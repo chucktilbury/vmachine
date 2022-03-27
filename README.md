@@ -1,2 +1,2 @@
-# virtual_machine
+# Virtual Machine
 Generic virtual machine
