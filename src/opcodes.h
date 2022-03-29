@@ -13,7 +13,7 @@ typedef enum {
     OP_EXCEPT,
     OP_PUSH,
     OP_POP,
-    OP_ASSIGN,
+    OP_CONSTANT,
     OP_FREE,
 
     OP_NOT,

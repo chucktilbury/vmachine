@@ -38,7 +38,7 @@ typedef struct {
 
 ValueStore* createObjStore();
 void destroyObjStore(ValueStore* os);
-const char* objToStr(ValueType type);
+const char* valToStr(ValueType type);
 void printValue(Value obj);
 
 void initObj(Value* obj, ValueType type);

@@ -2,7 +2,7 @@
 #include "common.h"
 #include <stdarg.h>
 
-static int trace_level;
+static int trace_level = 6;
 
 void runtimeError(const char* fmt, ...)
 {

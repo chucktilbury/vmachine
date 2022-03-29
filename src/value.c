@@ -146,7 +146,7 @@ void assignObj(Value* obj, ValueType type, void* data)
     obj->type = type;
 }
 
-const char* objToStr(ValueType type)
+const char* valToStr(ValueType type)
 {
     return (type == VAL_ERROR)? "VAL_ERROR":
             (type == VAL_UNUM)? "VAL_UNUM":
@@ -159,7 +159,7 @@ const char* objToStr(ValueType type)
 
 void printValue(Value obj)
 {
-    printf("%s: ", objToStr(obj.type));
+    printf("%s: ", valToStr(obj.type));
     switch(obj.type) {
         case VAL_STRING:
         case VAL_ERROR:

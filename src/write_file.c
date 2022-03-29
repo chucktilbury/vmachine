@@ -17,17 +17,19 @@ void create_program(VirtualMachine* vm)
     val = addObjStore(vm->val_store, obj);
     WRITE8(vm, OP_PUSH);
     WRITE16(vm, val);
+    WRITE8(vm, OP_PRINT);
 
     initObj(&obj, VAL_INUM);
     obj.data.inum = 42;
     val = addObjStore(vm->val_store, obj);
     WRITE8(vm, OP_PUSH);
     WRITE16(vm, val);
+    WRITE8(vm, OP_PRINT);
 
     WRITE8(vm, OP_ADD);
     WRITE8(vm, OP_PRINT);
 
-    WRITE8(vm, OP_ASSIGN);
+    WRITE8(vm, OP_CONSTANT);
     WRITE16(vm, VAL_INUM);
     WRITE64(vm, 22);
     WRITE8(vm, OP_DIV);
