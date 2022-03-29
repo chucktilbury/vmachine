@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include "vm_support.h"
 
-void writeObjStore(FILE* fp, ObjStore* os);
-void readObjStore(FILE* fp, ObjStore* os);
+void writeObjStore(FILE* fp, ValueStore* os);
+void readObjStore(FILE* fp, ValueStore* os);
 
 void writeInstStore(FILE* fp, InstStore* is);
 void readInstStore(FILE* fp, InstStore* is);

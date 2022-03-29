@@ -3,12 +3,16 @@
 
 void runtimeError(const char* fmt, ...);
 void setTraceLevel(int lev);
+int getTraceLevel();
 
 #ifdef DEBUG_VM_TRACE
-#define TRACE(n, f, ...) do {trace(__FILE__, __func__, __LINE__, n, f, ## __VA_ARGS__ );} while(0)
-void trace(const char* file, const char* func, int line, int level, const char* fmt, ...);
+#define VTRACE(n, f, ...) do { \
+        if((n) >= getTraceLevel()) { \
+            marker(f, ## __VA_ARGS__ ); printf("\n"); \
+        }} while(0)
+void marker(const char* fmt, ...);
 #else
-#define TRACE(n, f, ...) do {} while(0)
+#define VTRACE(n, f, ...) do {} while(0)
 #endif
 
 #endif

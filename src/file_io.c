@@ -1,24 +1,23 @@
 
 #include "common.h"
-#include "object.h"
 #include "file_io.h"
 
-void writeObjStore(FILE* fp, ObjStore* os)
+void writeObjStore(FILE* fp, ValueStore* os)
 {
     fwrite(&os->len, sizeof(uint32_t), 1, fp);
-    fwrite(os->list, sizeof(Object), os->len, fp);
+    fwrite(os->list, sizeof(Value), os->len, fp);
 }
 
-void readObjStore(FILE* fp, ObjStore* os)
+void readObjStore(FILE* fp, ValueStore* os)
 {
     fread(&os->len, sizeof(uint32_t), 1, fp);
 
     while(os->cap < os->len)
         os->cap <<= 1;
 
-    os->list = realloc(os->list, sizeof(Object)*os->cap);
+    os->list = realloc(os->list, sizeof(Value)*os->cap);
     assert(os->list != NULL);
-    fread(os->list, sizeof(Object), os->len, fp);
+    fread(os->list, sizeof(Value), os->len, fp);
 }
 
 void writeInstStore(FILE* fp, InstStore* is)
@@ -34,7 +33,7 @@ void readInstStore(FILE* fp, InstStore* is)
     while(is->cap < is->len)
         is->cap <<= 1;
 
-    is->list = realloc(is->list, sizeof(Object)*is->cap);
+    is->list = realloc(is->list, sizeof(Value)*is->cap);
     assert(is->list != NULL);
     fread(is->list, sizeof(InstStore), is->len, fp);
 }

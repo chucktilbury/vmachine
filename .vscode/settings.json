@@ -5,5 +5,8 @@
         "INUM",
         "JMPIF",
         "STRG"
-    ]
+    ],
+    "files.associations": {
+        "iterator": "c"
+    }
 }

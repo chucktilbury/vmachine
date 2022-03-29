@@ -14,7 +14,7 @@ const char* opToStr(OpCodes op)
             (op == OP_EXCEPT)? "OP_EXCEPT":
             (op == OP_PUSH)? "OP_PUSH":
             (op == OP_POP)? "OP_POP":
-            (op == OP_ALLOC)? "OP_ALLOC":
+            (op == OP_ASSIGN)? "OP_ASSIGN":
             (op == OP_FREE)? "OP_FREE":
             (op == OP_EQ)? "OP_EQ":
             (op == OP_NOT_EQ)? "OP_NOT_EQ":

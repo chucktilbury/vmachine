@@ -1,7 +1,7 @@
 #ifndef _VM_SUPPORT_H_
 #define _VM_SUPPORT_H_
 
-#include "object.h"
+#include "value.h"
 #include "error.h"
 #include "instr.h"
 #include "opcodes.h"
@@ -9,22 +9,24 @@
 
 typedef struct {
     InstStore* inst;
-    ObjStore* val_stack;
-    ObjStore* val_store;
-    ObjStore* heap;
+    ValueStore* val_stack;
+    ValueStore* val_store;
+    ValueStore* heap;
 } VirtualMachine;
 
 void runMachine(VirtualMachine* vm);
 VirtualMachine* createVirtualMachine();
 void destroyVirtualMachine(VirtualMachine* vm);
 
-#define read8(vm)   read8InstStore(vm->inst)
-#define read16(vm)  read16InstStore(vm->inst)
-#define read32(vm)  read32InstStore(vm->inst)
-#define write8(vm, word)    write8InstStore(vm->inst, word)
-#define write16(vm, word)   write16InstStore(vm->inst, word)
-#define write32(vm, word)   write32InstStore(vm->inst, word)
-
+#define READ8(vm)   read8InstStore(vm->inst)
+#define READ16(vm)  read16InstStore(vm->inst)
+#define READ32(vm)  read32InstStore(vm->inst)
+#define READ64(vm)  read64InstStore(vm->inst)
+#define WRITE8(vm, word)    write8InstStore(vm->inst, word)
+#define WRITE16(vm, word)   write16InstStore(vm->inst, word)
+#define WRITE32(vm, word)   write32InstStore(vm->inst, word)
+#define WRITE64(vm, word)   write64InstStore(vm->inst, word)
+#define IP(vm)      getIndex(vm->inst)
 
 #include "file_io.h"
 

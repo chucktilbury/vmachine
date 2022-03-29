@@ -5,29 +5,17 @@
 
 #include "vm_support.h"
 
-void printline(const char* fmt, ...)
-{
-    va_list args;
-
-    va_start(args, fmt);
-    vfprintf(stderr, fmt, args);
-    va_end(args);
-
-    fprintf(stderr, "\n");
-}
-
 void disassemble(VirtualMachine* vm)
 {
     bool finished = false;
     int inst = 0;
 
     while(!finished) {
-        inst = read8(vm);
+        inst = READ8(vm);
         //printf("instruction: %s\n", opToStr(instruction));
         switch(inst) {
             case OP_EXIT:
-                printline("%08d:%12s",
-                        getIndex(vm->inst), opToStr(inst));
+                printf("%08d: %s\n", IP(vm), opToStr(inst));
                 finished = true;
                 break;
 
@@ -52,8 +40,7 @@ void disassemble(VirtualMachine* vm)
             case OP_DIV:
             case OP_MOD:
             case OP_PRINT: {
-                printline("%08d:%12s",
-                            getIndex(vm->inst), opToStr(inst));
+                printf("%08d: %s\n", IP(vm), opToStr(inst));
                 break;
             }
 
@@ -61,31 +48,39 @@ void disassemble(VirtualMachine* vm)
             case OP_CALL:
             case OP_CALLX:
             case OP_PUSH:
-            case OP_ALLOC:
-            case OP_FREE:
-                printline("%08d:%12s\t0x%04X",
-                            getIndex(vm->inst),
-                            opToStr(inst), read16(vm));
+            case OP_FREE: {
+                uint16_t oper = READ16(vm);
+                printf("%08d: %s\t0x%04X\t", IP(vm), opToStr(inst), oper);
+                printValue(getObjStore(vm->val_store, oper));
                 break;
+            }
+
+            case OP_ASSIGN: {
+                printf("%08d: %s\t\t", IP(vm), opToStr(inst));
+                uint16_t type = READ16(vm);
+                uint64_t data = READ64(vm);
+                Value obj;
+                assignObj(&obj, type, &data);
+                printValue(obj);
+                break;
+            }
 
             // 16 bit signed operand
             case OP_JMP:
-            case OP_JMPIF:
-                printline("%08d:%12s\t%d",
-                            getIndex(vm->inst),
-                            opToStr(inst), (int)read16(vm));
+            case OP_JMPIF: {
+                int oper = (int)READ16(vm);
+                printf("%08d: %s\t%d\t", IP(vm), opToStr(inst), oper);
+                printValue(getObjStore(vm->val_store, oper));
                 break;
+            }
 
             // 32 bit operand
             case OP_EXCEPT:
-                printline("%08d:%12s\t0x%08X",
-                            getIndex(vm->inst),
-                            opToStr(inst), read32(vm));
+                printf("%08d: %s\t0x%08X", IP(vm), opToStr(inst), READ32(vm));
                 break;
 
             default:
-                printline("invalid instruction: 0x%02X at 0x%08X",
-                            inst, getIndex(vm->inst));
+                printf("invalid instruction: 0x%02X at 0x%08X", inst, IP(vm));
                 exit(1);
 
         }

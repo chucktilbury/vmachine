@@ -57,6 +57,13 @@ void write32InstStore(InstStore* is, uint32_t val)
     is->len += 4;
 }
 
+void write64InstStore(InstStore* is, uint64_t val)
+{
+    grow_list(is, 8);
+    *((uint32_t*)&is->list[is->len]) = val;
+    is->len += 8;
+}
+
 uint8_t read8InstStore(InstStore* is)
 {
     uint8_t val = *((uint8_t*)&is->list[is->index]);
@@ -75,6 +82,13 @@ uint32_t read32InstStore(InstStore* is)
 {
     uint32_t val = *((uint32_t*)&is->list[is->index]);
     is->index += 4;
+    return val;
+}
+
+uint64_t read64InstStore(InstStore* is)
+{
+    uint64_t val = *((uint64_t*)&is->list[is->index]);
+    is->index += 8;
     return val;
 }
 

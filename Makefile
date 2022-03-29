@@ -17,7 +17,7 @@ VMLIB	=	$(BINDIR)/libvm_support.a
 
 SLST	=	file_io.c \
 			instr.c \
-			object.c \
+			value.c \
 			opcodes.c \
 			error.c \
 			vm_support.c
@@ -25,7 +25,7 @@ SLST	=	file_io.c \
 HLST	=	common.h \
 			file_io.h \
 			instr.h \
-			object.h \
+			value.h \
 			opcodes.h \
 			error.h \
 			vm_support.h

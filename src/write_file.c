@@ -7,26 +7,34 @@
 void create_program(VirtualMachine* vm)
 {
     int val;
-    Object obj;
+    Value obj;
 
-    write8(vm, OP_NOOP);
-    write8(vm, OP_NOOP);
+    WRITE8(vm, OP_NOOP);
+    WRITE8(vm, OP_NOOP);
 
-    initObj(&obj, OBJ_INUM);
+    initObj(&obj, VAL_INUM);
     obj.data.inum = 123;
     val = addObjStore(vm->val_store, obj);
-    write8(vm, OP_PUSH);
-    write16(vm, val);
+    WRITE8(vm, OP_PUSH);
+    WRITE16(vm, val);
 
-    initObj(&obj, OBJ_INUM);
+    initObj(&obj, VAL_INUM);
     obj.data.inum = 42;
     val = addObjStore(vm->val_store, obj);
-    write8(vm, OP_PUSH);
-    write16(vm, val);
+    WRITE8(vm, OP_PUSH);
+    WRITE16(vm, val);
 
-    write8(vm, OP_ADD);
-    write8(vm, OP_PRINT);
-    write8(vm, OP_EXIT);
+    WRITE8(vm, OP_ADD);
+    WRITE8(vm, OP_PRINT);
+
+    WRITE8(vm, OP_ASSIGN);
+    WRITE16(vm, VAL_INUM);
+    WRITE64(vm, 22);
+    WRITE8(vm, OP_DIV);
+    WRITE8(vm, OP_PRINT);
+
+    WRITE8(vm, OP_POP);
+    WRITE8(vm, OP_EXIT);
 }
 
 int main(int argc, char** argv) {
