@@ -13,6 +13,7 @@ DOCTARG	=	$(DOCOUTDIR)/html/index.html
 VM		=	$(BINDIR)/vm
 WRI		=	$(BINDIR)/wri
 DIS		=	$(BINDIR)/dis
+ASM		=	$(BINDIR)/asm
 VMLIB	=	$(BINDIR)/libvm_support.a
 
 SLST	=	file_io.c \
@@ -20,6 +21,8 @@ SLST	=	file_io.c \
 			value.c \
 			opcodes.c \
 			error.c \
+			utils.c \
+			strings.c \
 			vm_support.c
 
 HLST	=	common.h \
@@ -28,6 +31,8 @@ HLST	=	common.h \
 			value.h \
 			opcodes.h \
 			error.h \
+			utils.h \
+			strings.h \
 			vm_support.h
 
 OBJS 	=	$(foreach item, $(SLST:.c=.o), $(addprefix $(OBJDIR)/, $(item)))
@@ -41,9 +46,9 @@ DEBUG	=	-g
 #OPTO	=	-Ofast
 #INCS	= 	-I$(INCDIR)
 COPTS	=	-Wall -Wextra -std=c99 $(VM_TRACE) $(EXE_TRACE) $(OPTO) $(DEBUG)
-LIBS	=	-L$(BINDIR) -lreadline -lvm_support
+LIBS	=	-L$(BINDIR) -lreadline -lvm_support -lm
 
-all: $(DIS) $(WRI) $(VM)
+all: $(DIS) $(WRI) $(VM) $(ASM)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) $(COPTS) -c $< -o $@
@@ -60,8 +65,19 @@ $(WRI): $(SRCDIR)/write_file.c $(VMLIB)
 $(VM): $(SRCDIR)/vm.c $(VMLIB)
 	gcc $(COPTS) -o $(VM) $(SRCDIR)/vm.c $(LIBS)
 
+$(ASM): $(SRCDIR)/asmparser.c $(SRCDIR)/asmscanner.c
+	gcc $(COPTS) -o $(ASM) $(SRCDIR)/asmparser.c $(SRCDIR)/asmscanner.c  $(LIBS)
+
+$(SRCDIR)/asmparser.c: $(SRCDIR)/asmparser.yacc
+	bison --report=lookahead -tvdo $(SRCDIR)/asmparser.c $(SRCDIR)/asmparser.yacc
+
+$(SRCDIR)/asmscanner.c: $(SRCDIR)/asmscanner.lex
+	flex -io $(SRCDIR)/asmscanner.c $(SRCDIR)/asmscanner.lex
+
 clean:
-	-$(RM) -r $(OBJDIR) $(BINDIR)
+	-$(RM) -r $(OBJDIR) $(BINDIR) \
+			$(SRCDIR)/asmscanner.c $(SRCDIR)/asmparser.c \
+			$(SRCDIR)/asmparser.h $(SRCDIR)/asmparser.output
 
 clean-docs:
 	-$(RM) -r $(DOCOUTDIR)

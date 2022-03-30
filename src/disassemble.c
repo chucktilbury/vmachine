@@ -29,11 +29,11 @@ void disassemble(VirtualMachine* vm)
             case OP_NEG:
             // binary operators
             case OP_EQ:
-            case OP_NOT_EQ:
-            case OP_LESS_EQ:
-            case OP_GTR_EQ:
+            case OP_NEQ:
+            case OP_LEQ:
+            case OP_GEQ:
             case OP_LESS:
-            case OP_GREATER:
+            case OP_GTR:
             case OP_ADD:
             case OP_SUB:
             case OP_MUL:
@@ -51,7 +51,7 @@ void disassemble(VirtualMachine* vm)
             case OP_FREE: {
                 uint16_t oper = READ16(vm);
                 printf("%08d: %s\t0x%04X\t", IP(vm), opToStr(inst), oper);
-                printValue(getObjStore(vm->val_store, oper));
+                printValue(getValStore(vm->val_store, oper));
                 break;
             }
 
@@ -60,7 +60,7 @@ void disassemble(VirtualMachine* vm)
                 uint16_t type = READ16(vm);
                 uint64_t data = READ64(vm);
                 Value obj;
-                assignObj(&obj, type, &data);
+                assignValue(&obj, type, &data);
                 printValue(obj);
                 break;
             }
@@ -70,7 +70,7 @@ void disassemble(VirtualMachine* vm)
             case OP_JMPIF: {
                 int oper = (int)READ16(vm);
                 printf("%08d: %s\t%d\t", IP(vm), opToStr(inst), oper);
-                printValue(getObjStore(vm->val_store, oper));
+                printValue(getValStore(vm->val_store, oper));
                 break;
             }
 

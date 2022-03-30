@@ -1,11 +1,13 @@
 {
     "cSpell.words": [
         "ABINARY",
+        "CALLR",
         "CBINARY",
         "eobj",
         "FNUM",
         "INUM",
         "JMPIF",
+        "JMPR",
         "STRG"
     ],
     "files.associations": {

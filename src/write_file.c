@@ -12,16 +12,16 @@ void create_program(VirtualMachine* vm)
     WRITE8(vm, OP_NOOP);
     WRITE8(vm, OP_NOOP);
 
-    initObj(&obj, VAL_INUM);
+    initValue(&obj, VAL_INUM);
     obj.data.inum = 123;
-    val = addObjStore(vm->val_store, obj);
+    val = addValStore(vm->val_store, obj);
     WRITE8(vm, OP_PUSH);
     WRITE16(vm, val);
     WRITE8(vm, OP_PRINT);
 
-    initObj(&obj, VAL_INUM);
+    initValue(&obj, VAL_INUM);
     obj.data.inum = 42;
-    val = addObjStore(vm->val_store, obj);
+    val = addValStore(vm->val_store, obj);
     WRITE8(vm, OP_PUSH);
     WRITE16(vm, val);
     WRITE8(vm, OP_PRINT);

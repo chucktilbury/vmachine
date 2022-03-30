@@ -6,13 +6,13 @@
 
 VirtualMachine* createVirtualMachine()
 {
-    VirtualMachine* vm = malloc(sizeof(VirtualMachine));
-    assert(vm != NULL);
+    VirtualMachine* vm = _alloc_ds(VirtualMachine);
 
     vm->inst = createInstStore();
-    vm->val_stack = createObjStore();
-    vm->val_store = createObjStore();
-    vm->heap = createObjStore();
+    vm->val_stack = createValStore();
+    vm->val_store = createValStore();
+    vm->heap = createValStore();
+    vm->strs = createStrStore();
 
     return vm;
 }
@@ -21,10 +21,11 @@ void destroyVirtualMachine(VirtualMachine* vm)
 {
     if(vm != NULL) {
         destroyInstStore(vm->inst);
-        destroyObjStore(vm->val_stack);
-        destroyObjStore(vm->val_store);
-        destroyObjStore(vm->heap);
-        free(vm);
+        destroyValStore(vm->val_stack);
+        destroyValStore(vm->val_store);
+        destroyValStore(vm->heap);
+        destroyStrStore(vm->strs);
+        _free(vm);
     }
 }
 
@@ -79,11 +80,11 @@ void runMachine(VirtualMachine* vm)
             // no operand binary operation pops 2 values and pushes a
             // boolean result.
             case OP_EQ:         CBINARY(==); break;
-            case OP_NOT_EQ:     CBINARY(!=); break;
-            case OP_LESS_EQ:    CBINARY(<=); break;
-            case OP_GTR_EQ:     CBINARY(>=); break;
+            case OP_NEQ:     CBINARY(!=); break;
+            case OP_LEQ:    CBINARY(<=); break;
+            case OP_GEQ:     CBINARY(>=); break;
             case OP_LESS:       CBINARY(<); break;
-            case OP_GREATER:    CBINARY(>); break;
+            case OP_GTR:    CBINARY(>); break;
 
             // no operand binary operation pops 2 operands and pushes a
             // numeric value as the result.
@@ -118,7 +119,7 @@ void runMachine(VirtualMachine* vm)
                 uint64_t value = READ64(vm);
                 VTRACE(5, "%08d %s\t%s", IP(vm), opToStr(opcode), valToStr(type));
                 Value obj;
-                assignObj(&obj, type, &value);
+                assignValue(&obj, type, &value);
                 printValue(obj);
                 PUSH(vm, obj);
                 break;

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "vm_support.h"
 
 typedef enum {
     VAL_ERROR,
@@ -25,7 +26,6 @@ typedef struct {
         int64_t inum;
         double fnum;
         bool boolean;
-        int index;
         char* str;
     } data;
 } Value;
@@ -36,24 +36,24 @@ typedef struct {
     int len;
 } ValueStore;
 
-ValueStore* createObjStore();
-void destroyObjStore(ValueStore* os);
+ValueStore* createValStore();
+void destroyValStore(ValueStore* os);
 const char* valToStr(ValueType type);
 void printValue(Value obj);
 
-void initObj(Value* obj, ValueType type);
-void assignObj(Value* obj, ValueType type, void* data);
+void initValue(Value* obj, ValueType type);
+void assignValue(Value* obj, ValueType type, void* data);
 
-int addObjStore(ValueStore* os, Value obj);
-Value getObjStore(ValueStore* os, int index);
-Value setObjStore(ValueStore* os, int index, Value obj);
+StoreIndex addValStore(ValueStore* os, Value obj);
+Value getValStore(ValueStore* os, StoreIndex index);
+Value setValStore(ValueStore* os, StoreIndex index, Value obj);
 
-void pushObjStore(ValueStore* os, Value obj);
-Value popObjStore(ValueStore* os);
-Value peekObjStore(ValueStore* os);
+void pushValStore(ValueStore* os, Value obj);
+Value popValStore(ValueStore* os);
+Value peekValStore(ValueStore* os);
 
-#define PUSH(vm, obj)   do { pushObjStore(vm->val_stack, (obj)); } while(0)
-#define COPY(vm, n)     do { pushObjStore(vm->val_stack, getObjStore(vm->val_store, (n))); } while(0)
-#define POP(vm, o)      do { (o) = popObjStore(vm->val_stack); } while(0)
-#define PEEK(vm, o)     do { (o) = peekObjStore(vm->val_stack); } while(0)
+#define PUSH(vm, obj)   do { pushValStore(vm->val_stack, (obj)); } while(0)
+#define COPY(vm, n)     do { pushValStore(vm->val_stack, getValStore(vm->val_store, (n))); } while(0)
+#define POP(vm, o)      do { (o) = popValStore(vm->val_stack); } while(0)
+#define PEEK(vm, o)     do { (o) = peekValStore(vm->val_stack); } while(0)
 #endif

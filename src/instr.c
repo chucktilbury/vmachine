@@ -1,13 +1,13 @@
 
 #include "common.h"
-#include "instr.h"
+#include "vm_support.h"
 
 static inline void grow_list(InstStore* is, size_t size)
 {
     if(is->cap < is->len + size) {
         while(is->cap < is->len + size)
             is->cap <<= 1;
-        is->list = realloc(is->list, is->cap);
+        is->list = _realloc_ds_array(is->list, uint8_t, is->cap);
         assert(is->list != NULL);
     }
     // else do nothing
@@ -15,14 +15,12 @@ static inline void grow_list(InstStore* is, size_t size)
 
 InstStore* createInstStore()
 {
-    InstStore* is = malloc(sizeof(InstStore));
-    assert(is != NULL);
+    InstStore* is = _alloc_ds(InstStore);
 
     is->cap = 0x01 << 3;
     is->len = 0;
     is->index = 0;
-    is->list = malloc(is->cap);
-    assert(is->list != NULL);
+    is->list = _alloc_ds_array(uint8_t, is->cap);
 
     return is;
 }
@@ -31,8 +29,8 @@ void destroyInstStore(InstStore* is)
 {
     if(is != NULL) {
         if(is->list != NULL)
-            free(is->list);
-        free(is);
+            _free(is->list);
+        _free(is);
     }
 }
 

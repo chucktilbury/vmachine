@@ -1,17 +1,22 @@
 #ifndef _VM_SUPPORT_H_
 #define _VM_SUPPORT_H_
 
+typedef uint16_t StoreIndex;
+
 #include "value.h"
 #include "error.h"
 #include "instr.h"
 #include "opcodes.h"
 #include "instr.h"
+#include "strings.h"
+#include "utils.h"
 
 typedef struct {
     InstStore* inst;
     ValueStore* val_stack;
     ValueStore* val_store;
     ValueStore* heap;
+    StrStore* strs;
 } VirtualMachine;
 
 void runMachine(VirtualMachine* vm);

@@ -1,7 +1,6 @@
 
 #include "common.h"
-#include "value.h"
-#include "error.h"
+#include "vm_support.h"
 
 // TODO: reuse deleted slots.
 static inline void grow_store(ValueStore* os)
@@ -23,15 +22,14 @@ static void init_error_obj(Value* obj)
     obj->isWritable = false;
 }
 
-ValueStore* createObjStore()
+ValueStore* createValStore()
 {
-    ValueStore* obj = malloc(sizeof(ValueStore));
+    ValueStore* obj = _alloc_ds(ValueStore);
     assert(obj != NULL);
 
     obj->cap = 0x01 << 3;
     obj->len = 0;
-    obj->list = malloc(sizeof(ValueStore)*obj->cap);
-    assert(obj->list != NULL);
+    obj->list = _alloc_ds_array(Value, obj->cap);
 
     Value eobj;
     init_error_obj(&eobj);
@@ -41,16 +39,16 @@ ValueStore* createObjStore()
     return obj;
 }
 
-void destroyObjStore(ValueStore* os)
+void destroyValStore(ValueStore* os)
 {
     if(os != NULL) {
         if(os->list != NULL)
-            free(os->list);
-        free(os);
+            _free(os->list);
+        _free(os);
     }
 }
 
-void initObj(Value* obj, ValueType type)
+void initValue(Value* obj, ValueType type)
 {
     obj->type = type;
     obj->name = NULL;
@@ -59,25 +57,25 @@ void initObj(Value* obj, ValueType type)
     obj->inUse = true;
 }
 
-void pushObjStore(ValueStore* os, Value obj)
+void pushValStore(ValueStore* os, Value obj)
 {
-    addObjStore(os, obj);
+    addValStore(os, obj);
 }
 
-Value popObjStore(ValueStore* os)
+Value popValStore(ValueStore* os)
 {
     assert(os->len > 0);
     os->len--;
     return os->list[os->len];
 }
 
-Value peekObjStore(ValueStore* os)
+Value peekValStore(ValueStore* os)
 {
     assert(os->len > 0);
     return os->list[os->len-1];
 }
 
-int addObjStore(ValueStore* os, Value obj)
+StoreIndex addValStore(ValueStore* os, Value obj)
 {
     grow_store(os);
     os->list[os->len] = obj;
@@ -86,11 +84,11 @@ int addObjStore(ValueStore* os, Value obj)
     return os->len-1;
 }
 
-Value getObjStore(ValueStore* os, int index)
+Value getValStore(ValueStore* os, StoreIndex index)
 {
     Value obj;
 
-    if(index >= 0 && index < os->len) {
+    if(index < os->len) {
         obj = os->list[index];
         if(obj.inUse)
             return obj;
@@ -101,9 +99,9 @@ Value getObjStore(ValueStore* os, int index)
         return os->list[0];
 }
 
-Value setObjStore(ValueStore* os, int index, Value obj)
+Value setValStore(ValueStore* os, StoreIndex index, Value obj)
 {
-    if(index >= 0 && index < os->len) {
+    if(index < os->len) {
         obj = os->list[index];
         if(obj.isWritable) {
             os->list[index] = obj;
@@ -116,7 +114,7 @@ Value setObjStore(ValueStore* os, int index, Value obj)
         return os->list[0];
 }
 
-void assignObj(Value* obj, ValueType type, void* data)
+void assignValue(Value* obj, ValueType type, void* data)
 {
     switch(type) {
         case VAL_ERROR:
@@ -159,7 +157,7 @@ const char* valToStr(ValueType type)
 
 void printValue(Value obj)
 {
-    printf("%s: ", valToStr(obj.type));
+    printf("%s: %s: ", obj.name, valToStr(obj.type));
     switch(obj.type) {
         case VAL_STRING:
         case VAL_ERROR:
