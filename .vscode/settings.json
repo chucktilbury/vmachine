@@ -8,9 +8,14 @@
         "INUM",
         "JMPIF",
         "JMPR",
-        "STRG"
+        "sfmt",
+        "STRG",
+        "vfmt",
+        "vmachine",
+        "vstore"
     ],
     "files.associations": {
-        "iterator": "c"
+        "iterator": "c",
+        "sstream": "c"
     }
 }

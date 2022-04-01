@@ -1,22 +1,20 @@
 #ifndef _VM_SUPPORT_H_
 #define _VM_SUPPORT_H_
 
-typedef uint16_t StoreIndex;
+typedef uint16_t Index;
 
+#include "instr.h"
 #include "value.h"
-#include "error.h"
-#include "instr.h"
-#include "opcodes.h"
-#include "instr.h"
 #include "strings.h"
-#include "utils.h"
+#include "symbols.h"
 
 typedef struct {
     InstStore* inst;
     ValueStore* val_stack;
     ValueStore* val_store;
-    ValueStore* heap;
-    StrStore* strs;
+    ValueStore* const_store;
+    StrStore* str_store;
+    Symbol* table;
 } VirtualMachine;
 
 void runMachine(VirtualMachine* vm);
@@ -33,6 +31,9 @@ void destroyVirtualMachine(VirtualMachine* vm);
 #define WRITE64(vm, word)   write64InstStore(vm->inst, word)
 #define IP(vm)      getIndex(vm->inst)
 
+#include "error.h"
+#include "opcodes.h"
+#include "utils.h"
 #include "file_io.h"
 
 #endif

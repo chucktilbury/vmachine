@@ -1,0 +1,21 @@
+#ifndef _SYMBOLS_H_
+#define _SYMBOLS_H_
+
+#include <stddef.h>
+#include "vm_support.h"
+
+typedef struct _sym_ {
+    const char* key;
+    size_t len;
+    Index idx; // the value that this symbol references
+    struct _sym_* left;
+    struct _sym_* right;
+} Symbol;
+
+Symbol* createSymbols();
+void destroySymbols(Symbol* table);
+
+void addSymbol(Symbol* table, const char* key, Index idx);
+Index findSymbol(Symbol* table, const char* key);
+
+#endif

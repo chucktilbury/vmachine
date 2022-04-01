@@ -23,9 +23,6 @@ void yyerror(const char* s);
 
 int error_count = 0;
 
-void addSymbol(const char* name, int slot);
-int findSymbol(const char* name);
-
 VirtualMachine* vm = NULL;
 
 #define TOKSTR get_tok_str()
@@ -281,9 +278,10 @@ void negVal(Value* dest, Value val)
     uint64_t unum;
     int64_t inum;
     double fnum;
-    char *str;
     int opcode;
+    char* str;
     Value value;
+    Index string;
 };
 
 %token <str> TOK_SYMBOL
@@ -301,7 +299,7 @@ void negVal(Value* dest, Value val)
 
 %type <type> type_spec
 %type <value> expression expression_factor
-%type <str> label
+%type <string> label
 
 %right '='
 %left '+' '-'
@@ -330,13 +328,7 @@ module_item
 
 label
     : TOK_SYMBOL {
-        Value val;
-        initValue(&val, VAL_INDEX);
-        val.data.unum = getIndex(vm->inst);
-        val.name = $1;
-        val.isAssigned = true;
-        int slot = addValStore(vm->val_store, val);
-        addSymbol($1, slot);
+        // create an address object
     }
     ;
 
@@ -352,17 +344,21 @@ include_statement
 
 data_definition
     : type_spec TOK_SYMBOL {
+        // create an uninitialized object of the given type and store the
+        // name into the symbol table.
         Value val;
-        initValue(&val, $1);
-        val.name = $2;
+        Index idx = addStrStore(vm->str_store, $2);
+        initValue(&val, $1, idx);
         val.isAssigned = false;
         int slot = addValStore(vm->val_store, val);
-        addSymbol($2, slot);
+        //addSymbol($2, slot);
     }
     | type_spec TOK_SYMBOL '=' expression {
+        // create a numeric value of the given type and store it in the value
+        // store, then store the symbol in the symbol table.
         Value val;
-        initValue(&val, $1);
-        val.name = $2;
+        Index idx = addStrStore(vm->str_store, $2);
+        initValue(&val, $1, idx);
         val.isAssigned = true;
         switch($1) {
             case VAL_UNUM: val.data.unum = $4.data.unum; break;
@@ -370,17 +366,17 @@ data_definition
             case VAL_FNUM: val.data.fnum = $4.data.fnum; break;
         }
         int slot = addValStore(vm->val_store, val);
-        addSymbol($2, slot);
-        //printValue(val);
     }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
+        // Add the string to the string store, then vreate the value opbect
+        // that references it. Then store the name in the symbol table with
+        // the slot number of the value (not the string)
         Value val;
-        initValue(&val, $1);
-        val.name = $2;
+        Index idx = addStrStore(vm->str_store, $2);
+        initValue(&val, $1, idx);
         val.isAssigned = true;
         val.data.str = $4;
         int slot = addValStore(vm->val_store, val);
-        addSymbol($2, slot);
     }
     ;
 
@@ -406,7 +402,8 @@ class1_instruction
     | TOK_PRINT { WRITE8(vm, OP_PRINT); }
     ;
 
-    /* instructions that have an immediate operand */
+    /* instructions that have an immediate operand. the operand is an
+        expression. */
 class2_instruction
     : TOK_CALL TOK_SYMBOL {
         WRITE8(vm, OP_CALL);
@@ -466,6 +463,8 @@ instruction_list
 
 expression_factor
     : TOK_SYMBOL {
+        // find the value associated with the symbol and use it in the
+        // expression.
         int slot = findSymbol($1);
         Value val = getValStore(vm->val_store, slot);
         if(!val.isAssigned)
@@ -507,82 +506,10 @@ expression
 
 extern char yytext[];
 
-// simple binary tree
-typedef struct _sym_tab_ {
-    const char* name;
-    int slot;
-    struct _sym_tab_* left;
-    struct _sym_tab_* right;
-} SymbolTable;
-
-SymbolTable* symtab = NULL;
-
 void yyerror(const char* s)
 {
     fflush(stderr);
     syntaxError("%s", s);
-}
-
-void add_symbol(SymbolTable* root, SymbolTable* sym)
-{
-    int val = strcmp(root->name, sym->name);
-    if(val < 0) {
-        if(root->left == NULL)
-            root->left = sym;
-        else
-            add_symbol(root->left, sym);
-    }
-    else if(val > 0) {
-        if(root->right == NULL)
-            root->right = sym;
-        else
-            add_symbol(root->right, sym);
-    }
-    else
-        syntaxError("symbol \"%s\" already exists.", sym->name);
-}
-
-void addSymbol(const char* name, int slot)
-{
-    SymbolTable* symbol = malloc(sizeof(SymbolTable));
-    assert(symbol != NULL);
-
-    symbol->name = name;
-    symbol->slot = slot;
-    symbol->left = NULL;
-    symbol->right = NULL;
-    if(symtab != NULL)
-        add_symbol(symtab, symbol);
-    else
-        symtab = symbol;
-}
-
-int find_symbol(SymbolTable* node, const char* name)
-{
-    int val = strcmp(node->name, name);
-    if(val < 0) {
-        if(node->left != NULL)
-            return find_symbol(node->left, name);
-        else {
-            syntaxError("symbol \"%s\" is undefined.", name);
-            return -1;
-        }
-    }
-    else if(val > 0) {
-        if(node->right != NULL)
-            return find_symbol(node->right, name);
-        else {
-            syntaxError("symbol \"%s\" is undefined.", name);
-            return -1;
-        }
-    }
-    else
-        return node->slot;
-}
-
-int findSymbol(const char* name)
-{
-    return find_symbol(symtab, name);
 }
 
 int main(int argc, char** argv)

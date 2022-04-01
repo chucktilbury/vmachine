@@ -51,7 +51,7 @@ void disassemble(VirtualMachine* vm)
             case OP_FREE: {
                 uint16_t oper = READ16(vm);
                 printf("%08d: %s\t0x%04X\t", IP(vm), opToStr(inst), oper);
-                printValue(getValStore(vm->val_store, oper));
+                printValue(vm, getVal(vm->val_store, oper));
                 break;
             }
 
@@ -60,8 +60,8 @@ void disassemble(VirtualMachine* vm)
                 uint16_t type = READ16(vm);
                 uint64_t data = READ64(vm);
                 Value obj;
-                assignValue(&obj, type, &data);
-                printValue(obj);
+                assignVal(&obj, type, &data);
+                printValue(vm, obj);
                 break;
             }
 
@@ -70,7 +70,7 @@ void disassemble(VirtualMachine* vm)
             case OP_JMPIF: {
                 int oper = (int)READ16(vm);
                 printf("%08d: %s\t%d\t", IP(vm), opToStr(inst), oper);
-                printValue(getValStore(vm->val_store, oper));
+                printValue(vm, getVal(vm->val_store, oper));
                 break;
             }
 

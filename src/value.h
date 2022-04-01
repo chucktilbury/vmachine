@@ -12,21 +12,18 @@ typedef enum {
     VAL_FNUM,
     VAL_BOOL,
     VAL_STRING,
-    VAL_INDEX,
+    VAL_ADDRESS,
 } ValueType;
 
 typedef struct {
     ValueType type;
-    const char* name;
     bool isAssigned;
-    bool isWritable;
-    bool inUse;
     union {
         uint64_t unum;
         int64_t inum;
         double fnum;
         bool boolean;
-        char* str;
+        Index obj;
     } data;
 } Value;
 
@@ -39,21 +36,20 @@ typedef struct {
 ValueStore* createValStore();
 void destroyValStore(ValueStore* os);
 const char* valToStr(ValueType type);
-void printValue(Value obj);
 
-void initValue(Value* obj, ValueType type);
-void assignValue(Value* obj, ValueType type, void* data);
+void initVal(Value* obj, ValueType type);
+void assignVal(Value* obj, ValueType type, void* data);
 
-StoreIndex addValStore(ValueStore* os, Value obj);
-Value getValStore(ValueStore* os, StoreIndex index);
-Value setValStore(ValueStore* os, StoreIndex index, Value obj);
+Index addVal(ValueStore* os, Value obj);
+Value getVal(ValueStore* os, Index idx);
+Value setVal(ValueStore* os, Index idx, Value obj);
 
-void pushValStore(ValueStore* os, Value obj);
-Value popValStore(ValueStore* os);
-Value peekValStore(ValueStore* os);
+void pushVal(ValueStore* os, Value obj);
+Value popVal(ValueStore* os);
+Value peekVal(ValueStore* os);
 
-#define PUSH(vm, obj)   do { pushValStore(vm->val_stack, (obj)); } while(0)
-#define COPY(vm, n)     do { pushValStore(vm->val_stack, getValStore(vm->val_store, (n))); } while(0)
-#define POP(vm, o)      do { (o) = popValStore(vm->val_stack); } while(0)
-#define PEEK(vm, o)     do { (o) = peekValStore(vm->val_stack); } while(0)
+#define PUSH(vm, obj)   do { pushVal(vm->val_stack, (obj)); } while(0)
+#define COPY(vm, n)     do { pushVal(vm->val_stack, getVal(vm->val_store, (n))); } while(0)
+#define POP(vm, o)      do { (o) = popVal(vm->val_stack); } while(0)
+#define PEEK(vm, o)     do { (o) = peekVal(vm->val_stack); } while(0)
 #endif

@@ -1,7 +1,110 @@
 
 #include "common.h"
-#include "file_io.h"
+#include "vm_support.h"
 
+typedef struct {
+    uint16_t type;
+    bool isAssigned;
+    uint64_t value;
+} val_fmt;
+
+typedef struct {
+    size_t sstore_len;
+    size_t vstore_len;
+    size_t instr_len;
+} vm_fmt;
+
+void saveVM(VirtualMachine* vm, const char* fname)
+{
+    FILE* outfile_pointer = fopen(fname, "wb");
+    assert(outfile_pointer != NULL);
+
+    vm_fmt header;
+    header.sstore_len = vm->str_store->len;
+    header.vstore_len = vm->val_store->len;
+    header.instr_len = vm->inst->len;
+    fwrite(&header, sizeof(vm_fmt), 1, outfile_pointer);
+
+    // save the string store
+    for(size_t idx = 0; idx < vm->str_store->len; idx++) {
+        uint16_t len = vm->str_store->list[idx].len;
+        fwrite(&len, sizeof(uint16_t), 1, outfile_pointer);
+        if(vm->str_store->list[idx].len != 0) {
+            fwrite(vm->str_store->list[idx].str, sizeof(char), len, outfile_pointer);
+        }
+    }
+
+    // save the value store
+    for(int idx = 0; idx < vm->val_store->len; idx++) {
+        val_fmt vfmt;
+        Value val = vm->val_store->list[idx];
+        vfmt.type = val.type;
+        vfmt.isAssigned = val.isAssigned;
+        vfmt.value = val.data.unum;
+        fwrite(&vfmt, sizeof(val_fmt), 1, outfile_pointer);
+    }
+
+    // save the instruction store
+    fwrite(vm->inst->list, sizeof(uint8_t), vm->inst->len, outfile_pointer);
+
+    fclose(outfile_pointer);
+}
+
+VirtualMachine* loadVM(const char* fname)
+{
+
+    VirtualMachine* vm = createVirtualMachine();
+
+    FILE* infile_pointer = fopen(fname, "rb");
+    assert(infile_pointer != NULL);
+
+    vm_fmt vmf;
+    fread(&vmf, sizeof(vm_fmt), 1, infile_pointer);
+
+    // load the string store
+    vm->val_store->len = vmf.vstore_len;
+    while(vm->str_store->len >= vm->str_store->cap)
+        vm->str_store->cap <<= 1;
+    vm->str_store->list = _realloc_ds_array(vm->str_store->list, ObjString, vm->str_store->cap);
+    for(size_t idx = 0; idx < vm->str_store->len; idx++) {
+        uint16_t len;
+        fread(&len, sizeof(uint16_t), 1, infile_pointer);
+        vm->str_store->list[idx].len = len;
+        if(len != 0) {
+            vm->str_store->list[idx].str = _malloc(len);
+            fread((void*)vm->str_store->list[idx].str, sizeof(uint8_t), len, infile_pointer);
+        }
+        else
+            vm->str_store->list[idx].str = NULL;
+    }
+
+    // load the value store
+    vm->val_store->len = vmf.vstore_len;
+    while(vm->val_store->len >= vm->val_store->cap)
+        vm->val_store->cap <<= 1;
+    vm->val_store->list = _realloc_ds_array(vm->val_store->list, Value, vm->val_store->cap);
+    for(int idx = 0; idx < vm->val_store->len; idx++) {
+        val_fmt valf;
+        fread(&valf, sizeof(val_fmt), 1, infile_pointer);
+        Value val;
+        val.type = valf.type;
+        val.isAssigned = valf.isAssigned;
+        val.data.unum = valf.value;
+        vm->val_store->list[idx] = val;
+    }
+
+    // load the instruction store
+    vm->inst->len = vmf.instr_len;
+    while(vm->inst->len >= vm->inst->cap)
+        vm->inst->cap <<= 1;
+    vm->inst->list = _realloc_ds_array(vm->inst->list, uint8_t, vm->inst->cap);
+    fread(vm->inst->list, sizeof(uint8_t), vm->inst->len, infile_pointer);
+
+    fclose(infile_pointer);
+    return vm;
+}
+
+/*
 void writeObjStore(FILE* fp, ValueStore* os)
 {
     fwrite(&os->len, sizeof(uint32_t), 1, fp);
@@ -38,6 +141,17 @@ void readInstStore(FILE* fp, InstStore* is)
     fread(is->list, sizeof(InstStore), is->len, fp);
 }
 
+void writeStrStore(FILE* fp, StrStore* ss)
+{
+
+}
+
+void readStrStore(FILE* fp, StrStore* ss)
+{
+
+}
+
+
 VirtualMachine* loadVM(const char* fname)
 {
     VirtualMachine* vm = createVirtualMachine();
@@ -62,3 +176,4 @@ void saveVM(const char* fname, VirtualMachine* vm)
 
     fclose(outfile_pointer);
 }
+*/

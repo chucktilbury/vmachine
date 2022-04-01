@@ -1,6 +1,10 @@
 bin/
 obj/
 docs/out/
+asmparser.c
+asmparser.h
+asmparser.output
+asmscanner.c
 
 # Prerequisites
 *.d

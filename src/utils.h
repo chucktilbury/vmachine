@@ -17,4 +17,6 @@ void memfree(void* ptr);
 #define _alloc_ds_array(t, n)       (t*)memalloc((n)*sizeof(t))
 #define _realloc_ds_array(p, t, n)  (t*)memrealloc((p), sizeof(t)*(n))
 
+void printValue(VirtualMachine* vm, Value obj);
+
 #endif

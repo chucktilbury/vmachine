@@ -11,8 +11,9 @@ VirtualMachine* createVirtualMachine()
     vm->inst = createInstStore();
     vm->val_stack = createValStore();
     vm->val_store = createValStore();
-    vm->heap = createValStore();
-    vm->strs = createStrStore();
+    vm->const_store = createValStore();
+    vm->str_store = createStrStore();
+    vm->table = createSymbols();
 
     return vm;
 }
@@ -23,8 +24,9 @@ void destroyVirtualMachine(VirtualMachine* vm)
         destroyInstStore(vm->inst);
         destroyValStore(vm->val_stack);
         destroyValStore(vm->val_store);
-        destroyValStore(vm->heap);
-        destroyStrStore(vm->strs);
+        destroyValStore(vm->const_store);
+        destroyStrStore(vm->str_store);
+        destroySymbols(vm->table);
         _free(vm);
     }
 }
@@ -100,7 +102,7 @@ void runMachine(VirtualMachine* vm)
                 //marker("%08d %s\t", IP(vm), opToStr(opcode));
                 Value result;
                 PEEK(vm, result);
-                printValue(result);
+                printValue(vm, result);
                 break;
             }
 
@@ -119,8 +121,8 @@ void runMachine(VirtualMachine* vm)
                 uint64_t value = READ64(vm);
                 VTRACE(5, "%08d %s\t%s", IP(vm), opToStr(opcode), valToStr(type));
                 Value obj;
-                assignValue(&obj, type, &value);
-                printValue(obj);
+                assignVal(&obj, type, &value);
+                printValue(vm, obj);
                 PUSH(vm, obj);
                 break;
             }

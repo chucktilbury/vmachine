@@ -11,7 +11,7 @@ make_dirs := $(shell mkdir -p $(OBJDIR) $(BINDIR))
 DOCTARG	=	$(DOCOUTDIR)/html/index.html
 
 VM		=	$(BINDIR)/vm
-WRI		=	$(BINDIR)/wri
+#WRI		=	$(BINDIR)/wri
 DIS		=	$(BINDIR)/dis
 ASM		=	$(BINDIR)/asm
 VMLIB	=	$(BINDIR)/libvm_support.a
@@ -23,6 +23,7 @@ SLST	=	file_io.c \
 			error.c \
 			utils.c \
 			strings.c \
+			symbols.c \
 			vm_support.c
 
 HLST	=	common.h \
@@ -33,6 +34,7 @@ HLST	=	common.h \
 			error.h \
 			utils.h \
 			strings.h \
+			symbols.h \
 			vm_support.h
 
 OBJS 	=	$(foreach item, $(SLST:.c=.o), $(addprefix $(OBJDIR)/, $(item)))
@@ -48,7 +50,7 @@ DEBUG	=	-g
 COPTS	=	-Wall -Wextra -std=c99 $(VM_TRACE) $(EXE_TRACE) $(OPTO) $(DEBUG)
 LIBS	=	-L$(BINDIR) -lreadline -lvm_support -lm
 
-all: $(DIS) $(WRI) $(VM) $(ASM)
+all: $(DIS) $(VM) $(ASM) # $(WRI)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	$(CC) $(COPTS) -c $< -o $@
@@ -59,8 +61,8 @@ $(VMLIB): $(OBJS) $(HEADERS)
 $(DIS): $(SRCDIR)/disassemble.c $(VMLIB)
 	gcc $(COPTS) -o $(DIS) $(SRCDIR)/disassemble.c $(LIBS)
 
-$(WRI): $(SRCDIR)/write_file.c $(VMLIB)
-	gcc $(COPTS) -o $(WRI) $(SRCDIR)/write_file.c $(LIBS)
+# $(WRI): $(SRCDIR)/write_file.c $(VMLIB)
+# 	gcc $(COPTS) -o $(WRI) $(SRCDIR)/write_file.c $(LIBS)
 
 $(VM): $(SRCDIR)/vm.c $(VMLIB)
 	gcc $(COPTS) -o $(VM) $(SRCDIR)/vm.c $(LIBS)

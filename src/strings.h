@@ -3,13 +3,9 @@
 
 #include "vm_support.h"
 
-typedef struct _obj_str_ {
+typedef struct {
     uint16_t len;
     const char* str;
-    StoreIndex idx;
-    struct _obj_str_* left;
-    struct _obj_str_* right;
-    struct _obj_str_* back;
 } ObjString;
 
 /**
@@ -21,19 +17,21 @@ typedef struct _obj_str_ {
  * instruction stream.
  */
 typedef struct {
-    ObjString* root;
-    ObjString** list;
+    ObjString* list;
     size_t cap;
     size_t len;
 } StrStore;
 
 StrStore* createStrStore();
 void destroyStrStore(StrStore* ss);
-void destroyStrNode(ObjString* obj);
 
-StoreIndex addStrStore(StrStore* ss, const char* str);
-const char* getStrStoreStr(StrStore* ss, StoreIndex idx);
-StoreIndex getStrStoreSlot(StrStore* ss, const char* str);
-void delStrStore(StrStore* ss, StoreIndex idx);
+Index addStr(StrStore* ss, const char* str);
+const char* getStr(StrStore* ss, Index idx);
+void delStr(StrStore* ss, Index idx);
+
+ObjString* getStrByIndex(StrStore* ss, Index idx);
+ObjString* getStrByStr(StrStore* ss, const char* str);
+
+int add_tree(ObjString* tree, ObjString*node);
 
 #endif
