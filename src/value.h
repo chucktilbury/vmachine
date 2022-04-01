@@ -18,6 +18,7 @@ typedef enum {
 typedef struct {
     ValueType type;
     bool isAssigned;
+    bool isConst;
     union {
         uint64_t unum;
         int64_t inum;
@@ -38,7 +39,7 @@ void destroyValStore(ValueStore* os);
 const char* valToStr(ValueType type);
 
 void initVal(Value* obj, ValueType type);
-void assignVal(Value* obj, ValueType type, void* data);
+void assignVal(Value* obj, Value* val);
 
 Index addVal(ValueStore* os, Value obj);
 Value getVal(ValueStore* os, Index idx);
@@ -52,4 +53,6 @@ Value peekVal(ValueStore* os);
 #define COPY(vm, n)     do { pushVal(vm->val_stack, getVal(vm->val_store, (n))); } while(0)
 #define POP(vm, o)      do { (o) = popVal(vm->val_stack); } while(0)
 #define PEEK(vm, o)     do { (o) = peekVal(vm->val_stack); } while(0)
+#define VAL(store, idx) ((store).list[idx])
+
 #endif

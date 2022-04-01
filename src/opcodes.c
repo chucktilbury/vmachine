@@ -7,17 +7,17 @@ const char* opToStr(OpCodes op)
             (op == OP_ERROR)? "OP_ERROR":
             (op == OP_EXIT)? "OP_EXIT":
             (op == OP_CALL)? "OP_CALL":
-            (op == OP_CALLR)? "OP_CALLR":
+            //(op == OP_CALLR)? "OP_CALLR":
             (op == OP_CALLX)? "OP_CALLX":
             (op == OP_RETURN)? "OP_RETURN":
             (op == OP_JMP)? "OP_JMP":
-            (op == OP_JMPR)? "OP_JMPR":
+            //(op == OP_JMPR)? "OP_JMPR":
             (op == OP_JMPIF)? "OP_JMPIF":
-            (op == OP_JMPIFR)? "OP_JMPIFR":
+            //(op == OP_JMPIFR)? "OP_JMPIFR":
             (op == OP_EXCEPT)? "OP_EXCEPT":
             (op == OP_PUSH)? "OP_PUSH":
             (op == OP_POP)? "OP_POP":
-            //(op == OP_CONSTANT)? "OP_CONSTANT":
+            //(op == OP_CONST)? "OP_CONST":
             //(op == OP_FREE)? "OP_FREE":
             (op == OP_EQ)? "OP_EQ":
             (op == OP_NEQ)? "OP_NEQ":

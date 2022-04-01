@@ -5,14 +5,47 @@
 typedef struct {
     uint16_t type;
     bool isAssigned;
+    bool isConst;
     uint64_t value;
 } val_fmt;
 
 typedef struct {
     size_t sstore_len;
     size_t vstore_len;
+    size_t cstore_len;
     size_t instr_len;
 } vm_fmt;
+
+static void save_values(ValueStore* store, FILE* fp)
+{
+    for(int idx = 0; idx < store->len; idx++) {
+        val_fmt vfmt;
+        Value val = store->list[idx];
+        vfmt.type = val.type;
+        vfmt.isAssigned = val.isAssigned;
+        vfmt.value = val.data.unum;
+        fwrite(&vfmt, sizeof(val_fmt), 1, fp);
+    }
+}
+
+static void load_values(size_t len, ValueStore* store, FILE* fp)
+{
+    // load the value store
+    store->len = len;
+    while(store->len >= store->cap)
+        store->cap <<= 1;
+    store->list = _realloc_ds_array(store->list, Value, store->cap);
+    for(int idx = 0; idx < store->len; idx++) {
+        val_fmt valf;
+        fread(&valf, sizeof(val_fmt), 1, fp);
+        Value val;
+        val.type = valf.type;
+        val.isAssigned = valf.isAssigned;
+        val.isConst = valf.isConst;
+        val.data.unum = valf.value;
+        store->list[idx] = val;
+    }
+}
 
 void saveVM(VirtualMachine* vm, const char* fname)
 {
@@ -22,6 +55,7 @@ void saveVM(VirtualMachine* vm, const char* fname)
     vm_fmt header;
     header.sstore_len = vm->str_store->len;
     header.vstore_len = vm->val_store->len;
+    header.cstore_len = vm->const_store->len;
     header.instr_len = vm->inst->len;
     fwrite(&header, sizeof(vm_fmt), 1, outfile_pointer);
 
@@ -35,14 +69,8 @@ void saveVM(VirtualMachine* vm, const char* fname)
     }
 
     // save the value store
-    for(int idx = 0; idx < vm->val_store->len; idx++) {
-        val_fmt vfmt;
-        Value val = vm->val_store->list[idx];
-        vfmt.type = val.type;
-        vfmt.isAssigned = val.isAssigned;
-        vfmt.value = val.data.unum;
-        fwrite(&vfmt, sizeof(val_fmt), 1, outfile_pointer);
-    }
+    save_values(vm->val_store, outfile_pointer);
+    save_values(vm->const_store, outfile_pointer);
 
     // save the instruction store
     fwrite(vm->inst->list, sizeof(uint8_t), vm->inst->len, outfile_pointer);
@@ -79,19 +107,8 @@ VirtualMachine* loadVM(const char* fname)
     }
 
     // load the value store
-    vm->val_store->len = vmf.vstore_len;
-    while(vm->val_store->len >= vm->val_store->cap)
-        vm->val_store->cap <<= 1;
-    vm->val_store->list = _realloc_ds_array(vm->val_store->list, Value, vm->val_store->cap);
-    for(int idx = 0; idx < vm->val_store->len; idx++) {
-        val_fmt valf;
-        fread(&valf, sizeof(val_fmt), 1, infile_pointer);
-        Value val;
-        val.type = valf.type;
-        val.isAssigned = valf.isAssigned;
-        val.data.unum = valf.value;
-        vm->val_store->list[idx] = val;
-    }
+    load_values(vmf.vstore_len, vm->val_store, infile_pointer);
+    load_values(vmf.cstore_len, vm->const_store, infile_pointer);
 
     // load the instruction store
     vm->inst->len = vmf.instr_len;

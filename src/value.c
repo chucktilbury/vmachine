@@ -17,6 +17,7 @@ static void init_error_obj(Value* obj)
 {
     obj->type = VAL_ERROR;
     obj->isAssigned = true;
+    obj->isConst = true;
     obj->data.unum = 0;
 }
 
@@ -50,6 +51,7 @@ void initVal(Value* obj, ValueType type)
 {
     obj->type = type;
     obj->isAssigned = false;
+    obj->isConst = false;
 }
 
 void pushVal(ValueStore* os, Value obj)
@@ -97,42 +99,134 @@ Value setVal(ValueStore* os, Index index, Value obj)
         return os->list[0];
 }
 
-void assignVal(Value* obj, ValueType type, void* data)
+void assignVal(Value* obj, Value* val)
 {
-    switch(type) {
-        case VAL_STRING:
+    switch(obj->type) {
+        case VAL_STRING: {
+            switch(obj->type) {
+                case VAL_STRING:
+                case VAL_ERROR:
+                    obj->data.obj = val->data.obj;
+                    break;
+                case VAL_UNUM:
+                case VAL_INUM:
+                case VAL_FNUM:
+                case VAL_BOOL:
+                case VAL_ADDRESS:
+                    runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
+                    break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
+            break;
         case VAL_ERROR:
-            obj->data.obj = *(Index*)data;
+            switch(obj->type) {
+                case VAL_STRING:
+                case VAL_ERROR:
+                    obj->data.obj = val->data.obj;
+                    break;
+                case VAL_UNUM:
+                case VAL_INUM:
+                case VAL_FNUM:
+                case VAL_BOOL:
+                case VAL_ADDRESS:
+                    runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
+                    break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
             break;
         case VAL_UNUM:
-            obj->data.unum = *((uint64_t*)data);
+            switch(obj->type) {
+                case VAL_UNUM:  obj->data.unum = val->data.unum; break;
+                case VAL_INUM:  obj->data.unum = (uint64_t)val->data.inum; break;
+                case VAL_FNUM:  obj->data.unum = (uint64_t)((int64_t)val->data.fnum); break;
+                case VAL_ADDRESS:  obj->data.unum = val->data.unum; break;
+                // errors
+                case VAL_BOOL:
+                case VAL_STRING:
+                case VAL_ERROR:
+                    runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
+                    break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
             break;
         case VAL_INUM:
-            obj->data.inum = *((int64_t*)data);
+            switch(obj->type) {
+                case VAL_UNUM:  obj->data.inum = (int64_t)val->data.unum; break;
+                case VAL_INUM:  obj->data.inum = val->data.inum; break;
+                case VAL_FNUM:  obj->data.inum = (int64_t)val->data.unum; break;
+                case VAL_ADDRESS:  obj->data.inum = (int64_t)val->data.unum; break;
+                // errors
+                case VAL_BOOL:
+                case VAL_STRING:
+                case VAL_ERROR:
+                    runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
+                    break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
             break;
         case VAL_FNUM:
-            obj->data.fnum = *((double*)data);
+            switch(obj->type) {
+                case VAL_UNUM:  obj->data.fnum = (double)val->data.unum; break;
+                case VAL_INUM:  obj->data.fnum = (double)val->data.inum; break;
+                case VAL_FNUM:  obj->data.fnum = val->data.fnum; break;
+                case VAL_ADDRESS:  obj->data.fnum = (double)val->data.unum; break;
+                // errors
+                case VAL_BOOL:
+                case VAL_STRING:
+                case VAL_ERROR:
+                    runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
+                    break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
             break;
         case VAL_BOOL:
-            obj->data.boolean = *((bool*)data);
+            switch(obj->type) {
+                case VAL_BOOL:      obj->data.boolean = val->data.boolean; break;
+                case VAL_STRING:    obj->data.boolean = val->isAssigned? true: false; break;
+                case VAL_UNUM:      obj->data.boolean = val->isAssigned? true: false; break;
+                case VAL_INUM:      obj->data.boolean = val->isAssigned? true: false; break;
+                case VAL_FNUM:      obj->data.boolean = val->isAssigned? true: false; break;
+                case VAL_ADDRESS:   obj->data.boolean = val->isAssigned? true: false; break;
+                case VAL_ERROR:     obj->data.boolean = val->isAssigned? true: false; break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
             break;
         case VAL_ADDRESS:
-            obj->data.unum = *((uint64_t*)data);
+            switch(obj->type) {
+                case VAL_UNUM:  obj->data.unum = val->data.unum; break;
+                case VAL_INUM:  obj->data.unum = (uint64_t)val->data.inum; break;
+                case VAL_ADDRESS: obj->data.unum = val->data.unum; break;
+                // errors
+                case VAL_FNUM:
+                case VAL_STRING:
+                case VAL_ERROR:
+                case VAL_BOOL:
+                    runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
+                    break;
+                default:
+                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            }
             break;
         default:
-            runtimeError("attempt to assign an unknown object type: %d", type);
+            runtimeError("attempt to assign an unknown object type: %d", obj->type);
+        }
     }
-    obj->type = type;
 }
 
 const char* valToStr(ValueType type)
 {
-    return (type == VAL_ERROR)? "VAL_ERROR":
-            (type == VAL_UNUM)? "VAL_UNUM":
-            (type == VAL_INUM)? "VAL_INUM":
-            (type == VAL_FNUM)? "VAL_FNUM":
-            (type == VAL_BOOL)? "VAL_BOOL":
-            (type == VAL_STRING)? "VAL_STRING":
-            (type == VAL_ADDRESS)? "VAL_ADDRESS": "UNKNOWN";
+    return (type == VAL_ERROR)? "ERROR":
+            (type == VAL_UNUM)? "UNUM":
+            (type == VAL_INUM)? "INUM":
+            (type == VAL_FNUM)? "FNUM":
+            (type == VAL_BOOL)? "BOOL":
+            (type == VAL_STRING)? "STRING":
+            (type == VAL_ADDRESS)? "ADDRESS": "UNKNOWN";
 }
 

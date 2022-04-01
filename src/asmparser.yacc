@@ -289,16 +289,15 @@ void negVal(Value* dest, Value val)
 %token <inum> TOK_INUM
 %token <fnum> TOK_FNUM
 %token <str> TOK_STR
-%token <opcode> TOK_ERROR TOK_NOOP TOK_EXIT TOK_CALL TOK_CALLR TOK_CALLX TOK_RETURN
-%token <opcode> TOK_JMP TOK_JMPR TOK_JMPIF TOK_JMPIFR TOK_EXCEPT TOK_PUSH TOK_POP
+%token <opcode> TOK_ERROR TOK_NOOP TOK_EXIT TOK_CALL TOK_CALLX TOK_RETURN
+%token <opcode> TOK_JMP TOK_JMPIF TOK_EXCEPT TOK_PUSH TOK_POP TOK_SAVE
 %token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT
 %token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD
-%token <type> TOK_UNUM_TYPE TOK_INUM_TYPE TOK_FNUM_TYPE
-%token <type> TOK_STR_TYPE
+%token <type> TOK_UNUM_TYPE TOK_INUM_TYPE TOK_FNUM_TYPE TOK_CONST
+%token <type> TOK_STR_TYPE TOK_BOOL_TYPE
 %token TOK_INCLUDE
 
-%type <type> type_spec
-%type <value> expression expression_factor
+%type <value> type_spec expression expression_factor
 %type <string> label
 
 %right '='
@@ -329,13 +328,60 @@ module_item
 label
     : TOK_SYMBOL {
         // create an address object
+        Value val;
+        initVal(&val, VAL_ADDRESS);
+        val.isAssigned = true;
+        val.isConst = true;
+        val.data.unum = vm->inst->len;
+        addSymbol(vm->sym_table, $1, addVal(vm->const_store, val));
     }
     ;
 
 type_spec
-    : TOK_UNUM_TYPE
-    | TOK_INUM_TYPE
-    | TOK_FNUM_TYPE
+    : TOK_UNUM_TYPE {
+        Value val;
+        initVal(&val, VAL_UNUM);
+        $$ = val;
+    }
+    | TOK_INUM_TYPE {
+        Value val;
+        initVal(&val, VAL_INUM);
+        $$ = val;
+    }
+    | TOK_FNUM_TYPE {
+        Value val;
+        initVal(&val, VAL_FNUM);
+        $$ = val;
+    }
+    | TOK_BOOL_TYPE {
+        Value val;
+        initVal(&val, VAL_BOOL);
+        $$ = val;
+    }
+    | TOK_CONST TOK_UNUM_TYPE {
+        Value val;
+        initVal(&val, VAL_UNUM);
+        val.isConst = true;
+        $$ = val;
+    }
+    | TOK_CONST TOK_INUM_TYPE {
+        Value val;
+        initVal(&val, VAL_INUM);
+        val.isConst = true;
+        $$ = val;
+    }
+    | TOK_CONST TOK_FNUM_TYPE {
+        Value val;
+        initVal(&val, VAL_FNUM);
+        val.isConst = true;
+        $$ = val;
+    }
+    | TOK_CONST TOK_BOOL_TYPE {
+        Value val;
+        initVal(&val, VAL_BOOL);
+        val.isConst = true;
+        $$ = val;
+    }
     ;
 
 include_statement
@@ -346,37 +392,25 @@ data_definition
     : type_spec TOK_SYMBOL {
         // create an uninitialized object of the given type and store the
         // name into the symbol table.
-        Value val;
-        Index idx = addStrStore(vm->str_store, $2);
-        initValue(&val, $1, idx);
-        val.isAssigned = false;
-        int slot = addValStore(vm->val_store, val);
-        //addSymbol($2, slot);
+        addSymbol(vm->sym_table, $2, addVal(vm->val_store, $1));
     }
     | type_spec TOK_SYMBOL '=' expression {
         // create a numeric value of the given type and store it in the value
         // store, then store the symbol in the symbol table.
-        Value val;
-        Index idx = addStrStore(vm->str_store, $2);
-        initValue(&val, $1, idx);
-        val.isAssigned = true;
-        switch($1) {
-            case VAL_UNUM: val.data.unum = $4.data.unum; break;
-            case VAL_INUM: val.data.inum = $4.data.inum; break;
-            case VAL_FNUM: val.data.fnum = $4.data.fnum; break;
-        }
-        int slot = addValStore(vm->val_store, val);
+        $1.isAssigned = true;
+        assignVal(&$1, &$4);
+        addSymbol(vm->sym_table, $2, addVal(vm->val_store, $1));
     }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
-        // Add the string to the string store, then vreate the value opbect
+        // Add the string to the string store, then create the value object
         // that references it. Then store the name in the symbol table with
         // the slot number of the value (not the string)
         Value val;
-        Index idx = addStrStore(vm->str_store, $2);
-        initValue(&val, $1, idx);
+        Index idx = addStr(vm->str_store, $4);
+        initVal(&val, $1);
         val.isAssigned = true;
-        val.data.str = $4;
-        int slot = addValStore(vm->val_store, val);
+        val.data.obj = idx;
+        addSymbol(vm->sym_table, $2, addVal(vm->val_store, val));
     }
     ;
 
@@ -402,48 +436,43 @@ class1_instruction
     | TOK_PRINT { WRITE8(vm, OP_PRINT); }
     ;
 
-    /* instructions that have an immediate operand. the operand is an
-        expression. */
+    /* instructions that have an immediate operand. the operand is a
+        constant value */
 class2_instruction
-    : TOK_CALL TOK_SYMBOL {
+    : TOK_CALL expression {
         WRITE8(vm, OP_CALL);
-        WRITE16(vm, findSymbol($2));
+        WRITE16(vm, addVal(vm->const_store, $2));
     }
-    | TOK_CALLR TOK_SYMBOL {
-        WRITE8(vm, OP_CALLR);
-        WRITE16(vm, findSymbol($2));
-    }
-    | TOK_JMP TOK_SYMBOL {
+    | TOK_JMP expression {
         WRITE8(vm, OP_JMP);
-        WRITE16(vm, findSymbol($2));
+        WRITE16(vm, addVal(vm->const_store, $2));
     }
-    | TOK_JMPR TOK_SYMBOL {
-        WRITE8(vm, OP_JMPR);
-        WRITE16(vm, findSymbol($2));
-    }
-    | TOK_JMPIF TOK_SYMBOL {
+    | TOK_JMPIF expression {
         WRITE8(vm, OP_JMPIF);
-        WRITE16(vm, findSymbol($2));
+        WRITE16(vm, addVal(vm->const_store, $2));
     }
-    | TOK_JMPIFR TOK_SYMBOL {
-        WRITE8(vm, OP_JMPIFR);
-        WRITE16(vm, findSymbol($2));
-    }
-    | TOK_CALLX TOK_SYMBOL {
+    | TOK_CALLX expression {
         WRITE8(vm, OP_CALLX);
-        WRITE16(vm, findSymbol($2));
+        WRITE16(vm, addVal(vm->const_store, $2));
     }
-    | TOK_PUSH TOK_SYMBOL {
-        WRITE8(vm, OP_PUSH);
-        WRITE16(vm, findSymbol($2));
-    }
-    | TOK_EXCEPT TOK_SYMBOL {
+    | TOK_EXCEPT expression {
         WRITE8(vm, OP_EXCEPT);
-        WRITE16(vm, findSymbol($2));
+        WRITE16(vm, addVal(vm->const_store, $2));
     }
-    | TOK_ERROR TOK_SYMBOL {
+    | TOK_ERROR expression {
         WRITE8(vm, OP_ERROR);
-        WRITE16(vm, findSymbol($2));
+        WRITE16(vm, addVal(vm->const_store, $2));
+    }
+
+    /* Instructions that have have an operand that is a variable value. */
+class3_instruction
+    : TOK_PUSH TOK_SYMBOL {
+        WRITE8(vm, OP_PUSH);
+        WRITE16(vm, findSymbol(vm->sym_table, $2));
+    }
+    | TOK_SAVE TOK_SYMBOL {
+        WRITE8(vm, OP_SAVE);
+        WRITE16(vm, findSymbol(vm->sym_table, $2));
     }
     ;
 
@@ -454,6 +483,7 @@ instruction_block
 instruction_item
     : class1_instruction
     | class2_instruction
+    | class3_instruction
     ;
 
 instruction_list
@@ -465,8 +495,8 @@ expression_factor
     : TOK_SYMBOL {
         // find the value associated with the symbol and use it in the
         // expression.
-        int slot = findSymbol($1);
-        Value val = getValStore(vm->val_store, slot);
+        int slot = findSymbol(vm->sym_table, $1);
+        Value val = getVal(vm->val_store, slot);
         if(!val.isAssigned)
             syntaxError("symbol \"%s\" has not been assigned a value", $1);
         memcpy(&$$, &val, sizeof(Value));
@@ -485,7 +515,7 @@ expression_factor
     }
     | TOK_STR {
         // this is here to produce an error
-        $$.data.str = $1;
+        $$.data.obj = addStr(vm->str_store, $1);
         $$.type = VAL_STRING;
     }
     ;
@@ -523,7 +553,7 @@ int main(int argc, char** argv)
     vm = createVirtualMachine();
     yyparse();
     if(error_count == 0)
-        saveVM(argv[2], vm);
+        saveVM(vm, argv[2]);
 
     return error_count;
 }

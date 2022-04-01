@@ -96,6 +96,8 @@ static void update_loc(void){
 "float"         { yylval.type = VAL_FNUM; return TOK_FNUM_TYPE; }
 "int"           { yylval.type = VAL_INUM; return TOK_INUM_TYPE; }
 "uint"          { yylval.type = VAL_UNUM; return TOK_UNUM_TYPE; }
+"bool"          { yylval.type = VAL_BOOL; return TOK_BOOL_TYPE; }
+"const"         { return TOK_CONST; }
 
 "error"         { yylval.opcode = OP_ERROR; return TOK_ERROR; }
 "noop"          { yylval.opcode = OP_NOOP; return TOK_NOOP; }
@@ -107,6 +109,7 @@ static void update_loc(void){
 "jmpif"         { yylval.opcode = OP_JMPIF; return TOK_JMPIF; }
 "except"        { yylval.opcode = OP_EXCEPT; return TOK_EXCEPT; }
 "push"          { yylval.opcode = OP_PUSH; return TOK_PUSH; }
+"save"          { yylval.opcode = OP_SAVE; return TOK_SAVE; }
 "pop"           { yylval.opcode = OP_POP; return TOK_POP; }
 "not"           { yylval.opcode = OP_NOT; return TOK_NOT; }
 "eq"            { yylval.opcode = OP_EQ; return TOK_EQ; }

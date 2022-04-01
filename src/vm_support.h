@@ -14,7 +14,7 @@ typedef struct {
     ValueStore* val_store;
     ValueStore* const_store;
     StrStore* str_store;
-    Symbol* table;
+    Symbol* sym_table;
 } VirtualMachine;
 
 void runMachine(VirtualMachine* vm);

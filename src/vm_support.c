@@ -13,7 +13,7 @@ VirtualMachine* createVirtualMachine()
     vm->val_store = createValStore();
     vm->const_store = createValStore();
     vm->str_store = createStrStore();
-    vm->table = createSymbols();
+    vm->sym_table = createSymbols();
 
     return vm;
 }
@@ -26,7 +26,7 @@ void destroyVirtualMachine(VirtualMachine* vm)
         destroyValStore(vm->val_store);
         destroyValStore(vm->const_store);
         destroyStrStore(vm->str_store);
-        destroySymbols(vm->table);
+        destroySymbols(vm->sym_table);
         _free(vm);
     }
 }
@@ -81,12 +81,12 @@ void runMachine(VirtualMachine* vm)
 
             // no operand binary operation pops 2 values and pushes a
             // boolean result.
-            case OP_EQ:         CBINARY(==); break;
-            case OP_NEQ:     CBINARY(!=); break;
+            case OP_EQ:     CBINARY(==); break;
+            case OP_NEQ:    CBINARY(!=); break;
             case OP_LEQ:    CBINARY(<=); break;
-            case OP_GEQ:     CBINARY(>=); break;
-            case OP_LESS:       CBINARY(<); break;
-            case OP_GTR:    CBINARY(>); break;
+            case OP_GEQ:    CBINARY(>=); break;
+            case OP_LESS:   CBINARY(<);  break;
+            case OP_GTR:    CBINARY(>);  break;
 
             // no operand binary operation pops 2 operands and pushes a
             // numeric value as the result.
@@ -114,21 +114,12 @@ void runMachine(VirtualMachine* vm)
                 break;
             }
 
-            // create an object from a constant on the instruction stream
-            // and push it on the value stack.
-            case OP_CONSTANT: {
-                uint16_t type = READ16(vm);
-                uint64_t value = READ64(vm);
-                VTRACE(5, "%08d %s\t%s", IP(vm), opToStr(opcode), valToStr(type));
-                Value obj;
-                assignVal(&obj, type, &value);
-                printValue(vm, obj);
-                PUSH(vm, obj);
-                break;
-            }
-
-            case OP_FREE: {
-                VTRACE(5, "%08d %s\t%08d", IP(vm), opToStr(opcode), READ16(vm));
+            // copy a var from the top of stack into the value pool.
+            case OP_SAVE: {
+                Index idx = READ16(vm);
+                Value val;
+                PEEK(vm, val);
+                assignVal(&vm->val_store->list[idx], &val);
                 break;
             }
 

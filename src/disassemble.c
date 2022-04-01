@@ -55,16 +55,6 @@ void disassemble(VirtualMachine* vm)
                 break;
             }
 
-            case OP_CONSTANT: {
-                printf("%08d: %s\t\t", IP(vm), opToStr(inst));
-                uint16_t type = READ16(vm);
-                uint64_t data = READ64(vm);
-                Value obj;
-                assignVal(&obj, type, &data);
-                printValue(vm, obj);
-                break;
-            }
-
             // 16 bit signed operand
             case OP_JMP:
             case OP_JMPIF: {
