@@ -8,12 +8,12 @@
 
 %{
 
-#include <math.h>
+#include "common.h"
 #include <stdarg.h>
 
-#include "common.h"
 #include "vm_support.h"
 #include "scanner.h"
+#include "pars_support.h"
 
 // defined by flex
 extern int yylex(void);
@@ -22,8 +22,8 @@ extern FILE *yyin;
 void yyerror(const char* s);
 
 int error_count = 0;
-
-VirtualMachine* vm = NULL;
+VMachine* vm = NULL;
+Symbol* sym_table = NULL;
 
 #define TOKSTR get_tok_str()
 
@@ -37,235 +37,6 @@ void syntaxError(const char* fmt, ...)
     vfprintf(stderr, fmt, args);
     va_end(args);
     fputc('\n', stderr);
-}
-
-void addVals(Value* dest, Value left, Value right)
-{
-    dest->type = left.type;
-    switch(left.type) {
-        case VAL_UNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.unum = left.data.unum + right.data.unum; break;
-                case VAL_INUM: dest->data.unum = left.data.unum + (uint64_t)right.data.inum; break;
-                case VAL_FNUM: dest->data.unum = left.data.unum + (uint64_t)((int64_t)right.data.fnum); break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_INUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.inum = left.data.inum + (int64_t)right.data.unum; break;
-                case VAL_INUM: dest->data.inum = left.data.inum + right.data.inum; break;
-                case VAL_FNUM: dest->data.inum = left.data.inum + (int64_t)right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_FNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.fnum = left.data.fnum + (double)right.data.unum; break;
-                case VAL_INUM: dest->data.fnum = left.data.fnum + (double)right.data.inum; break;
-                case VAL_FNUM: dest->data.fnum = left.data.fnum + right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-}
-
-void subVals(Value* dest, Value left, Value right)
-{
-    dest->type = left.type;
-    switch(left.type) {
-        case VAL_UNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.unum = left.data.unum - right.data.unum; break;
-                case VAL_INUM: dest->data.unum = left.data.unum - (uint64_t)right.data.inum; break;
-                case VAL_FNUM: dest->data.unum = left.data.unum - (uint64_t)((int64_t)right.data.fnum); break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_INUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.inum = left.data.inum - (int64_t)right.data.unum; break;
-                case VAL_INUM: dest->data.inum = left.data.inum - right.data.inum; break;
-                case VAL_FNUM: dest->data.inum = left.data.inum - (int64_t)right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_FNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.fnum = left.data.fnum - (double)right.data.unum; break;
-                case VAL_INUM: dest->data.fnum = left.data.fnum - (double)right.data.inum; break;
-                case VAL_FNUM: dest->data.fnum = left.data.fnum - right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-}
-
-void mulVals(Value* dest, Value left, Value right)
-{
-    dest->type = left.type;
-    switch(left.type) {
-        case VAL_UNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.unum = left.data.unum * right.data.unum; break;
-                case VAL_INUM: dest->data.unum = left.data.unum * (uint64_t)right.data.inum; break;
-                case VAL_FNUM: dest->data.unum = left.data.unum * (uint64_t)((int64_t)right.data.fnum); break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_INUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.inum = left.data.inum * (int64_t)right.data.unum; break;
-                case VAL_INUM: dest->data.inum = left.data.inum * right.data.inum; break;
-                case VAL_FNUM: dest->data.inum = left.data.inum * (int64_t)right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_FNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.fnum = left.data.fnum * (double)right.data.unum; break;
-                case VAL_INUM: dest->data.fnum = left.data.fnum * (double)right.data.inum; break;
-                case VAL_FNUM: dest->data.fnum = left.data.fnum * right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-}
-
-void divVals(Value* dest, Value left, Value right)
-{
-    dest->type = left.type;
-    switch(right.type) {
-        case VAL_UNUM:
-            if(right.data.unum == 0) {
-                syntaxError("divide by zero");
-                return;
-            }
-            break;
-        case VAL_INUM:
-            if(right.data.inum == 0) {
-                syntaxError("divide by zero");
-                return;
-            }
-            break;
-        case VAL_FNUM:
-            if(right.data.fnum == 0.0) {
-                syntaxError("divide by zero");
-                return;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-
-    switch(left.type) {
-        case VAL_UNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.unum = left.data.unum / right.data.unum; break;
-                case VAL_INUM: dest->data.unum = left.data.unum / (uint64_t)right.data.inum; break;
-                case VAL_FNUM: dest->data.unum = left.data.unum / (uint64_t)((int64_t)right.data.fnum); break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_INUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.inum = left.data.inum / (int64_t)right.data.unum; break;
-                case VAL_INUM: dest->data.inum = left.data.inum / right.data.inum; break;
-                case VAL_FNUM: dest->data.inum = left.data.inum / (int64_t)right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_FNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.fnum = left.data.fnum / (double)right.data.unum; break;
-                case VAL_INUM: dest->data.fnum = left.data.fnum / (double)right.data.inum; break;
-                case VAL_FNUM: dest->data.fnum = left.data.fnum / right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-}
-
-void modVals(Value* dest, Value left, Value right)
-{
-    dest->type = left.type;
-    switch(right.type) {
-        case VAL_UNUM:
-            if(right.data.unum == 0) {
-                syntaxError("divide by zero");
-                return;
-            }
-            break;
-        case VAL_INUM:
-            if(right.data.inum == 0) {
-                syntaxError("divide by zero");
-                return;
-            }
-            break;
-        case VAL_FNUM:
-            if(right.data.fnum == 0.0) {
-                syntaxError("divide by zero");
-                return;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-
-    switch(left.type) {
-        case VAL_UNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.unum = left.data.unum % right.data.unum; break;
-                case VAL_INUM: dest->data.unum = left.data.unum % (uint64_t)right.data.inum; break;
-                case VAL_FNUM: dest->data.unum = left.data.unum % (uint64_t)((int64_t)right.data.fnum); break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_INUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.inum = left.data.inum % (int64_t)right.data.unum; break;
-                case VAL_INUM: dest->data.inum = left.data.inum % right.data.inum; break;
-                case VAL_FNUM: dest->data.inum = left.data.inum % (int64_t)right.data.fnum; break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        case VAL_FNUM:
-            switch(right.type) {
-                case VAL_UNUM: dest->data.fnum = fmod(left.data.fnum, (double)right.data.unum); break;
-                case VAL_INUM: dest->data.fnum = fmod(left.data.fnum, (double)right.data.inum); break;
-                case VAL_FNUM: dest->data.fnum = fmod(left.data.fnum, right.data.fnum); break;
-                default: syntaxError("only numbers allowed in expressions"); break;
-            }
-            break;
-        default:
-            syntaxError("only numbers allowed in expressions");
-            break;
-    }
-}
-
-void negVal(Value* dest, Value val)
-{
-    dest->type = val.type;
-    switch(val.type) {
-        case VAL_UNUM: dest->data.unum = (uint64_t)(-(int64_t)val.data.unum); break;
-        case VAL_INUM: dest->data.unum = -val.data.inum; break;
-        case VAL_FNUM: dest->data.unum = -val.data.fnum; break;
-        default: syntaxError("only numbers allowed in expressions"); break;
-    }
 }
 
 %}
@@ -328,12 +99,16 @@ module_item
 label
     : TOK_SYMBOL {
         // create an address object
-        Value val;
-        initVal(&val, VAL_ADDRESS);
-        val.isAssigned = true;
-        val.isConst = true;
-        val.data.unum = vm->inst->len;
-        addSymbol(vm->sym_table, $1, addVal(vm->const_store, val));
+        if(findSymbol($1))
+            syntaxError("symbol \"%s\" has already been defined", $1);
+        else {
+            Value val;
+            initVal(&val, VAL_ADDRESS);
+            val.isAssigned = true;
+            val.isConst = true;
+            val.data.unum = vm->inst->len;
+            addSymbol($1, addVal(vm->val_store, val));
+        }
     }
     ;
 
@@ -392,25 +167,36 @@ data_definition
     : type_spec TOK_SYMBOL {
         // create an uninitialized object of the given type and store the
         // name into the symbol table.
-        addSymbol(vm->sym_table, $2, addVal(vm->val_store, $1));
+        if(findSymbol($2))
+            syntaxError("symbol \"%s\" has already been defined", $2);
+        else
+            addSymbol($2, addVal(vm->val_store, $1));
     }
     | type_spec TOK_SYMBOL '=' expression {
         // create a numeric value of the given type and store it in the value
         // store, then store the symbol in the symbol table.
-        $1.isAssigned = true;
-        assignVal(&$1, &$4);
-        addSymbol(vm->sym_table, $2, addVal(vm->val_store, $1));
+        if(findSymbol($2))
+            syntaxError("symbol \"%s\" has already been defined", $2);
+        else {
+            $1.isAssigned = true;
+            assignVal(&$1, &$4);
+            addSymbol($2, addVal(vm->val_store, $1));
+        }
     }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
         // Add the string to the string store, then create the value object
         // that references it. Then store the name in the symbol table with
         // the slot number of the value (not the string)
-        Value val;
-        Index idx = addStr(vm->str_store, $4);
-        initVal(&val, $1);
-        val.isAssigned = true;
-        val.data.obj = idx;
-        addSymbol(vm->sym_table, $2, addVal(vm->val_store, val));
+        if(findSymbol($2))
+            syntaxError("symbol \"%s\" has already been defined", $2);
+        else {
+            Value val;
+            Index idx = addStr(vm->str_store, $4);
+            initVal(&val, $1);
+            val.isAssigned = true;
+            val.data.obj = idx;
+            addSymbol($2, addVal(vm->val_store, val));
+        }
     }
     ;
 
@@ -441,38 +227,38 @@ class1_instruction
 class2_instruction
     : TOK_CALL expression {
         WRITE8(vm, OP_CALL);
-        WRITE16(vm, addVal(vm->const_store, $2));
+        WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_JMP expression {
         WRITE8(vm, OP_JMP);
-        WRITE16(vm, addVal(vm->const_store, $2));
+        WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_JMPIF expression {
         WRITE8(vm, OP_JMPIF);
-        WRITE16(vm, addVal(vm->const_store, $2));
+        WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_CALLX expression {
         WRITE8(vm, OP_CALLX);
-        WRITE16(vm, addVal(vm->const_store, $2));
+        WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_EXCEPT expression {
         WRITE8(vm, OP_EXCEPT);
-        WRITE16(vm, addVal(vm->const_store, $2));
+        WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_ERROR expression {
         WRITE8(vm, OP_ERROR);
-        WRITE16(vm, addVal(vm->const_store, $2));
+        WRITE16(vm, addVal(vm->val_store, $2));
     }
 
     /* Instructions that have have an operand that is a variable value. */
 class3_instruction
     : TOK_PUSH TOK_SYMBOL {
         WRITE8(vm, OP_PUSH);
-        WRITE16(vm, findSymbol(vm->sym_table, $2));
+        WRITE16(vm, findSymbol($2));
     }
     | TOK_SAVE TOK_SYMBOL {
         WRITE8(vm, OP_SAVE);
-        WRITE16(vm, findSymbol(vm->sym_table, $2));
+        WRITE16(vm, findSymbol($2));
     }
     ;
 
@@ -495,7 +281,7 @@ expression_factor
     : TOK_SYMBOL {
         // find the value associated with the symbol and use it in the
         // expression.
-        int slot = findSymbol(vm->sym_table, $1);
+        int slot = findSymbol($1);
         Value val = getVal(vm->val_store, slot);
         if(!val.isAssigned)
             syntaxError("symbol \"%s\" has not been assigned a value", $1);
@@ -511,6 +297,7 @@ expression_factor
     }
     | TOK_FNUM {
         $$.data.fnum = $1;
+        printf("number: %0.3f\n", $1);
         $$.type = VAL_FNUM;
     }
     | TOK_STR {
@@ -550,11 +337,17 @@ int main(int argc, char** argv)
     }
 
     open_file(argv[1]);
-    vm = createVirtualMachine();
+    vm = createVMachine();
     yyparse();
     if(error_count == 0)
         saveVM(vm, argv[2]);
 
+    dumpSymbols(vm);
+
+    destroyVMachine(vm);
+    destroySymbols(sym_table);
+
+    printf("error count = %d\n", error_count);
     return error_count;
 }
 

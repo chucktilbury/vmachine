@@ -24,6 +24,7 @@ SLST	=	file_io.c \
 			utils.c \
 			strings.c \
 			symbols.c \
+			pars_support.c \
 			vm_support.c
 
 HLST	=	common.h \
@@ -35,6 +36,7 @@ HLST	=	common.h \
 			utils.h \
 			strings.h \
 			symbols.h \
+			pars_support.h \
 			vm_support.h
 
 OBJS 	=	$(foreach item, $(SLST:.c=.o), $(addprefix $(OBJDIR)/, $(item)))
@@ -68,7 +70,7 @@ $(VM): $(SRCDIR)/vm.c $(VMLIB)
 	gcc $(COPTS) -o $(VM) $(SRCDIR)/vm.c $(LIBS)
 
 $(ASM): $(SRCDIR)/asmparser.c $(SRCDIR)/asmscanner.c
-	gcc $(COPTS) -o $(ASM) $(SRCDIR)/asmparser.c $(SRCDIR)/asmscanner.c  $(LIBS)
+	gcc $(COPTS) -o $(ASM) $(SRCDIR)/asmparser.c $(SRCDIR)/asmscanner.c $(LIBS)
 
 $(SRCDIR)/asmparser.c: $(SRCDIR)/asmparser.yacc
 	bison --report=lookahead -tvdo $(SRCDIR)/asmparser.c $(SRCDIR)/asmparser.yacc

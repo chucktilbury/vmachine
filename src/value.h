@@ -49,6 +49,8 @@ void pushVal(ValueStore* os, Value obj);
 Value popVal(ValueStore* os);
 Value peekVal(ValueStore* os);
 
+void dumpVals(VMachine* vm);
+
 #define PUSH(vm, obj)   do { pushVal(vm->val_stack, (obj)); } while(0)
 #define COPY(vm, n)     do { pushVal(vm->val_stack, getVal(vm->val_store, (n))); } while(0)
 #define POP(vm, o)      do { (o) = popVal(vm->val_stack); } while(0)

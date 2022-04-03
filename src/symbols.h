@@ -12,10 +12,11 @@ typedef struct _sym_ {
     struct _sym_* right;
 } Symbol;
 
-Symbol* createSymbols();
-void destroySymbols(Symbol* table);
+void destroySymbols();
 
-void addSymbol(Symbol* table, const char* key, Index idx);
-Index findSymbol(Symbol* table, const char* key);
+void addSymbol(const char* key, Index idx);
+Index findSymbol(const char* key);
+
+void dumpSymbols(VMachine* vm);
 
 #endif

@@ -13,7 +13,7 @@ void readInstStore(FILE* fp, InstStore* is);
 void writeStrStore(FILE* fp, StrStore* ss);
 void readStrStore(FILE* fp, StrStore* ss);
 
-VirtualMachine* loadVM(const char* fname);
-void saveVM(VirtualMachine* vm, const char* fname);
+VMachine* loadVM(const char* fname);
+void saveVM(VMachine* vm, const char* fname);
 
 #endif

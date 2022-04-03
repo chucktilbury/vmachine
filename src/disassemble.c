@@ -5,17 +5,18 @@
 
 #include "vm_support.h"
 
-void disassemble(VirtualMachine* vm)
+void disassemble(VMachine* vm)
 {
     bool finished = false;
     int inst = 0;
 
     while(!finished) {
+        printf("%04d: ", IP(vm));
         inst = READ8(vm);
         //printf("instruction: %s\n", opToStr(instruction));
         switch(inst) {
             case OP_EXIT:
-                printf("%08d: %s\n", IP(vm), opToStr(inst));
+                printf("%s\n", opToStr(inst));
                 finished = true;
                 break;
 
@@ -40,18 +41,17 @@ void disassemble(VirtualMachine* vm)
             case OP_DIV:
             case OP_MOD:
             case OP_PRINT: {
-                printf("%08d: %s\n", IP(vm), opToStr(inst));
+                printf("%s\n", opToStr(inst));
                 break;
             }
 
             // 16 bit operand
             case OP_CALL:
             case OP_CALLX:
-            case OP_PUSH:
-            case OP_FREE: {
+            case OP_PUSH: {
                 uint16_t oper = READ16(vm);
-                printf("%08d: %s\t0x%04X\t", IP(vm), opToStr(inst), oper);
-                printValue(vm, getVal(vm->val_store, oper));
+                printf("%s\t%4d\t", opToStr(inst), oper);
+                printVal(vm, getVal(vm->val_store, oper));
                 break;
             }
 
@@ -59,8 +59,8 @@ void disassemble(VirtualMachine* vm)
             case OP_JMP:
             case OP_JMPIF: {
                 int oper = (int)READ16(vm);
-                printf("%08d: %s\t%d\t", IP(vm), opToStr(inst), oper);
-                printValue(vm, getVal(vm->val_store, oper));
+                printf("%s\t%d\t", opToStr(inst), oper);
+                printVal(vm, getVal(vm->val_store, oper));
                 break;
             }
 
@@ -84,8 +84,10 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    VirtualMachine* vm = loadVM(argv[1]);
+    VMachine* vm = loadVM(argv[1]);
     disassemble(vm);
+
+    dumpVals(vm);
 
     return 0;
 }

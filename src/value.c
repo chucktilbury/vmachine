@@ -103,7 +103,7 @@ void assignVal(Value* obj, Value* val)
 {
     switch(obj->type) {
         case VAL_STRING: {
-            switch(obj->type) {
+            switch(val->type) {
                 case VAL_STRING:
                 case VAL_ERROR:
                     obj->data.obj = val->data.obj;
@@ -120,7 +120,7 @@ void assignVal(Value* obj, Value* val)
             }
             break;
         case VAL_ERROR:
-            switch(obj->type) {
+            switch(val->type) {
                 case VAL_STRING:
                 case VAL_ERROR:
                     obj->data.obj = val->data.obj;
@@ -137,7 +137,7 @@ void assignVal(Value* obj, Value* val)
             }
             break;
         case VAL_UNUM:
-            switch(obj->type) {
+            switch(val->type) {
                 case VAL_UNUM:  obj->data.unum = val->data.unum; break;
                 case VAL_INUM:  obj->data.unum = (uint64_t)val->data.inum; break;
                 case VAL_FNUM:  obj->data.unum = (uint64_t)((int64_t)val->data.fnum); break;
@@ -153,10 +153,10 @@ void assignVal(Value* obj, Value* val)
             }
             break;
         case VAL_INUM:
-            switch(obj->type) {
+            switch(val->type) {
                 case VAL_UNUM:  obj->data.inum = (int64_t)val->data.unum; break;
                 case VAL_INUM:  obj->data.inum = val->data.inum; break;
-                case VAL_FNUM:  obj->data.inum = (int64_t)val->data.unum; break;
+                case VAL_FNUM:  obj->data.inum = (int64_t)val->data.fnum; break;
                 case VAL_ADDRESS:  obj->data.inum = (int64_t)val->data.unum; break;
                 // errors
                 case VAL_BOOL:
@@ -169,11 +169,11 @@ void assignVal(Value* obj, Value* val)
             }
             break;
         case VAL_FNUM:
-            switch(obj->type) {
-                case VAL_UNUM:  obj->data.fnum = (double)val->data.unum; break;
+            switch(val->type) {
+                case VAL_UNUM:  obj->data.fnum = (double)((int64_t)val->data.unum); break;
                 case VAL_INUM:  obj->data.fnum = (double)val->data.inum; break;
                 case VAL_FNUM:  obj->data.fnum = val->data.fnum; break;
-                case VAL_ADDRESS:  obj->data.fnum = (double)val->data.unum; break;
+                case VAL_ADDRESS: obj->data.fnum = (double)((int64_t)val->data.unum); break;
                 // errors
                 case VAL_BOOL:
                 case VAL_STRING:
@@ -185,7 +185,7 @@ void assignVal(Value* obj, Value* val)
             }
             break;
         case VAL_BOOL:
-            switch(obj->type) {
+            switch(val->type) {
                 case VAL_BOOL:      obj->data.boolean = val->data.boolean; break;
                 case VAL_STRING:    obj->data.boolean = val->isAssigned? true: false; break;
                 case VAL_UNUM:      obj->data.boolean = val->isAssigned? true: false; break;
@@ -198,7 +198,7 @@ void assignVal(Value* obj, Value* val)
             }
             break;
         case VAL_ADDRESS:
-            switch(obj->type) {
+            switch(val->type) {
                 case VAL_UNUM:  obj->data.unum = val->data.unum; break;
                 case VAL_INUM:  obj->data.unum = (uint64_t)val->data.inum; break;
                 case VAL_ADDRESS: obj->data.unum = val->data.unum; break;
@@ -230,3 +230,11 @@ const char* valToStr(ValueType type)
             (type == VAL_ADDRESS)? "ADDRESS": "UNKNOWN";
 }
 
+void dumpVals(VMachine* vm)
+{
+
+    for(int i = 0; i < vm->val_store->len; i++) {
+        printf("%3d. ", i);
+        printVal(vm, vm->val_store->list[i]);
+    }
+}

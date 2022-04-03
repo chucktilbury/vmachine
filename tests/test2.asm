@@ -1,8 +1,8 @@
 /*
-    Multi line comment
+    Test aritmetic on unsigned integers
  */
-int some_name = 22 + 3
-int another_name = 123
+uint some_name = 22 + 3
+uint another_name = 123
 
 _symbol_123
     push some_name
@@ -14,3 +14,4 @@ _symbol_123
     print
     noop
     exit
+

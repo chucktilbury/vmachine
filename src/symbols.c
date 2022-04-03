@@ -3,6 +3,8 @@
 #include "common.h"
 #include "vm_support.h"
 
+extern Symbol* sym_table;
+
 int add(Symbol* tree, Symbol* node)
 {
     int val = strcmp(tree->key, node->key);
@@ -57,45 +59,50 @@ static void destroy(Symbol* tree)
     _free(tree);
 }
 
-void addSymbol(Symbol* table, const char* key, Index idx)
-{
-    if(table->key != NULL) {
-        Symbol* obj = _alloc_ds(Symbol);
-        obj->idx = idx;
-        obj->key = strdup(key);
-        obj->len = strlen(key);
-        add(table, obj);
-    }
-    else {
-        table->idx = idx;
-        table->key = strdup(key);
-        table->len = strlen(key);
-    }
-}
-
-Index findSymbol(Symbol* table, const char* key)
-{
-    if(table->key != NULL)
-        return find(table, key);
-    else
-        return 0; // error
-}
-
-Symbol* createSymbols()
+void addSymbol(const char* key, Index idx)
 {
     Symbol* obj = _alloc_ds(Symbol);
-    obj->idx = 0;
-    obj->key = NULL;
-    obj->len = 0;
+    obj->idx = idx;
+    obj->key = strdup(key);
+    obj->len = strlen(key);
 
-    return obj;
+    if(sym_table != NULL)
+        add(sym_table, obj);
+    else
+        sym_table = obj;
 }
 
-void destroySymbols(Symbol* table)
+Index findSymbol(const char* key)
 {
-    if(table != NULL)
-        destroy(table);
+    if(sym_table != NULL)
+        return find(sym_table, key);
+    else
+        return 0; // error value
 }
+
+void destroySymbols()
+{
+    if(sym_table != NULL)
+        destroy(sym_table);
+}
+
+static void dump(VMachine* vm, Symbol* sym)
+{
+    if(sym->right != NULL)
+        dump(vm, sym->right);
+
+    if(sym->left != NULL)
+        dump(vm, sym->left);
+
+    printf("key: %-15s index: %-4u ", sym->key, sym->idx);
+    printVal(vm, getVal(vm->val_store, sym->idx));
+}
+
+void dumpSymbols(VMachine* vm)
+{
+    dump(vm, sym_table);
+}
+
 
 /* // simple binary tree
 typedef struct _sym_tab_ {

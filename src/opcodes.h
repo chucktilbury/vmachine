@@ -37,9 +37,12 @@ typedef enum {
     OP_MOD,     // arithmetic modulo
 
     OP_PRINT,   // print the value at the top of the stack
-    //OP_TRAP,    // immediate is an 8 bit trap number
 
-    OP_FREE,     // not found a use yet
+    OP_SETZ,    // set the zero flag
+    OP_CLRZ,    // clear the zero flag
+
+    //OP_TRAP,    // immediate is an 8 bit trap number
+    //OP_FREE,     // not found a use yet
 } OpCodes;
 
 const char* opToStr(OpCodes op);

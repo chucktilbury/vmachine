@@ -12,10 +12,12 @@ void dump_buffer(uint8_t* buffer, int size) {
 int virtualMachine(const char* fname)
 {
     // load the file
-    VirtualMachine* vm = loadVM(fname); //createVirtualMachine();
+    VMachine* vm = loadVM(fname); //createVirtualMachine();
 
     // run the program
     runMachine(vm);
+
+    destroyVMachine(vm);
     return 0;
 }
 

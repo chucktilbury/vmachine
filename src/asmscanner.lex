@@ -163,6 +163,7 @@ static void update_loc(void){
 ([0-9]*\.)?[0-9]+([Ee][-+]?[0-9]+)? {
         //yylval.literal.fpval = strtod(yytext, NULL);
         yylval.fnum = strtod(yytext, NULL);
+        printf("number: %0.3f\n", yylval.fnum);
         return TOK_FNUM;
     }
 

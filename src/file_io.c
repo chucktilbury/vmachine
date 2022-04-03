@@ -12,7 +12,6 @@ typedef struct {
 typedef struct {
     size_t sstore_len;
     size_t vstore_len;
-    size_t cstore_len;
     size_t instr_len;
 } vm_fmt;
 
@@ -23,6 +22,7 @@ static void save_values(ValueStore* store, FILE* fp)
         Value val = store->list[idx];
         vfmt.type = val.type;
         vfmt.isAssigned = val.isAssigned;
+        vfmt.isConst = val.isConst;
         vfmt.value = val.data.unum;
         fwrite(&vfmt, sizeof(val_fmt), 1, fp);
     }
@@ -47,7 +47,7 @@ static void load_values(size_t len, ValueStore* store, FILE* fp)
     }
 }
 
-void saveVM(VirtualMachine* vm, const char* fname)
+void saveVM(VMachine* vm, const char* fname)
 {
     FILE* outfile_pointer = fopen(fname, "wb");
     assert(outfile_pointer != NULL);
@@ -55,7 +55,6 @@ void saveVM(VirtualMachine* vm, const char* fname)
     vm_fmt header;
     header.sstore_len = vm->str_store->len;
     header.vstore_len = vm->val_store->len;
-    header.cstore_len = vm->const_store->len;
     header.instr_len = vm->inst->len;
     fwrite(&header, sizeof(vm_fmt), 1, outfile_pointer);
 
@@ -70,7 +69,6 @@ void saveVM(VirtualMachine* vm, const char* fname)
 
     // save the value store
     save_values(vm->val_store, outfile_pointer);
-    save_values(vm->const_store, outfile_pointer);
 
     // save the instruction store
     fwrite(vm->inst->list, sizeof(uint8_t), vm->inst->len, outfile_pointer);
@@ -78,10 +76,10 @@ void saveVM(VirtualMachine* vm, const char* fname)
     fclose(outfile_pointer);
 }
 
-VirtualMachine* loadVM(const char* fname)
+VMachine* loadVM(const char* fname)
 {
 
-    VirtualMachine* vm = createVirtualMachine();
+    VMachine* vm = createVMachine();
 
     FILE* infile_pointer = fopen(fname, "rb");
     assert(infile_pointer != NULL);
@@ -108,7 +106,6 @@ VirtualMachine* loadVM(const char* fname)
 
     // load the value store
     load_values(vmf.vstore_len, vm->val_store, infile_pointer);
-    load_values(vmf.cstore_len, vm->const_store, infile_pointer);
 
     // load the instruction store
     vm->inst->len = vmf.instr_len;
@@ -169,9 +166,9 @@ void readStrStore(FILE* fp, StrStore* ss)
 }
 
 
-VirtualMachine* loadVM(const char* fname)
+VMachine* loadVM(const char* fname)
 {
-    VirtualMachine* vm = createVirtualMachine();
+    VMachine* vm = createVirtualMachine();
 
     FILE* infile_pointer = fopen(fname, "rb");
     assert(infile_pointer != NULL);
@@ -183,7 +180,7 @@ VirtualMachine* loadVM(const char* fname)
     return vm;
 }
 
-void saveVM(const char* fname, VirtualMachine* vm)
+void saveVM(const char* fname, VMachine* vm)
 {
     FILE* outfile_pointer = fopen(fname, "wb");
     assert(outfile_pointer != NULL);

@@ -3,16 +3,19 @@
         "ABINARY",
         "CALLR",
         "CBINARY",
+        "CLRZ",
         "eobj",
         "FNUM",
         "INUM",
         "JMPIF",
         "JMPR",
+        "SETZ",
         "sfmt",
         "STRG",
         "vfmt",
         "vmachine",
-        "vstore"
+        "vstore",
+        "zflag"
     ],
     "files.associations": {
         "iterator": "c",
