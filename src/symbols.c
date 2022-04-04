@@ -1,7 +1,6 @@
 
 
 #include "common.h"
-#include "vm_support.h"
 
 extern Symbol* sym_table;
 
@@ -65,7 +64,6 @@ void addSymbol(const char* key, Index idx)
     obj->idx = idx;
     obj->key = strdup(key);
     obj->len = strlen(key);
-
     if(sym_table != NULL)
         add(sym_table, obj);
     else
@@ -95,7 +93,7 @@ static void dump(VMachine* vm, Symbol* sym)
         dump(vm, sym->left);
 
     printf("key: %-15s index: %-4u ", sym->key, sym->idx);
-    printVal(vm, getVal(vm->val_store, sym->idx));
+    printVal(getVal(vm->val_store, sym->idx));
 }
 
 void dumpSymbols(VMachine* vm)

@@ -30,6 +30,8 @@ const char* opToStr(OpCodes op)
             (op == OP_MUL)? "OP_MUL":
             (op == OP_DIV)? "OP_DIV":
             (op == OP_MOD)? "OP_MOD":
+            (op == OP_CAST)? "OP_CAST":
+            (op == OP_CAST)? "OP_SAVE":
             //(op == OP_TRAP)? "OP_TRAP":
             (op == OP_PRINT)? "OP_PRINT": "UNKNOWN";
 }

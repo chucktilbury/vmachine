@@ -41,36 +41,44 @@ void disassemble(VMachine* vm)
             case OP_DIV:
             case OP_MOD:
             case OP_PRINT: {
-                printf("%s\n", opToStr(inst));
+                    printf("%s\n", opToStr(inst));
+                }
                 break;
-            }
 
             // 16 bit operand
             case OP_CALL:
             case OP_CALLX:
             case OP_PUSH: {
-                uint16_t oper = READ16(vm);
-                printf("%s\t%4d\t", opToStr(inst), oper);
-                printVal(vm, getVal(vm->val_store, oper));
+                    uint16_t oper = READ16(vm);
+                    printf("%s\t%4d\t", opToStr(inst), oper);
+                    printVal(getVal(vm->val_store, oper));
+                }
                 break;
-            }
 
             // 16 bit signed operand
             case OP_JMP:
             case OP_JMPIF: {
-                int oper = (int)READ16(vm);
-                printf("%s\t%d\t", opToStr(inst), oper);
-                printVal(vm, getVal(vm->val_store, oper));
+                    int oper = (int)READ16(vm);
+                    printf("%s\t%d\t", opToStr(inst), oper);
+                    printVal(getVal(vm->val_store, oper));
+                }
                 break;
-            }
 
-            // 32 bit operand
             case OP_EXCEPT:
-                printf("%08d: %s\t0x%08X", IP(vm), opToStr(inst), READ32(vm));
+                printf("%s\t0x%08X", opToStr(inst), READ16(vm));
+                break;
+
+            case OP_CAST: {
+                    int oper = (int)READ16(vm);
+                    printf("%s\t%d\t", opToStr(inst), oper);
+                    printVal(getVal(vm->val_store, oper));
+                    oper = (int)READ8(vm);
+                    printf("          cast to %s\n", valToStr(oper));
+                }
                 break;
 
             default:
-                printf("invalid instruction: 0x%02X at 0x%08X", inst, IP(vm));
+                printf("invalid instruction: 0x%02X at 0x%0d\n", inst, IP(vm));
                 exit(1);
 
         }
@@ -87,7 +95,7 @@ int main(int argc, char** argv) {
     VMachine* vm = loadVM(argv[1]);
     disassemble(vm);
 
-    dumpVals(vm);
+    dumpVals(vm->val_store);
 
     return 0;
 }

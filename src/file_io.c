@@ -1,11 +1,11 @@
 
 #include "common.h"
-#include "vm_support.h"
 
 typedef struct {
     uint16_t type;
     bool isAssigned;
     bool isConst;
+    bool isLiteral;
     uint64_t value;
 } val_fmt;
 
@@ -15,34 +15,35 @@ typedef struct {
     size_t instr_len;
 } vm_fmt;
 
-static void save_values(ValueStore* store, FILE* fp)
+static void save_values(ValList* store, FILE* fp)
 {
     for(int idx = 0; idx < store->len; idx++) {
         val_fmt vfmt;
-        Value val = store->list[idx];
-        vfmt.type = val.type;
-        vfmt.isAssigned = val.isAssigned;
-        vfmt.isConst = val.isConst;
-        vfmt.value = val.data.unum;
+        Value* val = store->list[idx];
+        vfmt.type = val->type;
+        vfmt.isAssigned = val->isAssigned;
+        vfmt.isConst = val->isConst;
+        vfmt.isLiteral = val->isLiteral;
+        vfmt.value = val->data.unum;
         fwrite(&vfmt, sizeof(val_fmt), 1, fp);
     }
 }
 
-static void load_values(size_t len, ValueStore* store, FILE* fp)
+static void load_values(size_t len, ValList* store, FILE* fp)
 {
     // load the value store
     store->len = len;
     while(store->len >= store->cap)
         store->cap <<= 1;
-    store->list = _realloc_ds_array(store->list, Value, store->cap);
+    store->list = _realloc_ds_array(store->list, void*, store->cap);
     for(int idx = 0; idx < store->len; idx++) {
         val_fmt valf;
         fread(&valf, sizeof(val_fmt), 1, fp);
-        Value val;
-        val.type = valf.type;
-        val.isAssigned = valf.isAssigned;
-        val.isConst = valf.isConst;
-        val.data.unum = valf.value;
+        Value* val = createVal(valf.type);
+        val->isAssigned = valf.isAssigned;
+        val->isConst = valf.isConst;
+        val->isLiteral = valf.isLiteral;
+        val->data.unum = valf.value;
         store->list[idx] = val;
     }
 }
@@ -119,13 +120,13 @@ VMachine* loadVM(const char* fname)
 }
 
 /*
-void writeObjStore(FILE* fp, ValueStore* os)
+void writeObjStore(FILE* fp, ValList* os)
 {
     fwrite(&os->len, sizeof(uint32_t), 1, fp);
     fwrite(os->list, sizeof(Value), os->len, fp);
 }
 
-void readObjStore(FILE* fp, ValueStore* os)
+void readObjStore(FILE* fp, ValList* os)
 {
     fread(&os->len, sizeof(uint32_t), 1, fp);
 

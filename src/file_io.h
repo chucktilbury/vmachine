@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-void writeObjStore(FILE* fp, ValueStore* os);
-void readObjStore(FILE* fp, ValueStore* os);
+void writeObjStore(FILE* fp, ValList* os);
+void readObjStore(FILE* fp, ValList* os);
 
 void writeInstStore(FILE* fp, InstStore* is);
 void readInstStore(FILE* fp, InstStore* is);

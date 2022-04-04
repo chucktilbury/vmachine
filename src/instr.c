@@ -1,6 +1,5 @@
 
 #include "common.h"
-#include "vm_support.h"
 
 static inline void grow_list(InstStore* is, size_t size)
 {

@@ -1,6 +1,5 @@
 
 #include "common.h"
-#include "vm_support.h"
 
 // FIXME: Do not store duplicate strings
 static Index find_slot(StrStore* ss, const char* str)

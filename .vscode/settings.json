@@ -9,9 +9,11 @@
         "INUM",
         "JMPIF",
         "JMPR",
+        "retv",
         "SETZ",
         "sfmt",
         "STRG",
+        "uints",
         "vfmt",
         "vmachine",
         "vstore",
@@ -19,6 +21,7 @@
     ],
     "files.associations": {
         "iterator": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "stdbool.h": "c"
     }
 }

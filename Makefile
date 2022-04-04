@@ -24,7 +24,7 @@ SLST	=	file_io.c \
 			utils.c \
 			strings.c \
 			symbols.c \
-			pars_support.c \
+			expressions.c \
 			vm_support.c
 
 HLST	=	common.h \
@@ -36,7 +36,7 @@ HLST	=	common.h \
 			utils.h \
 			strings.h \
 			symbols.h \
-			pars_support.h \
+			expressions.h \
 			vm_support.h
 
 OBJS 	=	$(foreach item, $(SLST:.c=.o), $(addprefix $(OBJDIR)/, $(item)))

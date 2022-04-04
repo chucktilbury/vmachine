@@ -11,9 +11,8 @@
 #include "common.h"
 #include <stdarg.h>
 
-#include "vm_support.h"
 #include "scanner.h"
-#include "pars_support.h"
+#include "expressions.h"
 
 // defined by flex
 extern int yylex(void);
@@ -51,7 +50,7 @@ void syntaxError(const char* fmt, ...)
     double fnum;
     int opcode;
     char* str;
-    Value value;
+    Value* value;
     Index string;
 };
 
@@ -65,16 +64,16 @@ void syntaxError(const char* fmt, ...)
 %token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT
 %token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD
 %token <type> TOK_UNUM_TYPE TOK_INUM_TYPE TOK_FNUM_TYPE TOK_CONST
-%token <type> TOK_STR_TYPE TOK_BOOL_TYPE
+%token <type> TOK_STR_TYPE TOK_BOOL_TYPE TOK_CAST
 %token TOK_INCLUDE
 
 %type <value> type_spec expression expression_factor
-%type <string> label
+%type <str> label
 
 %right '='
 %left '+' '-'
 %left '*' '/' '%'
-%left NEG
+%left NEGATE
 
 %%
     /*
@@ -91,9 +90,9 @@ module_item_list
 
 module_item
     : label
+    | instruction_block
     | include_statement
     | data_definition
-    | instruction_block
     ;
 
 label
@@ -102,11 +101,11 @@ label
         if(findSymbol($1))
             syntaxError("symbol \"%s\" has already been defined", $1);
         else {
-            Value val;
-            initVal(&val, VAL_ADDRESS);
-            val.isAssigned = true;
-            val.isConst = true;
-            val.data.unum = vm->inst->len;
+            Value* val = createVal(VAL_ADDRESS);
+            val->isAssigned = true;
+            val->isConst = true;
+            val->isLiteral = true;
+            val->data.unum = vm->inst->len;
             addSymbol($1, addVal(vm->val_store, val));
         }
     }
@@ -114,47 +113,35 @@ label
 
 type_spec
     : TOK_UNUM_TYPE {
-        Value val;
-        initVal(&val, VAL_UNUM);
-        $$ = val;
+        $$ = createVal(VAL_UNUM);
     }
     | TOK_INUM_TYPE {
-        Value val;
-        initVal(&val, VAL_INUM);
-        $$ = val;
+        $$ = createVal(VAL_INUM);
     }
     | TOK_FNUM_TYPE {
-        Value val;
-        initVal(&val, VAL_FNUM);
-        $$ = val;
+        $$ = createVal(VAL_FNUM);
     }
     | TOK_BOOL_TYPE {
-        Value val;
-        initVal(&val, VAL_BOOL);
-        $$ = val;
+        $$ = createVal(VAL_BOOL);
     }
     | TOK_CONST TOK_UNUM_TYPE {
-        Value val;
-        initVal(&val, VAL_UNUM);
-        val.isConst = true;
+        Value* val = createVal(VAL_UNUM);
+        val->isConst = true;
         $$ = val;
     }
     | TOK_CONST TOK_INUM_TYPE {
-        Value val;
-        initVal(&val, VAL_INUM);
-        val.isConst = true;
+        Value* val = createVal(VAL_INUM);
+        val->isConst = true;
         $$ = val;
     }
     | TOK_CONST TOK_FNUM_TYPE {
-        Value val;
-        initVal(&val, VAL_FNUM);
-        val.isConst = true;
+        Value* val = createVal(VAL_FNUM);
+        val->isConst = true;
         $$ = val;
     }
     | TOK_CONST TOK_BOOL_TYPE {
-        Value val;
-        initVal(&val, VAL_BOOL);
-        val.isConst = true;
+        Value* val = createVal(VAL_BOOL);
+        val->isConst = true;
         $$ = val;
     }
     ;
@@ -165,36 +152,30 @@ include_statement
 
 data_definition
     : type_spec TOK_SYMBOL {
-        // create an uninitialized object of the given type and store the
-        // name into the symbol table.
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else
             addSymbol($2, addVal(vm->val_store, $1));
     }
     | type_spec TOK_SYMBOL '=' expression {
-        // create a numeric value of the given type and store it in the value
-        // store, then store the symbol in the symbol table.
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            $1.isAssigned = true;
-            assignVal(&$1, &$4);
+            $1->isAssigned = true;
+            assignVal($1, $4);
             addSymbol($2, addVal(vm->val_store, $1));
         }
     }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
-        // Add the string to the string store, then create the value object
-        // that references it. Then store the name in the symbol table with
-        // the slot number of the value (not the string)
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            Value val;
-            Index idx = addStr(vm->str_store, $4);
-            initVal(&val, $1);
-            val.isAssigned = true;
-            val.data.obj = idx;
+            Value* val = createVal(VAL_OBJ);
+            //Index idx = addStr(vm->str_store, $4);
+            //initVal(&val, $1);
+            // TODO: FIX ME.
+            val->isAssigned = true;
+            val->data.obj = 0; //idx;
             addSymbol($2, addVal(vm->val_store, val));
         }
     }
@@ -237,28 +218,37 @@ class2_instruction
         WRITE8(vm, OP_JMPIF);
         WRITE16(vm, addVal(vm->val_store, $2));
     }
-    | TOK_CALLX expression {
-        WRITE8(vm, OP_CALLX);
-        WRITE16(vm, addVal(vm->val_store, $2));
-    }
-    | TOK_EXCEPT expression {
-        WRITE8(vm, OP_EXCEPT);
-        WRITE16(vm, addVal(vm->val_store, $2));
-    }
-    | TOK_ERROR expression {
-        WRITE8(vm, OP_ERROR);
-        WRITE16(vm, addVal(vm->val_store, $2));
-    }
-
-    /* Instructions that have have an operand that is a variable value. */
-class3_instruction
-    : TOK_PUSH TOK_SYMBOL {
+    | TOK_PUSH expression {
         WRITE8(vm, OP_PUSH);
+        WRITE16(vm, addVal(vm->val_store, $2));
+    }
+    ;
+
+class4_instruction
+    : TOK_CALLX TOK_SYMBOL {
+        WRITE8(vm, OP_CALLX);
+        WRITE16(vm, findSymbol($2));
+    }
+    | TOK_EXCEPT TOK_SYMBOL {
+        WRITE8(vm, OP_EXCEPT);
+        WRITE16(vm, findSymbol($2));
+    }
+    | TOK_ERROR TOK_SYMBOL {
+        WRITE8(vm, OP_ERROR);
         WRITE16(vm, findSymbol($2));
     }
     | TOK_SAVE TOK_SYMBOL {
         WRITE8(vm, OP_SAVE);
         WRITE16(vm, findSymbol($2));
+    }
+    ;
+
+
+class3_instruction
+    : TOK_CAST TOK_SYMBOL type_spec {
+        WRITE8(vm, OP_CAST);
+        WRITE16(vm, findSymbol($2));
+        WRITE8(vm, $3->type);
     }
     ;
 
@@ -270,6 +260,7 @@ instruction_item
     : class1_instruction
     | class2_instruction
     | class3_instruction
+    | class4_instruction
     ;
 
 instruction_list
@@ -277,44 +268,45 @@ instruction_list
     | instruction_list instruction_item
     ;
 
+    /* removed symbol and string, but these will have to be addressed later */
 expression_factor
-    : TOK_SYMBOL {
-        // find the value associated with the symbol and use it in the
-        // expression.
-        int slot = findSymbol($1);
-        Value val = getVal(vm->val_store, slot);
-        if(!val.isAssigned)
-            syntaxError("symbol \"%s\" has not been assigned a value", $1);
-        memcpy(&$$, &val, sizeof(Value));
-    }
-    | TOK_UNUM {
-        $$.data.unum = $1;
-        $$.type = VAL_UNUM;
+    : TOK_UNUM {
+        $$ = createVal(VAL_UNUM);
+        $$->data.unum = $1;
+        $$->isLiteral = true;
     }
     | TOK_INUM {
-        $$.data.inum = $1;
-        $$.type = VAL_INUM;
+        $$ = createVal(VAL_INUM);
+        $$->data.inum = $1;
+        $$->isLiteral = true;
     }
     | TOK_FNUM {
-        $$.data.fnum = $1;
-        printf("number: %0.3f\n", $1);
-        $$.type = VAL_FNUM;
+        $$ = createVal(VAL_FNUM);
+        $$->data.fnum = $1;
+        $$->isLiteral = true;
     }
-    | TOK_STR {
-        // this is here to produce an error
-        $$.data.obj = addStr(vm->str_store, $1);
-        $$.type = VAL_STRING;
+    | TOK_SYMBOL {
+        int idx = findSymbol($1);
+        if(idx == 0)
+            syntaxError("undefined symbol: \"%s\"", $1);
+        else {
+            Value* val = createVal(VAL_ERROR);
+            memcpy(val, getVal(vm->val_store, idx), sizeof(Value));
+            val->isLiteral = true;
+            $$ = val;
+        }
     }
     ;
 
 expression
     : expression_factor
-    | expression '+' expression { addVals(&$$, $1, $3); }
-    | expression '-' expression { subVals(&$$, $1, $3); }
-    | expression '*' expression { mulVals(&$$, $1, $3); }
-    | expression '/' expression { divVals(&$$, $1, $3); }
-    | expression '%' expression { modVals(&$$, $1, $3); }
-    | '-' expression %prec NEG { negVal(&$$, $2); }
+    | expression '+' expression { addVals($$, $1, $3); }
+    | expression '-' expression { subVals($$, $1, $3); }
+    | expression '*' expression { mulVals($$, $1, $3); }
+    | expression '/' expression { divVals($$, $1, $3); }
+    | expression '%' expression { modVals($$, $1, $3); }
+    | '-' expression %prec NEGATE { negVal($2); $$ = $2; }
+    | '(' expression ')' { $$ = $2; }
     ;
 
 %%

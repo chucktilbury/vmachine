@@ -11,14 +11,15 @@ typedef enum {
     VAL_INUM,
     VAL_FNUM,
     VAL_BOOL,
-    VAL_STRING,
+    VAL_OBJ,
     VAL_ADDRESS,
-} ValueType;
+} ValType;
 
 typedef struct {
-    ValueType type;
-    bool isAssigned;
-    bool isConst;
+    ValType type;
+    bool isAssigned;// has a value
+    bool isConst;   // declared as constant
+    bool isLiteral; // not connected to a symbol
     union {
         uint64_t unum;
         int64_t inum;
@@ -28,28 +29,22 @@ typedef struct {
     } data;
 } Value;
 
-typedef struct {
-    Value* list;
-    int cap;
-    int len;
-} ValueStore;
+typedef GenericPtrList ValList;
 
-ValueStore* createValStore();
-void destroyValStore(ValueStore* os);
-const char* valToStr(ValueType type);
+#define destroyValList(vl)  destroyGPL(vl)
+#define addVal(vl, obj)     addGPL(vl, obj)
+#define getVal(vl, idx)     getGPL(vl, idx)
+#define setVal(vl, idx, obj)    setGPL(vl, idx, obj)
+#define pushVal(vl, obj)    pushGPL(vl, obj)
+#define popVal(vl)          popGPL(vl)
+#define peekVal(vl)         peekGPL(vl)
 
-void initVal(Value* obj, ValueType type);
+ValList* createValList();
+Value* createVal(ValType type);
 void assignVal(Value* obj, Value* val);
-
-Index addVal(ValueStore* os, Value obj);
-Value getVal(ValueStore* os, Index idx);
-Value setVal(ValueStore* os, Index idx, Value obj);
-
-void pushVal(ValueStore* os, Value obj);
-Value popVal(ValueStore* os);
-Value peekVal(ValueStore* os);
-
-void dumpVals(VMachine* vm);
+void dumpVals();
+void printVal(Value* obj);
+const char* valToStr(ValType type);
 
 #define PUSH(vm, obj)   do { pushVal(vm->val_stack, (obj)); } while(0)
 #define COPY(vm, n)     do { pushVal(vm->val_stack, getVal(vm->val_store, (n))); } while(0)

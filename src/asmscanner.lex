@@ -92,13 +92,15 @@ static void update_loc(void){
 [ \t\r]         {}
 
     /* keywords */
-"string"        { yylval.type = VAL_STRING; return TOK_STR_TYPE; }
+"string"        { yylval.type = VAL_OBJ; return TOK_STR_TYPE; }
 "float"         { yylval.type = VAL_FNUM; return TOK_FNUM_TYPE; }
 "int"           { yylval.type = VAL_INUM; return TOK_INUM_TYPE; }
 "uint"          { yylval.type = VAL_UNUM; return TOK_UNUM_TYPE; }
 "bool"          { yylval.type = VAL_BOOL; return TOK_BOOL_TYPE; }
+
 "const"         { return TOK_CONST; }
 
+"cast"          { yylval.opcode = OP_CAST; return TOK_CAST; }
 "error"         { yylval.opcode = OP_ERROR; return TOK_ERROR; }
 "noop"          { yylval.opcode = OP_NOOP; return TOK_NOOP; }
 "exit"          { yylval.opcode = OP_EXIT; return TOK_EXIT; }
@@ -127,12 +129,14 @@ static void update_loc(void){
 "print"         { yylval.opcode = OP_PRINT; return TOK_PRINT; }
 
         /* arithmetic operators */
-"-"             { return '-'; }
 "+"             { return '+'; }
+"-"             { return '-'; }
 "="             { return '='; }
 "/"             { return '/'; }
 "*"             { return '*'; }
 "%"             { return '%'; }
+"("             { return '('; }
+")"             { return ')'; }
 
     /* constructed tokens */
 
@@ -163,7 +167,7 @@ static void update_loc(void){
 ([0-9]*\.)?[0-9]+([Ee][-+]?[0-9]+)? {
         //yylval.literal.fpval = strtod(yytext, NULL);
         yylval.fnum = strtod(yytext, NULL);
-        printf("number: %0.3f\n", yylval.fnum);
+        //printf("number: %0.3f\n", yylval.fnum);
         return TOK_FNUM;
     }
 

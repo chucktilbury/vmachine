@@ -8,7 +8,7 @@ int getTraceLevel();
 #ifdef DEBUG_VM_TRACE
 #define VTRACE(n, f, ...) do { \
         if((n) >= getTraceLevel()) { \
-            marker(f, ## __VA_ARGS__ ); printf("\n"); \
+            marker(f, ## __VA_ARGS__ ); \
         }} while(0)
 void marker(const char* fmt, ...);
 #else

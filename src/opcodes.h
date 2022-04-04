@@ -36,6 +36,8 @@ typedef enum {
     OP_DIV,     // arithmetic divide
     OP_MOD,     // arithmetic modulo
 
+    OP_CAST,    // var index and type
+
     OP_PRINT,   // print the value at the top of the stack
 
     OP_SETZ,    // set the zero flag

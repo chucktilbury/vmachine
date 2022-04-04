@@ -17,6 +17,26 @@ void memfree(void* ptr);
 #define _alloc_ds_array(t, n)       (t*)memalloc((n)*sizeof(t))
 #define _realloc_ds_array(p, t, n)  (t*)memrealloc((p), sizeof(t)*(n))
 
-void printVal(VMachine* vm, Value obj);
+typedef struct {
+    void** list;
+    int cap;
+    int len;
+    int idx;
+} GenericPtrList;
+
+GenericPtrList* createGPL();
+void destroyGPL(GenericPtrList* gpl);
+
+int addGPL(GenericPtrList* gpl, void* data);
+void* getGPL(GenericPtrList* gpl, int idx);
+void setGPL(GenericPtrList* gpl, int idx, void* data);
+void* delGPL(GenericPtrList* gpl, int idx);
+
+void resetGPL(GenericPtrList* gpl);
+void* iterGPL(GenericPtrList* gpl);
+
+int pushGPL(GenericPtrList* gpl, void* data);
+void* popGPL(GenericPtrList* gpl);
+void* peekGPL(GenericPtrList* gpl);
 
 #endif

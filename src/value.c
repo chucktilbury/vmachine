@@ -1,110 +1,69 @@
 
 #include "common.h"
-#include "vm_support.h"
 
-// TODO: reuse deleted slots.
-static inline void grow_store(ValueStore* os)
-{
-    if(os->cap < os->len+1) {
-        os->cap <<= 1;
-        os->list = realloc(os->list, sizeof(ValueStore)*os->cap);
-        assert(os->list != NULL);
-    }
-    // else do nothing
-}
-
+/**
+ * @brief Init an error value
+ *
+ * @param obj
+ *
+ */
 static void init_error_obj(Value* obj)
 {
-    obj->type = VAL_ERROR;
     obj->isAssigned = true;
     obj->isConst = true;
+    obj->isLiteral = true;
     obj->data.unum = 0;
 }
 
-ValueStore* createValStore()
+/**
+ * @brief Create a Val Store object
+ *
+ * @return ValList*
+ */
+ValList* createValList()
 {
-    ValueStore* obj = _alloc_ds(ValueStore);
-    assert(obj != NULL);
+    ValList* obj = createGPL();
 
-    obj->cap = 0x01 << 3;
-    obj->len = 0;
-    obj->list = _alloc_ds_array(Value, obj->cap);
-
-    Value eobj;
-    init_error_obj(&eobj);
+    Value* eobj = createVal(VAL_ERROR);
+    init_error_obj(eobj);
     obj->list[0] = eobj;
     obj->len = 1;
 
     return obj;
 }
 
-void destroyValStore(ValueStore* os)
+/**
+ * @brief Create a Val object
+ *
+ * @param type
+ *
+ * @return Value*
+ */
+Value* createVal(ValType type)
 {
-    if(os != NULL) {
-        if(os->list != NULL)
-            _free(os->list);
-        _free(os);
-    }
+    Value* val = _alloc_ds(Value);
+    val->type = type;
+    val->isAssigned = false;
+    val->isConst = false;
+    val->isLiteral = false;
+    val->data.unum = 0;
+
+    return val;
 }
 
-void initVal(Value* obj, ValueType type)
-{
-    obj->type = type;
-    obj->isAssigned = false;
-    obj->isConst = false;
-}
-
-void pushVal(ValueStore* os, Value obj)
-{
-    addVal(os, obj);
-}
-
-Value popVal(ValueStore* os)
-{
-    assert(os->len > 0);
-    os->len--;
-    return os->list[os->len];
-}
-
-Value peekVal(ValueStore* os)
-{
-    assert(os->len > 0);
-    return os->list[os->len-1];
-}
-
-Index addVal(ValueStore* os, Value obj)
-{
-    grow_store(os);
-    os->list[os->len] = obj;
-    os->len ++;
-
-    return os->len-1;
-}
-
-Value getVal(ValueStore* os, Index index)
-{
-    if(index < os->len)
-        return os->list[index];
-    else
-        return os->list[0];
-}
-
-Value setVal(ValueStore* os, Index index, Value obj)
-{
-    if(index < os->len) {
-        os->list[index] = obj;
-        return obj;
-    }
-    else
-        return os->list[0];
-}
-
+/**
+ * @brief Assign one value type to another, with error checking.
+ *
+ * @param obj
+ * @param val
+ *
+ */
 void assignVal(Value* obj, Value* val)
 {
     switch(obj->type) {
-        case VAL_STRING: {
+        case VAL_OBJ: {
             switch(val->type) {
-                case VAL_STRING:
+                case VAL_OBJ:
                 case VAL_ERROR:
                     obj->data.obj = val->data.obj;
                     break;
@@ -116,12 +75,12 @@ void assignVal(Value* obj, Value* val)
                     runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
                     break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("7 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         case VAL_ERROR:
             switch(val->type) {
-                case VAL_STRING:
+                case VAL_OBJ:
                 case VAL_ERROR:
                     obj->data.obj = val->data.obj;
                     break;
@@ -133,7 +92,7 @@ void assignVal(Value* obj, Value* val)
                     runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
                     break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("6 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         case VAL_UNUM:
@@ -144,12 +103,12 @@ void assignVal(Value* obj, Value* val)
                 case VAL_ADDRESS:  obj->data.unum = val->data.unum; break;
                 // errors
                 case VAL_BOOL:
-                case VAL_STRING:
+                case VAL_OBJ:
                 case VAL_ERROR:
                     runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
                     break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("5 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         case VAL_INUM:
@@ -160,12 +119,12 @@ void assignVal(Value* obj, Value* val)
                 case VAL_ADDRESS:  obj->data.inum = (int64_t)val->data.unum; break;
                 // errors
                 case VAL_BOOL:
-                case VAL_STRING:
+                case VAL_OBJ:
                 case VAL_ERROR:
                     runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
                     break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("4 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         case VAL_FNUM:
@@ -176,25 +135,25 @@ void assignVal(Value* obj, Value* val)
                 case VAL_ADDRESS: obj->data.fnum = (double)((int64_t)val->data.unum); break;
                 // errors
                 case VAL_BOOL:
-                case VAL_STRING:
+                case VAL_OBJ:
                 case VAL_ERROR:
                     runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
                     break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("3 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         case VAL_BOOL:
             switch(val->type) {
                 case VAL_BOOL:      obj->data.boolean = val->data.boolean; break;
-                case VAL_STRING:    obj->data.boolean = val->isAssigned? true: false; break;
+                case VAL_OBJ:    obj->data.boolean = val->isAssigned? true: false; break;
                 case VAL_UNUM:      obj->data.boolean = val->isAssigned? true: false; break;
                 case VAL_INUM:      obj->data.boolean = val->isAssigned? true: false; break;
                 case VAL_FNUM:      obj->data.boolean = val->isAssigned? true: false; break;
                 case VAL_ADDRESS:   obj->data.boolean = val->isAssigned? true: false; break;
                 case VAL_ERROR:     obj->data.boolean = val->isAssigned? true: false; break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("2 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         case VAL_ADDRESS:
@@ -204,37 +163,93 @@ void assignVal(Value* obj, Value* val)
                 case VAL_ADDRESS: obj->data.unum = val->data.unum; break;
                 // errors
                 case VAL_FNUM:
-                case VAL_STRING:
+                case VAL_OBJ:
                 case VAL_ERROR:
                 case VAL_BOOL:
                     runtimeError("cannot assign a %s to a %s", valToStr(val->type), valToStr(obj->type));
                     break;
                 default:
-                    runtimeError("attempt to assign an unknown object type: %d", obj->type);
+                    runtimeError("1 attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
             break;
         default:
-            runtimeError("attempt to assign an unknown object type: %d", obj->type);
+            runtimeError("xx attempt to assign an unknown object type: %s", valToStr(obj->type));
         }
     }
 }
 
-const char* valToStr(ValueType type)
+/**
+ * @brief Convert a value type to a string for errors and debugging.
+ *
+ * @param type
+ *
+ * @return const char*
+ */
+const char* valToStr(ValType type)
 {
     return (type == VAL_ERROR)? "ERROR":
             (type == VAL_UNUM)? "UNUM":
             (type == VAL_INUM)? "INUM":
             (type == VAL_FNUM)? "FNUM":
             (type == VAL_BOOL)? "BOOL":
-            (type == VAL_STRING)? "STRING":
+            (type == VAL_OBJ)? "OBJECT":
             (type == VAL_ADDRESS)? "ADDRESS": "UNKNOWN";
 }
 
-void dumpVals(VMachine* vm)
+void dumpVals(ValList* lst)
 {
-
-    for(int i = 0; i < vm->val_store->len; i++) {
-        printf("%3d. ", i);
-        printVal(vm, vm->val_store->list[i]);
+    resetGPL(lst);
+    Value* val;
+    while(NULL != (val = iterGPL(lst))) {
+        printf("%3d. ", lst->idx);
+        printVal(val);
     }
 }
+
+void printVal(Value* obj)
+{
+    printf("%-12s", valToStr(obj->type));
+    int pad_len = 10;
+    switch(obj->type) {
+        case VAL_ERROR: {
+                int slen = snprintf(NULL, 0, "ERROR");
+                printf("ERROR%*s", pad_len - slen, " ");
+            }
+            break;
+        case VAL_OBJ: {
+                int slen = snprintf(NULL, 0, "%d", obj->data.obj);
+                printf("%d%*s", obj->data.obj, pad_len - slen, " ");
+            }
+            break;
+        case VAL_UNUM: {
+                int slen = snprintf(NULL, 0, "0x%lX", obj->data.unum);
+                printf("0x%lX%*s", obj->data.unum, pad_len - slen, " ");
+            }
+            break;
+        case VAL_ADDRESS:
+        case VAL_INUM: {
+                int slen = snprintf(NULL, 0, "%ld", obj->data.inum);
+                printf("%ld%*s", obj->data.inum, pad_len - slen, " ");
+            }
+            break;
+        case VAL_FNUM: {
+                int slen = snprintf(NULL, 0, "%0.1f", obj->data.fnum);
+                printf("%0.1f%*s", obj->data.fnum, pad_len - slen, " ");
+            }
+            break;
+        case VAL_BOOL: {
+                int slen = snprintf(NULL, 0, "%s", obj->data.boolean? "TRUE": "FALSE");
+                printf("%s%*s", obj->data.boolean? "TRUE": "FALSE", pad_len - slen, " ");
+            }
+            break;
+        default:
+            printf("object value not found");
+            break;
+    }
+
+    printf("assigned: %s const: %s literal: %s\n",
+        obj->isAssigned? "true": "false",
+        obj->isConst? "true": "false",
+        obj->isLiteral? "true": "false");
+}
+

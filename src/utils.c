@@ -1,6 +1,5 @@
 
 #include "common.h"
-#include "vm_support.h"
 
 #ifndef strdup
 const char* strdup(const char* str)
@@ -40,47 +39,126 @@ void memfree(void* ptr)
         free(ptr);
 }
 
-void printVal(VMachine* vm, Value obj)
+
+/*
+ * Generic pointer lists
+ */
+
+GenericPtrList* createGPL()
 {
-    printf("%-12s", valToStr(obj.type));
-    int pad_len = 10;
-    switch(obj.type) {
-        case VAL_ERROR: {
-                int slen = snprintf(NULL, 0, "ERROR");
-                printf("ERROR%*s", pad_len - slen, " ");
-            }
+    GenericPtrList* gpl = _alloc_ds(GenericPtrList);
+    gpl->cap = 0x01 << 3;
+    gpl->len = 0;
+    gpl->idx = 0;
+    gpl->list = _alloc_ds_array(void*, gpl->cap);
+
+    return gpl;
+}
+
+void destroyGPL(GenericPtrList* gpl)
+{
+    if(gpl != NULL) {
+        if(gpl->list != NULL)
+            _free(gpl->list);
+        _free(gpl);
+    }
+}
+
+int addGPL(GenericPtrList* gpl, void* data)
+{
+    int slot = -1;
+
+    for(int i = 0; i < gpl->len; i++) {
+        if(gpl->list[i] == NULL) {
+            slot = i;
             break;
-        case VAL_STRING: {
-                int slen = snprintf(NULL, 0, "%s", getStr(vm->str_store, obj.data.obj));
-                printf("%s%*s", getStr(vm->str_store, obj.data.obj), pad_len - slen, " ");
-            }
-            break;
-        case VAL_UNUM: {
-                int slen = snprintf(NULL, 0, "0x%lX", obj.data.unum);
-                printf("0x%lX%*s", obj.data.unum, pad_len - slen, " ");
-            }
-            break;
-        case VAL_ADDRESS:
-        case VAL_INUM: {
-                int slen = snprintf(NULL, 0, "%ld", obj.data.inum);
-                printf("%ld%*s", obj.data.inum, pad_len - slen, " ");
-            }
-            break;
-        case VAL_FNUM: {
-                int slen = snprintf(NULL, 0, "%0.1f", obj.data.fnum);
-                printf("%0.1f%*s", obj.data.fnum, pad_len - slen, " ");
-            }
-            break;
-        case VAL_BOOL: {
-                int slen = snprintf(NULL, 0, "%s", obj.data.boolean? "TRUE": "FALSE");
-                printf("%s%*s", obj.data.boolean? "TRUE": "FALSE", pad_len - slen, " ");
-            }
-            break;
-        default:
-            printf("object value not found");
-            break;
+        }
     }
 
-    printf("assigned: %s const: %s\n", obj.isAssigned? "true": "false", obj.isConst? "true": "false");
+    if(slot < 0) {
+        if(gpl->len+1 > gpl->cap) {
+            gpl->cap <<= 1;
+            gpl->list = _realloc_ds_array(gpl->list, void*, gpl->cap);
+        }
+        slot = gpl->len;
+        gpl->len++;
+    }
+
+    gpl->list[slot] = data;
+
+    return slot;
+}
+
+void* getGPL(GenericPtrList* gpl, int idx)
+{
+    if(idx < gpl->len) {
+        return gpl->list[idx];
+    }
+
+    return NULL;
+}
+
+void setGPL(GenericPtrList* gpl, int idx, void* data)
+{
+    if(idx < gpl->len) {
+        gpl->list[idx] = data;
+    }
+}
+
+void* delGPL(GenericPtrList* gpl, int idx)
+{
+    void* retv = NULL;
+
+    if(idx < gpl->len) {
+        retv = gpl->list[idx];
+        gpl->list[idx] = NULL; // the caller has to free this
+    }
+
+    return retv;
+}
+
+void resetGPL(GenericPtrList* gpl)
+{
+    gpl->idx = 0;
+}
+
+void* iterGPL(GenericPtrList* gpl)
+{
+    return (gpl->idx < gpl->len)? gpl->list[gpl->idx++]: NULL;
+}
+
+int pushGPL(GenericPtrList* gpl, void* data)
+{
+    if(gpl->len+1 > gpl->cap) {
+        gpl->cap <<= 1;
+        gpl->list = _realloc_ds_array(gpl->list, void*, gpl->cap);
+    }
+
+    gpl->list[gpl->len] = data;
+    gpl->len++;
+
+    return gpl->len-1;
+}
+
+void* popGPL(GenericPtrList* gpl)
+{
+    gpl->len--;
+    if(gpl->len < 0) {
+        gpl->len = 0;
+        return NULL;
+    }
+
+    void* retv = gpl->list[gpl->len];
+    gpl->list[gpl->len] = NULL;
+
+    return retv;
+}
+
+void* peekGPL(GenericPtrList* gpl)
+{
+    if(gpl->len-1 < 0) {
+        return NULL;
+    }
+    return gpl->list[gpl->len-1];
 }
 
