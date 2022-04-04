@@ -166,6 +166,15 @@ data_definition
             addSymbol($2, addVal(vm->val_store, $1));
         }
     }
+    | type_spec TOK_SYMBOL '=' TOK_SYMBOL {
+        if(findSymbol($2))
+            syntaxError("symbol \"%s\" has already been defined", $2);
+        else {
+            $1->isAssigned = true;
+            assignVal($1, getVal(vm->val_store, findSymbol($4)));
+            addSymbol($2, addVal(vm->val_store, $1));
+        }
+    }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
@@ -222,12 +231,21 @@ class2_instruction
         WRITE8(vm, OP_PUSH);
         WRITE16(vm, addVal(vm->val_store, $2));
     }
+    | TOK_PUSH TOK_SYMBOL {
+        WRITE8(vm, OP_PUSH);
+        WRITE16(vm, findSymbol($2));
+    }
     ;
 
 class4_instruction
     : TOK_CALLX TOK_SYMBOL {
-        WRITE8(vm, OP_CALLX);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_CALLX);
+            WRITE16(vm, slot);
+        }
     }
     | TOK_EXCEPT TOK_SYMBOL {
         WRITE8(vm, OP_EXCEPT);
@@ -238,8 +256,13 @@ class4_instruction
         WRITE16(vm, findSymbol($2));
     }
     | TOK_SAVE TOK_SYMBOL {
-        WRITE8(vm, OP_SAVE);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_SAVE);
+            WRITE16(vm, slot);
+        }
     }
     ;
 
@@ -284,17 +307,6 @@ expression_factor
         $$ = createVal(VAL_FNUM);
         $$->data.fnum = $1;
         $$->isLiteral = true;
-    }
-    | TOK_SYMBOL {
-        int idx = findSymbol($1);
-        if(idx == 0)
-            syntaxError("undefined symbol: \"%s\"", $1);
-        else {
-            Value* val = createVal(VAL_ERROR);
-            memcpy(val, getVal(vm->val_store, idx), sizeof(Value));
-            val->isLiteral = true;
-            $$ = val;
-        }
     }
     ;
 

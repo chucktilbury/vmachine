@@ -48,6 +48,7 @@ void disassemble(VMachine* vm)
             // 16 bit operand
             case OP_CALL:
             case OP_CALLX:
+            case OP_SAVE:
             case OP_PUSH: {
                     uint16_t oper = READ16(vm);
                     printf("%s\t%4d\t", opToStr(inst), oper);

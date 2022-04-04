@@ -29,7 +29,7 @@ _symbol_321
     print
     noop
 
-const float some_int =  uint_name
+const float some_int =  int_name
 uint float_name = 102
 
 _symbol_
