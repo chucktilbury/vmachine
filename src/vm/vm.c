@@ -1,11 +1,12 @@
 
 #include "common.h"
-#include "vm_support.h"
 
-void dump_buffer(uint8_t* buffer, int size) {
+void dump_buffer(uint8_t* buffer, int size)
+{
 
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < size; i++) {
         printf(", 0x%02X", buffer[i]);
+    }
     printf("\n");
 }
 

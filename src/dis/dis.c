@@ -3,8 +3,6 @@
 #include "common.h"
 #include <stdarg.h>
 
-#include "vm_support.h"
-
 void disassemble(VMachine* vm)
 {
     bool finished = false;
@@ -86,7 +84,8 @@ void disassemble(VMachine* vm)
     }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 
     if(argc < 2) {
         fprintf(stderr, "use: %s filename\n", argv[0]);

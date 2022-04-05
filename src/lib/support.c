@@ -1,7 +1,6 @@
 
 #include "common.h"
-#include "vm_support.h"
-#include "expressions.h"
+#include "vmachine.h"
 
 
 
@@ -29,8 +28,8 @@ void destroyVMachine(VMachine* vm)
 }
 
 #define CBINARY(op) do {\
-                VTRACE(5, "%08d %s", IP(vm), opToStr(opcode)); \
-                } while(0)
+        VTRACE(5, "%08d %s", IP(vm), opToStr(opcode)); \
+    } while(0)
 
 void runMachine(VMachine* vm)
 {
@@ -75,19 +74,31 @@ void runMachine(VMachine* vm)
 
             // no operand binary operation pops 2 values and pushes a
             // boolean result.
-            case OP_EQ:     CBINARY(==); break;
-            case OP_NEQ:    CBINARY(!=); break;
-            case OP_LEQ:    CBINARY(<=); break;
-            case OP_GEQ:    CBINARY(>=); break;
-            case OP_LESS:   CBINARY(<);  break;
-            case OP_GTR:    CBINARY(>);  break;
+            case OP_EQ:
+                CBINARY( ==);
+                break;
+            case OP_NEQ:
+                CBINARY( !=);
+                break;
+            case OP_LEQ:
+                CBINARY( <=);
+                break;
+            case OP_GEQ:
+                CBINARY( >=);
+                break;
+            case OP_LESS:
+                CBINARY( <);
+                break;
+            case OP_GTR:
+                CBINARY( >);
+                break;
 
             // no operand binary operation pops 2 operands and pushes a
             // numeric value as the result.
             case OP_ADD: {
                     VTRACE(5, "%-10s\n", opToStr(opcode));
                     Value* left, *right;
-                    Value *result = createVal(VAL_ERROR);
+                    Value* result = createVal(VAL_ERROR);
                     POP(vm, left);
                     POP(vm, right);
                     addVals(result, right, left);
@@ -97,8 +108,8 @@ void runMachine(VMachine* vm)
 
             case OP_SUB: {
                     VTRACE(5, "%-10s\n", opToStr(opcode));
-                    Value *left, *right;
-                    Value *result = createVal(VAL_ERROR);
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
                     POP(vm, left);
                     POP(vm, right);
                     subVals(result, right, left);
@@ -108,8 +119,8 @@ void runMachine(VMachine* vm)
 
             case OP_MUL: {
                     VTRACE(5, "%-10s\n", opToStr(opcode));
-                    Value *left, *right;
-                    Value *result = createVal(VAL_ERROR);
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
                     POP(vm, left);
                     POP(vm, right);
                     mulVals(result, right, left);
@@ -119,8 +130,8 @@ void runMachine(VMachine* vm)
 
             case OP_DIV: {
                     VTRACE(5, "%-10s\n", opToStr(opcode));
-                    Value *left, *right;
-                    Value *result = createVal(VAL_ERROR);
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
                     POP(vm, left);
                     POP(vm, right);
                     divVals(result, right, left);
@@ -130,8 +141,8 @@ void runMachine(VMachine* vm)
 
             case OP_MOD: {
                     VTRACE(5, "%-10s\n", opToStr(opcode));
-                    Value *left, *right;
-                    Value *result = createVal(VAL_ERROR);
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
                     POP(vm, left);
                     POP(vm, right);
                     modVals(result, right, left);

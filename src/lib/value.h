@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "vm_support.h"
+#include "vmachine.h"
 
 typedef enum {
     VAL_ERROR,

@@ -4,8 +4,9 @@
 static inline void grow_list(InstStore* is, size_t size)
 {
     if(is->cap < is->len + size) {
-        while(is->cap < is->len + size)
+        while(is->cap < is->len + size) {
             is->cap <<= 1;
+        }
         is->list = _realloc_ds_array(is->list, uint8_t, is->cap);
         assert(is->list != NULL);
     }
@@ -27,8 +28,9 @@ InstStore* createInstStore()
 void destroyInstStore(InstStore* is)
 {
     if(is != NULL) {
-        if(is->list != NULL)
+        if(is->list != NULL) {
             _free(is->list);
+        }
         _free(is);
     }
 }
@@ -100,6 +102,7 @@ int setIndex(InstStore* is, int idx)
 }
 
 int addIndex(InstStore* is, int idx)
-{   // idx could be negative
+{
+    // idx could be negative
     return (is->index += idx);
 }

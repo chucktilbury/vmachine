@@ -1,7 +1,7 @@
 #ifndef _STRINGS_H_
 #define _STRINGS_H_
 
-#include "vm_support.h"
+#include "vmachine.h"
 
 typedef struct {
     uint16_t len;

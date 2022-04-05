@@ -2,7 +2,7 @@
 #define _SYMBOLS_H_
 
 #include <stddef.h>
-#include "vm_support.h"
+#include "vmachine.h"
 
 typedef struct _sym_ {
     const char* key;

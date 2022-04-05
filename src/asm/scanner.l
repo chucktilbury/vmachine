@@ -5,8 +5,8 @@
 //#define //_TRACE(...)
 
 #include "common.h"
-#include "vm_support.h"
-#include "asmparser.h"
+//#include "vm_support.h"
+#include "parser.h"
 #include "scanner.h"
 
 #pragma GCC diagnostic push

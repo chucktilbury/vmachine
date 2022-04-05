@@ -35,8 +35,9 @@ void* memrealloc(void* ptr, size_t size)
 
 void memfree(void* ptr)
 {
-    if(ptr != NULL)
+    if(ptr != NULL) {
         free(ptr);
+    }
 }
 
 
@@ -58,8 +59,9 @@ GenericPtrList* createGPL()
 void destroyGPL(GenericPtrList* gpl)
 {
     if(gpl != NULL) {
-        if(gpl->list != NULL)
+        if(gpl->list != NULL) {
             _free(gpl->list);
+        }
         _free(gpl);
     }
 }
@@ -76,7 +78,7 @@ int addGPL(GenericPtrList* gpl, void* data)
     }
 
     if(slot < 0) {
-        if(gpl->len+1 > gpl->cap) {
+        if(gpl->len + 1 > gpl->cap) {
             gpl->cap <<= 1;
             gpl->list = _realloc_ds_array(gpl->list, void*, gpl->cap);
         }
@@ -124,12 +126,12 @@ void resetGPL(GenericPtrList* gpl)
 
 void* iterGPL(GenericPtrList* gpl)
 {
-    return (gpl->idx < gpl->len)? gpl->list[gpl->idx++]: NULL;
+    return (gpl->idx < gpl->len) ? gpl->list[gpl->idx++] : NULL;
 }
 
 int pushGPL(GenericPtrList* gpl, void* data)
 {
-    if(gpl->len+1 > gpl->cap) {
+    if(gpl->len + 1 > gpl->cap) {
         gpl->cap <<= 1;
         gpl->list = _realloc_ds_array(gpl->list, void*, gpl->cap);
     }
@@ -137,7 +139,7 @@ int pushGPL(GenericPtrList* gpl, void* data)
     gpl->list[gpl->len] = data;
     gpl->len++;
 
-    return gpl->len-1;
+    return gpl->len - 1;
 }
 
 void* popGPL(GenericPtrList* gpl)
@@ -156,9 +158,9 @@ void* popGPL(GenericPtrList* gpl)
 
 void* peekGPL(GenericPtrList* gpl)
 {
-    if(gpl->len-1 < 0) {
+    if(gpl->len - 1 < 0) {
         return NULL;
     }
-    return gpl->list[gpl->len-1];
+    return gpl->list[gpl->len - 1];
 }
 

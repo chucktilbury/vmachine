@@ -33,8 +33,9 @@ static void load_values(size_t len, ValList* store, FILE* fp)
 {
     // load the value store
     store->len = len;
-    while(store->len >= store->cap)
+    while(store->len >= store->cap) {
         store->cap <<= 1;
+    }
     store->list = _realloc_ds_array(store->list, void*, store->cap);
     for(int idx = 0; idx < store->len; idx++) {
         val_fmt valf;
@@ -90,8 +91,9 @@ VMachine* loadVM(const char* fname)
 
     // load the string store
     vm->val_store->len = vmf.vstore_len;
-    while(vm->str_store->len >= vm->str_store->cap)
+    while(vm->str_store->len >= vm->str_store->cap) {
         vm->str_store->cap <<= 1;
+    }
     vm->str_store->list = _realloc_ds_array(vm->str_store->list, ObjString, vm->str_store->cap);
     for(size_t idx = 0; idx < vm->str_store->len; idx++) {
         uint16_t len;
@@ -101,8 +103,9 @@ VMachine* loadVM(const char* fname)
             vm->str_store->list[idx].str = _malloc(len);
             fread((void*)vm->str_store->list[idx].str, sizeof(uint8_t), len, infile_pointer);
         }
-        else
+        else {
             vm->str_store->list[idx].str = NULL;
+        }
     }
 
     // load the value store
@@ -110,8 +113,9 @@ VMachine* loadVM(const char* fname)
 
     // load the instruction store
     vm->inst->len = vmf.instr_len;
-    while(vm->inst->len >= vm->inst->cap)
+    while(vm->inst->len >= vm->inst->cap) {
         vm->inst->cap <<= 1;
+    }
     vm->inst->list = _realloc_ds_array(vm->inst->list, uint8_t, vm->inst->cap);
     fread(vm->inst->list, sizeof(uint8_t), vm->inst->len, infile_pointer);
 

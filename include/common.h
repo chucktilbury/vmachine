@@ -17,6 +17,6 @@
         printf("ENTER:  %s: %s: %d\n", __FILE__, __func__, __LINE__); } while(0)
 #define RET printf("RETURN: %s: %s: %d\n", __FILE__, __func__, __LINE__); return
 
-#include "vm_support.h"
+#include "vmachine.h"
 
 #endif

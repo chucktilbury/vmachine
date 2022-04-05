@@ -8,51 +8,61 @@ int add(Symbol* tree, Symbol* node)
 {
     int val = strcmp(tree->key, node->key);
     if(val > 0) {
-        if(tree->right != NULL)
+        if(tree->right != NULL) {
             return add(tree->right, node);
+        }
         else {
             tree->right = node;
             return 1;
         }
     }
     else if(val < 0) {
-        if(tree->left != NULL)
+        if(tree->left != NULL) {
             return add(tree->left, node);
+        }
         else {
             tree->left = node;
             return 1;
         }
     }
-    else
-        return 0;   // node already exists
+    else {
+        return 0;    // node already exists
+    }
 }
 
 static Index find(Symbol* tree, const char* key)
 {
     int val = strcmp(tree->key, key);
     if(val > 0) {
-        if(tree->right != NULL)
+        if(tree->right != NULL) {
             return find(tree->right, key);
-        else
-            return 0;   // not found
+        }
+        else {
+            return 0;    // not found
+        }
     }
     else if(val < 0) {
-        if(tree->left != NULL)
+        if(tree->left != NULL) {
             return find(tree->left, key);
-        else
-            return 0;   // not found
+        }
+        else {
+            return 0;    // not found
+        }
     }
-    else
+    else {
         return tree->idx;
+    }
 }
 
 static void destroy(Symbol* tree)
 {
-    if(tree->right != NULL)
+    if(tree->right != NULL) {
         destroy(tree->right);
+    }
 
-    if(tree->left != NULL)
+    if(tree->left != NULL) {
         destroy(tree->left);
+    }
 
     _free((void*)tree->key);
     _free(tree);
@@ -64,33 +74,40 @@ void addSymbol(const char* key, Index idx)
     obj->idx = idx;
     obj->key = strdup(key);
     obj->len = strlen(key);
-    if(sym_table != NULL)
+    if(sym_table != NULL) {
         add(sym_table, obj);
-    else
+    }
+    else {
         sym_table = obj;
+    }
 }
 
 Index findSymbol(const char* key)
 {
-    if(sym_table != NULL)
+    if(sym_table != NULL) {
         return find(sym_table, key);
-    else
-        return 0; // error value
+    }
+    else {
+        return 0;    // error value
+    }
 }
 
 void destroySymbols()
 {
-    if(sym_table != NULL)
+    if(sym_table != NULL) {
         destroy(sym_table);
+    }
 }
 
 static void dump(VMachine* vm, Symbol* sym)
 {
-    if(sym->right != NULL)
+    if(sym->right != NULL) {
         dump(vm, sym->right);
+    }
 
-    if(sym->left != NULL)
+    if(sym->left != NULL) {
         dump(vm, sym->left);
+    }
 
     printf("key: %-15s index: %-4u ", sym->key, sym->idx);
     printVal(getVal(vm->val_store, sym->idx));

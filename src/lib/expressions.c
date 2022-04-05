@@ -32,9 +32,14 @@ void castToType(Value* val, ValType type)
         case VAL_UNUM: {
                 uint64_t v;
                 switch(val->type) {
-                    case VAL_UNUM: break;
-                    case VAL_INUM: v = (uint64_t)val->data.inum; break;
-                    case VAL_FNUM: v = (uint64_t)((int64_t)val->data.fnum); break;
+                    case VAL_UNUM:
+                        break;
+                    case VAL_INUM:
+                        v = (uint64_t)val->data.inum;
+                        break;
+                    case VAL_FNUM:
+                        v = (uint64_t)((int64_t)val->data.fnum);
+                        break;
                     default:
                         runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
                         break;
@@ -47,9 +52,14 @@ void castToType(Value* val, ValType type)
         case VAL_INUM: {
                 int64_t v;
                 switch(val->type) {
-                    case VAL_UNUM: v = (int64_t)val->data.unum; break;
-                    case VAL_INUM: break;
-                    case VAL_FNUM: v = (int64_t)val->data.fnum; break;
+                    case VAL_UNUM:
+                        v = (int64_t)val->data.unum;
+                        break;
+                    case VAL_INUM:
+                        break;
+                    case VAL_FNUM:
+                        v = (int64_t)val->data.fnum;
+                        break;
                     default:
                         runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
                         break;
@@ -62,9 +72,14 @@ void castToType(Value* val, ValType type)
         case VAL_FNUM: {
                 double v;
                 switch(val->type) {
-                    case VAL_UNUM: v = (double)((int64_t)val->data.unum); break;
-                    case VAL_INUM: v = (double)val->data.fnum; break;
-                    case VAL_FNUM: break;
+                    case VAL_UNUM:
+                        v = (double)((int64_t)val->data.unum);
+                        break;
+                    case VAL_INUM:
+                        v = (double)val->data.fnum;
+                        break;
+                    case VAL_FNUM:
+                        break;
                     default:
                         runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
                         break;
@@ -461,10 +476,18 @@ void modVals(Value* dest, Value* left, Value* right)
 void negVal(Value* val)
 {
     switch(val->type) {
-        case VAL_UNUM: val->data.unum = -val->data.unum; break;
-        case VAL_INUM: val->data.inum = -val->data.inum; break;
-        case VAL_FNUM: val->data.fnum = -val->data.fnum; break;
-        default: runtimeError("only numbers allowed in expressions"); break;
+        case VAL_UNUM:
+            val->data.unum = -val->data.unum;
+            break;
+        case VAL_INUM:
+            val->data.inum = -val->data.inum;
+            break;
+        case VAL_FNUM:
+            val->data.fnum = -val->data.fnum;
+            break;
+        default:
+            runtimeError("only numbers allowed in expressions");
+            break;
     }
 }
 

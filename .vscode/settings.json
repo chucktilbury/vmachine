@@ -17,6 +17,9 @@
         "vfmt",
         "vmachine",
         "vstore",
+        "yyerror",
+        "yyparse",
+        "yytext",
         "zflag"
     ],
     "files.associations": {

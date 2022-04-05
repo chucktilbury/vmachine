@@ -7,12 +7,13 @@ static Index find_slot(StrStore* ss, const char* str)
     (void)str;
 
     for(Index i = 0; i < ss->len; i++) {
-        if(ss->list[i].len == 0)
+        if(ss->list[i].len == 0) {
             return i;
+        }
     }
 
     // not reusing a free()d slot
-    if(ss->cap < ss->len+1) {
+    if(ss->cap < ss->len + 1) {
         ss->cap <<= 1;
         ss->list = _realloc_ds_array(ss->list, ObjString, ss->cap);
     }
@@ -40,7 +41,7 @@ void destroyStrStore(StrStore* ss)
                     _free((void*)ss->list[i].str);
                 }
             }
-            _free(ss->list);
+        _free(ss->list);
         _free(ss);
     }
 }
