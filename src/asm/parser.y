@@ -12,7 +12,7 @@
 #include <stdarg.h>
 
 #include "scanner.h"
-#include "expressions.h"
+//#include "expressions.h"
 
 // defined by flex
 extern int yylex(void);
@@ -27,6 +27,117 @@ void syntaxError(const char*, ...);
 
 #define TOKSTR get_tok_str()
 
+static int get_bits(Value *val)
+{
+    int retv = 0;
+    uint32_t n = val->data.unum; // get the raw bits
+
+    if(val->type == VAL_FNUM)
+        retv = 32;
+    else {
+        int count = 0;
+        for(int i = 0; i < 32; i++) {
+            if(n & (0x01 << i))
+                count++;
+        }
+
+        if(count >= 0 && count < 7)
+            retv = 8;
+        else if(count >= 8 && count < 15)
+            retv = 16;
+        else
+            retv = 32;
+    }
+
+    return retv;
+}
+
+void emitJMP(VMachine* vm, Value* val)
+{
+    switch(get_bits(val)) {
+        case 8:
+            WRITE8(vm, OP_JMP8);
+            WRITE8(vm, val->type);
+            WRITE8(vm, val->data.unum);
+            break;
+        case 16:
+            WRITE8(vm, OP_JMP16);
+            WRITE8(vm, val->type);
+            WRITE16(vm, val->data.unum);
+            break;
+        case 32:
+            WRITE8(vm, OP_JMP32);
+            WRITE8(vm, val->type);
+            WRITE32(vm, val->data.unum);
+            break;
+    }
+}
+
+void emitJMPIF(VMachine* vm, Value* val)
+{
+    switch(get_bits(val)) {
+        case 8:
+            WRITE8(vm, OP_JMPIF8);
+            WRITE8(vm, val->type);
+            WRITE8(vm, val->data.unum);
+            break;
+        case 16:
+            WRITE8(vm, OP_JMPIF16);
+            WRITE8(vm, val->type);
+            WRITE16(vm, val->data.unum);
+            break;
+        case 32:
+            WRITE8(vm, OP_JMPIF32);
+            WRITE8(vm, val->type);
+            WRITE32(vm, val->data.unum);
+            break;
+    }
+}
+
+void emitCALL(VMachine* vm, Value* val)
+{
+    switch(get_bits(val)) {
+        case 8:
+            WRITE8(vm, OP_CALL8);
+            WRITE8(vm, val->type);
+            WRITE8(vm, val->data.unum);
+            break;
+        case 16:
+            WRITE8(vm, OP_CALL16);
+            WRITE8(vm, val->type);
+            WRITE16(vm, val->data.unum);
+            break;
+        case 32:
+            WRITE8(vm, OP_CALL32);
+            WRITE8(vm, val->type);
+            WRITE32(vm, val->data.unum);
+            break;
+    }
+}
+
+void emitPUSH(VMachine* vm, Value* val)
+{
+    switch(get_bits(val)) {
+        case 8:
+            WRITE8(vm, OP_PUSH8);
+            WRITE8(vm, val->type);
+            WRITE8(vm, val->data.unum);
+            break;
+        case 16:
+            WRITE8(vm, OP_PUSH16);
+            WRITE8(vm, val->type);
+            WRITE16(vm, val->data.unum);
+            break;
+        case 32:
+            WRITE8(vm, OP_PUSH32);
+            WRITE8(vm, val->type);
+            // printf("val->unum = 0x%08X\n", val->data.unum);
+            // printf("val->fnum = %0.3f\n", val->data.fnum);
+            WRITE32(vm, val->data.unum);
+            break;
+    }
+}
+
 %}
 
 %define parse.error verbose
@@ -34,9 +145,9 @@ void syntaxError(const char*, ...);
 
 %union {
     int type;
-    uint64_t unum;
-    int64_t inum;
-    double fnum;
+    uint32_t unum;
+    int32_t inum;
+    float fnum;
     int opcode;
     char* str;
     Value* value;
@@ -205,20 +316,36 @@ class1_instruction
         constant value */
 class2_instruction
     : TOK_CALL expression {
+        //WRITE8(vm, OP_CALL);
+        emitCALL(vm, $2);
+        //WRITE16(vm, addVal(vm->val_store, $2));
+    }
+    | TOK_CALL TOK_SYMBOL {
         WRITE8(vm, OP_CALL);
-        WRITE16(vm, addVal(vm->val_store, $2));
+        WRITE16(vm, findSymbol($2));
     }
     | TOK_JMP expression {
+        //WRITE8(vm, OP_JMP);
+        emitJMP(vm, $2);
+        //WRITE16(vm, addVal(vm->val_store, $2));
+    }
+    | TOK_JMP TOK_SYMBOL {
         WRITE8(vm, OP_JMP);
-        WRITE16(vm, addVal(vm->val_store, $2));
+        WRITE16(vm, findSymbol($2));
     }
     | TOK_JMPIF expression {
+        //WRITE8(vm, OP_JMPIF);
+        emitJMPIF(vm, $2);
+        //WRITE16(vm, addVal(vm->val_store, $2));
+    }
+    | TOK_JMPIF TOK_SYMBOL {
         WRITE8(vm, OP_JMPIF);
-        WRITE16(vm, addVal(vm->val_store, $2));
+        WRITE16(vm, findSymbol($2));
     }
     | TOK_PUSH expression {
-        WRITE8(vm, OP_PUSH);
-        WRITE16(vm, addVal(vm->val_store, $2));
+        //WRITE8(vm, OP_PUSH);
+        emitPUSH(vm, $2);
+        //WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_PUSH TOK_SYMBOL {
         WRITE8(vm, OP_PUSH);
@@ -259,8 +386,8 @@ class4_instruction
 class3_instruction
     : TOK_CAST TOK_SYMBOL type_spec {
         WRITE8(vm, OP_CAST);
-        WRITE16(vm, findSymbol($2));
         WRITE8(vm, $3->type);
+        WRITE16(vm, findSymbol($2));
     }
     ;
 
@@ -281,6 +408,8 @@ instruction_list
     ;
 
     /* removed symbol and string, but these will have to be addressed later */
+    /* If a value is to be derived from a symbol, then that has to be done using
+        assembly language. */
 expression_factor
     : TOK_UNUM {
         $$ = createVal(VAL_UNUM);

@@ -50,71 +50,74 @@ Grammar
    39                   | TOK_PRINT
 
    40 class2_instruction: TOK_CALL expression
-   41                   | TOK_JMP expression
-   42                   | TOK_JMPIF expression
-   43                   | TOK_PUSH expression
-   44                   | TOK_PUSH TOK_SYMBOL
+   41                   | TOK_CALL TOK_SYMBOL
+   42                   | TOK_JMP expression
+   43                   | TOK_JMP TOK_SYMBOL
+   44                   | TOK_JMPIF expression
+   45                   | TOK_JMPIF TOK_SYMBOL
+   46                   | TOK_PUSH expression
+   47                   | TOK_PUSH TOK_SYMBOL
 
-   45 class4_instruction: TOK_CALLX TOK_SYMBOL
-   46                   | TOK_EXCEPT TOK_SYMBOL
-   47                   | TOK_ERROR TOK_SYMBOL
-   48                   | TOK_SAVE TOK_SYMBOL
+   48 class4_instruction: TOK_CALLX TOK_SYMBOL
+   49                   | TOK_EXCEPT TOK_SYMBOL
+   50                   | TOK_ERROR TOK_SYMBOL
+   51                   | TOK_SAVE TOK_SYMBOL
 
-   49 class3_instruction: TOK_CAST TOK_SYMBOL type_spec
+   52 class3_instruction: TOK_CAST TOK_SYMBOL type_spec
 
-   50 instruction_block: label instruction_list
+   53 instruction_block: label instruction_list
 
-   51 instruction_item: class1_instruction
-   52                 | class2_instruction
-   53                 | class3_instruction
-   54                 | class4_instruction
+   54 instruction_item: class1_instruction
+   55                 | class2_instruction
+   56                 | class3_instruction
+   57                 | class4_instruction
 
-   55 instruction_list: instruction_item
-   56                 | instruction_list instruction_item
+   58 instruction_list: instruction_item
+   59                 | instruction_list instruction_item
 
-   57 expression_factor: TOK_UNUM
-   58                  | TOK_INUM
-   59                  | TOK_FNUM
+   60 expression_factor: TOK_UNUM
+   61                  | TOK_INUM
+   62                  | TOK_FNUM
 
-   60 expression: expression_factor
-   61           | expression '+' expression
-   62           | expression '-' expression
-   63           | expression '*' expression
-   64           | expression '/' expression
-   65           | expression '%' expression
-   66           | '-' expression
-   67           | '(' expression ')'
+   63 expression: expression_factor
+   64           | expression '+' expression
+   65           | expression '-' expression
+   66           | expression '*' expression
+   67           | expression '/' expression
+   68           | expression '%' expression
+   69           | '-' expression
+   70           | '(' expression ')'
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'%' (37) 65
-'(' (40) 67
-')' (41) 67
-'*' (42) 63
-'+' (43) 61
-'-' (45) 62 66
-'/' (47) 64
+'%' (37) 68
+'(' (40) 70
+')' (41) 70
+'*' (42) 66
+'+' (43) 64
+'-' (45) 65 69
+'/' (47) 67
 '=' (61) 19 20 21
 error (256)
-TOK_SYMBOL <str> (258) 8 18 19 20 21 44 45 46 47 48 49
-TOK_UNUM <unum> (259) 57
-TOK_INUM <inum> (260) 58
-TOK_FNUM <fnum> (261) 59
+TOK_SYMBOL <str> (258) 8 18 19 20 21 41 43 45 47 48 49 50 51 52
+TOK_UNUM <unum> (259) 60
+TOK_INUM <inum> (260) 61
+TOK_FNUM <fnum> (261) 62
 TOK_STR <str> (262) 17 21
-TOK_ERROR <opcode> (263) 47
+TOK_ERROR <opcode> (263) 50
 TOK_NOOP <opcode> (264) 23
 TOK_EXIT <opcode> (265) 22
-TOK_CALL <opcode> (266) 40
-TOK_CALLX <opcode> (267) 45
+TOK_CALL <opcode> (266) 40 41
+TOK_CALLX <opcode> (267) 48
 TOK_RETURN <opcode> (268) 24
-TOK_JMP <opcode> (269) 41
-TOK_JMPIF <opcode> (270) 42
-TOK_EXCEPT <opcode> (271) 46
-TOK_PUSH <opcode> (272) 43 44
+TOK_JMP <opcode> (269) 42 43
+TOK_JMPIF <opcode> (270) 44 45
+TOK_EXCEPT <opcode> (271) 49
+TOK_PUSH <opcode> (272) 46 47
 TOK_POP <opcode> (273) 25
-TOK_SAVE <opcode> (274) 48
+TOK_SAVE <opcode> (274) 51
 TOK_NOT <opcode> (275) 26
 TOK_EQ <opcode> (276) 28
 TOK_NEQ <opcode> (277) 29
@@ -135,7 +138,7 @@ TOK_FNUM_TYPE <type> (291) 11 15
 TOK_CONST <type> (292) 13 14 15 16
 TOK_STR_TYPE <type> (293) 21
 TOK_BOOL_TYPE <type> (294) 12 16
-TOK_CAST <type> (295) 49
+TOK_CAST <type> (295) 52
 TOK_INCLUDE (296) 17
 NEGATE (297)
 
@@ -151,33 +154,33 @@ module_item_list (53)
 module_item (54)
     on left: 4 5 6 7, on right: 2 3
 label <str> (55)
-    on left: 8, on right: 4 50
+    on left: 8, on right: 4 53
 type_spec <value> (56)
-    on left: 9 10 11 12 13 14 15 16, on right: 18 19 20 49
+    on left: 9 10 11 12 13 14 15 16, on right: 18 19 20 52
 include_statement (57)
     on left: 17, on right: 6
 data_definition (58)
     on left: 18 19 20 21, on right: 7
 class1_instruction (59)
     on left: 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39,
-    on right: 51
+    on right: 54
 class2_instruction (60)
-    on left: 40 41 42 43 44, on right: 52
+    on left: 40 41 42 43 44 45 46 47, on right: 55
 class4_instruction (61)
-    on left: 45 46 47 48, on right: 54
+    on left: 48 49 50 51, on right: 57
 class3_instruction (62)
-    on left: 49, on right: 53
+    on left: 52, on right: 56
 instruction_block (63)
-    on left: 50, on right: 5
+    on left: 53, on right: 5
 instruction_item (64)
-    on left: 51 52 53 54, on right: 55 56
+    on left: 54 55 56 57, on right: 58 59
 instruction_list (65)
-    on left: 55 56, on right: 50 56
+    on left: 58 59, on right: 53 59
 expression_factor <value> (66)
-    on left: 57 58 59, on right: 60
+    on left: 60 61 62, on right: 63
 expression <value> (67)
-    on left: 60 61 62 63 64 65 66 67, on right: 19 40 41 42 43 61 62
-    63 64 65 66 67
+    on left: 63 64 65 66 67 68 69 70, on right: 19 40 42 44 46 64 65
+    66 67 68 69 70
 
 
 State 0
@@ -306,7 +309,7 @@ State 11
 State 12
 
     4 module_item: label .  [$end, TOK_SYMBOL, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_INCLUDE]
-   50 instruction_block: label . instruction_list
+   53 instruction_block: label . instruction_list
 
     TOK_ERROR   shift, and go to state 25
     TOK_NOOP    shift, and go to state 26
@@ -434,7 +437,7 @@ State 24
 
 State 25
 
-   47 class4_instruction: TOK_ERROR . TOK_SYMBOL
+   50 class4_instruction: TOK_ERROR . TOK_SYMBOL
 
     TOK_SYMBOL  shift, and go to state 60
 
@@ -456,22 +459,24 @@ State 27
 State 28
 
    40 class2_instruction: TOK_CALL . expression
+   41                   | TOK_CALL . TOK_SYMBOL
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
+    TOK_SYMBOL  shift, and go to state 61
+    TOK_UNUM    shift, and go to state 62
+    TOK_INUM    shift, and go to state 63
+    TOK_FNUM    shift, and go to state 64
+    '-'         shift, and go to state 65
+    '('         shift, and go to state 66
 
-    expression_factor  go to state 66
-    expression         go to state 67
+    expression_factor  go to state 67
+    expression         go to state 68
 
 
 State 29
 
-   45 class4_instruction: TOK_CALLX . TOK_SYMBOL
+   48 class4_instruction: TOK_CALLX . TOK_SYMBOL
 
-    TOK_SYMBOL  shift, and go to state 68
+    TOK_SYMBOL  shift, and go to state 69
 
 
 State 30
@@ -483,53 +488,57 @@ State 30
 
 State 31
 
-   41 class2_instruction: TOK_JMP . expression
+   42 class2_instruction: TOK_JMP . expression
+   43                   | TOK_JMP . TOK_SYMBOL
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
+    TOK_SYMBOL  shift, and go to state 70
+    TOK_UNUM    shift, and go to state 62
+    TOK_INUM    shift, and go to state 63
+    TOK_FNUM    shift, and go to state 64
+    '-'         shift, and go to state 65
+    '('         shift, and go to state 66
 
-    expression_factor  go to state 66
-    expression         go to state 69
+    expression_factor  go to state 67
+    expression         go to state 71
 
 
 State 32
 
-   42 class2_instruction: TOK_JMPIF . expression
+   44 class2_instruction: TOK_JMPIF . expression
+   45                   | TOK_JMPIF . TOK_SYMBOL
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
+    TOK_SYMBOL  shift, and go to state 72
+    TOK_UNUM    shift, and go to state 62
+    TOK_INUM    shift, and go to state 63
+    TOK_FNUM    shift, and go to state 64
+    '-'         shift, and go to state 65
+    '('         shift, and go to state 66
 
-    expression_factor  go to state 66
-    expression         go to state 70
+    expression_factor  go to state 67
+    expression         go to state 73
 
 
 State 33
 
-   46 class4_instruction: TOK_EXCEPT . TOK_SYMBOL
+   49 class4_instruction: TOK_EXCEPT . TOK_SYMBOL
 
-    TOK_SYMBOL  shift, and go to state 71
+    TOK_SYMBOL  shift, and go to state 74
 
 
 State 34
 
-   43 class2_instruction: TOK_PUSH . expression
-   44                   | TOK_PUSH . TOK_SYMBOL
+   46 class2_instruction: TOK_PUSH . expression
+   47                   | TOK_PUSH . TOK_SYMBOL
 
-    TOK_SYMBOL  shift, and go to state 72
-    TOK_UNUM    shift, and go to state 61
-    TOK_INUM    shift, and go to state 62
-    TOK_FNUM    shift, and go to state 63
-    '-'         shift, and go to state 64
-    '('         shift, and go to state 65
+    TOK_SYMBOL  shift, and go to state 75
+    TOK_UNUM    shift, and go to state 62
+    TOK_INUM    shift, and go to state 63
+    TOK_FNUM    shift, and go to state 64
+    '-'         shift, and go to state 65
+    '('         shift, and go to state 66
 
-    expression_factor  go to state 66
-    expression         go to state 73
+    expression_factor  go to state 67
+    expression         go to state 76
 
 
 State 35
@@ -541,9 +550,9 @@ State 35
 
 State 36
 
-   48 class4_instruction: TOK_SAVE . TOK_SYMBOL
+   51 class4_instruction: TOK_SAVE . TOK_SYMBOL
 
-    TOK_SYMBOL  shift, and go to state 74
+    TOK_SYMBOL  shift, and go to state 77
 
 
 State 37
@@ -646,50 +655,50 @@ State 50
 
 State 51
 
-   49 class3_instruction: TOK_CAST . TOK_SYMBOL type_spec
+   52 class3_instruction: TOK_CAST . TOK_SYMBOL type_spec
 
-    TOK_SYMBOL  shift, and go to state 75
+    TOK_SYMBOL  shift, and go to state 78
 
 
 State 52
 
-   51 instruction_item: class1_instruction .
-
-    $default  reduce using rule 51 (instruction_item)
-
-
-State 53
-
-   52 instruction_item: class2_instruction .
-
-    $default  reduce using rule 52 (instruction_item)
-
-
-State 54
-
-   54 instruction_item: class4_instruction .
+   54 instruction_item: class1_instruction .
 
     $default  reduce using rule 54 (instruction_item)
 
 
+State 53
+
+   55 instruction_item: class2_instruction .
+
+    $default  reduce using rule 55 (instruction_item)
+
+
+State 54
+
+   57 instruction_item: class4_instruction .
+
+    $default  reduce using rule 57 (instruction_item)
+
+
 State 55
 
-   53 instruction_item: class3_instruction .
+   56 instruction_item: class3_instruction .
 
-    $default  reduce using rule 53 (instruction_item)
+    $default  reduce using rule 56 (instruction_item)
 
 
 State 56
 
-   55 instruction_list: instruction_item .
+   58 instruction_list: instruction_item .
 
-    $default  reduce using rule 55 (instruction_list)
+    $default  reduce using rule 58 (instruction_list)
 
 
 State 57
 
-   50 instruction_block: label instruction_list .  [$end, TOK_SYMBOL, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_INCLUDE]
-   56 instruction_list: instruction_list . instruction_item
+   53 instruction_block: label instruction_list .  [$end, TOK_SYMBOL, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_INCLUDE]
+   59 instruction_list: instruction_list . instruction_item
 
     TOK_ERROR   shift, and go to state 25
     TOK_NOOP    shift, and go to state 26
@@ -719,13 +728,13 @@ State 57
     TOK_MOD     shift, and go to state 50
     TOK_CAST    shift, and go to state 51
 
-    $default  reduce using rule 50 (instruction_block)
+    $default  reduce using rule 53 (instruction_block)
 
     class1_instruction  go to state 52
     class2_instruction  go to state 53
     class4_instruction  go to state 54
     class3_instruction  go to state 55
-    instruction_item    go to state 76
+    instruction_item    go to state 79
 
 
 State 58
@@ -734,7 +743,7 @@ State 58
    19                | type_spec TOK_SYMBOL . '=' expression
    20                | type_spec TOK_SYMBOL . '=' TOK_SYMBOL
 
-    '='  shift, and go to state 77
+    '='  shift, and go to state 80
 
     $default  reduce using rule 18 (data_definition)
 
@@ -743,175 +752,196 @@ State 59
 
    21 data_definition: TOK_STR_TYPE TOK_SYMBOL '=' . TOK_STR
 
-    TOK_STR  shift, and go to state 78
+    TOK_STR  shift, and go to state 81
 
 
 State 60
 
-   47 class4_instruction: TOK_ERROR TOK_SYMBOL .
+   50 class4_instruction: TOK_ERROR TOK_SYMBOL .
 
-    $default  reduce using rule 47 (class4_instruction)
+    $default  reduce using rule 50 (class4_instruction)
 
 
 State 61
 
-   57 expression_factor: TOK_UNUM .
-
-    $default  reduce using rule 57 (expression_factor)
-
-
-State 62
-
-   58 expression_factor: TOK_INUM .
-
-    $default  reduce using rule 58 (expression_factor)
-
-
-State 63
-
-   59 expression_factor: TOK_FNUM .
-
-    $default  reduce using rule 59 (expression_factor)
-
-
-State 64
-
-   66 expression: '-' . expression
-
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
-
-    expression_factor  go to state 66
-    expression         go to state 79
-
-
-State 65
-
-   67 expression: '(' . expression ')'
-
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
-
-    expression_factor  go to state 66
-    expression         go to state 80
-
-
-State 66
-
-   60 expression: expression_factor .
-
-    $default  reduce using rule 60 (expression)
-
-
-State 67
-
-   40 class2_instruction: TOK_CALL expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-
-    '+'  shift, and go to state 81
-    '-'  shift, and go to state 82
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
-
-    $default  reduce using rule 40 (class2_instruction)
-
-
-State 68
-
-   45 class4_instruction: TOK_CALLX TOK_SYMBOL .
-
-    $default  reduce using rule 45 (class4_instruction)
-
-
-State 69
-
-   41 class2_instruction: TOK_JMP expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-
-    '+'  shift, and go to state 81
-    '-'  shift, and go to state 82
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
+   41 class2_instruction: TOK_CALL TOK_SYMBOL .
 
     $default  reduce using rule 41 (class2_instruction)
 
 
-State 70
+State 62
 
-   42 class2_instruction: TOK_JMPIF expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
+   60 expression_factor: TOK_UNUM .
 
-    '+'  shift, and go to state 81
-    '-'  shift, and go to state 82
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
-
-    $default  reduce using rule 42 (class2_instruction)
+    $default  reduce using rule 60 (expression_factor)
 
 
-State 71
+State 63
 
-   46 class4_instruction: TOK_EXCEPT TOK_SYMBOL .
+   61 expression_factor: TOK_INUM .
 
-    $default  reduce using rule 46 (class4_instruction)
-
-
-State 72
-
-   44 class2_instruction: TOK_PUSH TOK_SYMBOL .
-
-    $default  reduce using rule 44 (class2_instruction)
+    $default  reduce using rule 61 (expression_factor)
 
 
-State 73
+State 64
 
-   43 class2_instruction: TOK_PUSH expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
+   62 expression_factor: TOK_FNUM .
 
-    '+'  shift, and go to state 81
-    '-'  shift, and go to state 82
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
-
-    $default  reduce using rule 43 (class2_instruction)
+    $default  reduce using rule 62 (expression_factor)
 
 
-State 74
+State 65
 
-   48 class4_instruction: TOK_SAVE TOK_SYMBOL .
+   69 expression: '-' . expression
+
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
+
+    expression_factor  go to state 67
+    expression         go to state 82
+
+
+State 66
+
+   70 expression: '(' . expression ')'
+
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
+
+    expression_factor  go to state 67
+    expression         go to state 83
+
+
+State 67
+
+   63 expression: expression_factor .
+
+    $default  reduce using rule 63 (expression)
+
+
+State 68
+
+   40 class2_instruction: TOK_CALL expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    '+'  shift, and go to state 84
+    '-'  shift, and go to state 85
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 40 (class2_instruction)
+
+
+State 69
+
+   48 class4_instruction: TOK_CALLX TOK_SYMBOL .
 
     $default  reduce using rule 48 (class4_instruction)
 
 
+State 70
+
+   43 class2_instruction: TOK_JMP TOK_SYMBOL .
+
+    $default  reduce using rule 43 (class2_instruction)
+
+
+State 71
+
+   42 class2_instruction: TOK_JMP expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    '+'  shift, and go to state 84
+    '-'  shift, and go to state 85
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 42 (class2_instruction)
+
+
+State 72
+
+   45 class2_instruction: TOK_JMPIF TOK_SYMBOL .
+
+    $default  reduce using rule 45 (class2_instruction)
+
+
+State 73
+
+   44 class2_instruction: TOK_JMPIF expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    '+'  shift, and go to state 84
+    '-'  shift, and go to state 85
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 44 (class2_instruction)
+
+
+State 74
+
+   49 class4_instruction: TOK_EXCEPT TOK_SYMBOL .
+
+    $default  reduce using rule 49 (class4_instruction)
+
+
 State 75
 
-   49 class3_instruction: TOK_CAST TOK_SYMBOL . type_spec
+   47 class2_instruction: TOK_PUSH TOK_SYMBOL .
+
+    $default  reduce using rule 47 (class2_instruction)
+
+
+State 76
+
+   46 class2_instruction: TOK_PUSH expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE]
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    '+'  shift, and go to state 84
+    '-'  shift, and go to state 85
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+
+    $default  reduce using rule 46 (class2_instruction)
+
+
+State 77
+
+   51 class4_instruction: TOK_SAVE TOK_SYMBOL .
+
+    $default  reduce using rule 51 (class4_instruction)
+
+
+State 78
+
+   52 class3_instruction: TOK_CAST TOK_SYMBOL . type_spec
 
     TOK_UNUM_TYPE  shift, and go to state 2
     TOK_INUM_TYPE  shift, and go to state 3
@@ -919,240 +949,240 @@ State 75
     TOK_CONST      shift, and go to state 5
     TOK_BOOL_TYPE  shift, and go to state 7
 
-    type_spec  go to state 86
+    type_spec  go to state 89
 
 
-State 76
+State 79
 
-   56 instruction_list: instruction_list instruction_item .
+   59 instruction_list: instruction_list instruction_item .
 
-    $default  reduce using rule 56 (instruction_list)
+    $default  reduce using rule 59 (instruction_list)
 
 
-State 77
+State 80
 
    19 data_definition: type_spec TOK_SYMBOL '=' . expression
    20                | type_spec TOK_SYMBOL '=' . TOK_SYMBOL
 
-    TOK_SYMBOL  shift, and go to state 87
-    TOK_UNUM    shift, and go to state 61
-    TOK_INUM    shift, and go to state 62
-    TOK_FNUM    shift, and go to state 63
-    '-'         shift, and go to state 64
-    '('         shift, and go to state 65
+    TOK_SYMBOL  shift, and go to state 90
+    TOK_UNUM    shift, and go to state 62
+    TOK_INUM    shift, and go to state 63
+    TOK_FNUM    shift, and go to state 64
+    '-'         shift, and go to state 65
+    '('         shift, and go to state 66
 
-    expression_factor  go to state 66
-    expression         go to state 88
+    expression_factor  go to state 67
+    expression         go to state 91
 
 
-State 78
+State 81
 
    21 data_definition: TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR .
 
     $default  reduce using rule 21 (data_definition)
 
 
-State 79
-
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-   66           | '-' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
-
-    $default  reduce using rule 66 (expression)
-
-
-State 80
-
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-   67           | '(' expression . ')'
-
-    '+'  shift, and go to state 81
-    '-'  shift, and go to state 82
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
-    ')'  shift, and go to state 89
-
-
-State 81
-
-   61 expression: expression '+' . expression
-
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
-
-    expression_factor  go to state 66
-    expression         go to state 90
-
-
 State 82
 
-   62 expression: expression '-' . expression
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+   69           | '-' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
-
-    expression_factor  go to state 66
-    expression         go to state 91
+    $default  reduce using rule 69 (expression)
 
 
 State 83
 
-   63 expression: expression '*' . expression
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+   70           | '(' expression . ')'
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
-
-    expression_factor  go to state 66
-    expression         go to state 92
+    '+'  shift, and go to state 84
+    '-'  shift, and go to state 85
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
+    ')'  shift, and go to state 92
 
 
 State 84
 
-   64 expression: expression '/' . expression
+   64 expression: expression '+' . expression
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
 
-    expression_factor  go to state 66
+    expression_factor  go to state 67
     expression         go to state 93
 
 
 State 85
 
-   65 expression: expression '%' . expression
+   65 expression: expression '-' . expression
 
-    TOK_UNUM  shift, and go to state 61
-    TOK_INUM  shift, and go to state 62
-    TOK_FNUM  shift, and go to state 63
-    '-'       shift, and go to state 64
-    '('       shift, and go to state 65
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
 
-    expression_factor  go to state 66
+    expression_factor  go to state 67
     expression         go to state 94
 
 
 State 86
 
-   49 class3_instruction: TOK_CAST TOK_SYMBOL type_spec .
+   66 expression: expression '*' . expression
 
-    $default  reduce using rule 49 (class3_instruction)
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
+
+    expression_factor  go to state 67
+    expression         go to state 95
 
 
 State 87
+
+   67 expression: expression '/' . expression
+
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
+
+    expression_factor  go to state 67
+    expression         go to state 96
+
+
+State 88
+
+   68 expression: expression '%' . expression
+
+    TOK_UNUM  shift, and go to state 62
+    TOK_INUM  shift, and go to state 63
+    TOK_FNUM  shift, and go to state 64
+    '-'       shift, and go to state 65
+    '('       shift, and go to state 66
+
+    expression_factor  go to state 67
+    expression         go to state 97
+
+
+State 89
+
+   52 class3_instruction: TOK_CAST TOK_SYMBOL type_spec .
+
+    $default  reduce using rule 52 (class3_instruction)
+
+
+State 90
 
    20 data_definition: type_spec TOK_SYMBOL '=' TOK_SYMBOL .
 
     $default  reduce using rule 20 (data_definition)
 
 
-State 88
+State 91
 
    19 data_definition: type_spec TOK_SYMBOL '=' expression .  [$end, TOK_SYMBOL, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_INCLUDE]
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
 
-    '+'  shift, and go to state 81
-    '-'  shift, and go to state 82
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
+    '+'  shift, and go to state 84
+    '-'  shift, and go to state 85
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
 
     $default  reduce using rule 19 (data_definition)
 
 
-State 89
-
-   67 expression: '(' expression ')' .
-
-    $default  reduce using rule 67 (expression)
-
-
-State 90
-
-   61 expression: expression . '+' expression
-   61           | expression '+' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', ')']
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
-
-    $default  reduce using rule 61 (expression)
-
-
-State 91
-
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   62           | expression '-' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', ')']
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-
-    '*'  shift, and go to state 83
-    '/'  shift, and go to state 84
-    '%'  shift, and go to state 85
-
-    $default  reduce using rule 62 (expression)
-
-
 State 92
 
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   63           | expression '*' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
-   64           | expression . '/' expression
-   65           | expression . '%' expression
+   70 expression: '(' expression ')' .
 
-    $default  reduce using rule 63 (expression)
+    $default  reduce using rule 70 (expression)
 
 
 State 93
 
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   64           | expression '/' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
-   65           | expression . '%' expression
+   64 expression: expression . '+' expression
+   64           | expression '+' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', ')']
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
 
     $default  reduce using rule 64 (expression)
 
 
 State 94
 
-   61 expression: expression . '+' expression
-   62           | expression . '-' expression
-   63           | expression . '*' expression
-   64           | expression . '/' expression
-   65           | expression . '%' expression
-   65           | expression '%' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   65           | expression '-' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', ')']
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    '*'  shift, and go to state 86
+    '/'  shift, and go to state 87
+    '%'  shift, and go to state 88
 
     $default  reduce using rule 65 (expression)
+
+
+State 95
+
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   66           | expression '*' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+
+    $default  reduce using rule 66 (expression)
+
+
+State 96
+
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   67           | expression '/' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
+   68           | expression . '%' expression
+
+    $default  reduce using rule 67 (expression)
+
+
+State 97
+
+   64 expression: expression . '+' expression
+   65           | expression . '-' expression
+   66           | expression . '*' expression
+   67           | expression . '/' expression
+   68           | expression . '%' expression
+   68           | expression '%' expression .  [$end, TOK_SYMBOL, TOK_ERROR, TOK_NOOP, TOK_EXIT, TOK_CALL, TOK_CALLX, TOK_RETURN, TOK_JMP, TOK_JMPIF, TOK_EXCEPT, TOK_PUSH, TOK_POP, TOK_SAVE, TOK_NOT, TOK_EQ, TOK_NEQ, TOK_LEQ, TOK_GEQ, TOK_LESS, TOK_PRINT, TOK_GTR, TOK_NEG, TOK_ADD, TOK_SUB, TOK_MUL, TOK_DIV, TOK_MOD, TOK_UNUM_TYPE, TOK_INUM_TYPE, TOK_FNUM_TYPE, TOK_CONST, TOK_STR_TYPE, TOK_BOOL_TYPE, TOK_CAST, TOK_INCLUDE, '+', '-', '*', '/', '%', ')']
+
+    $default  reduce using rule 68 (expression)

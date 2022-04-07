@@ -21,13 +21,13 @@ int int_name = 123
 
 _symbol_321
     push uint_name
-    pUSh int_name
+    PUSH int_name
     add
     print
     push some_name
     div
     print
-    noop
+    NoOp
 
 const float some_int =  int_name
 uint float_name = 102

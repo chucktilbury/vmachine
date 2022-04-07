@@ -6,7 +6,8 @@ typedef struct {
     bool isAssigned;
     bool isConst;
     bool isLiteral;
-    uint64_t value;
+    uint32_t hash;
+    uint32_t value;
 } val_fmt;
 
 typedef struct {
@@ -24,6 +25,7 @@ static void save_values(ValList* store, FILE* fp)
         vfmt.isAssigned = val->isAssigned;
         vfmt.isConst = val->isConst;
         vfmt.isLiteral = val->isLiteral;
+        vfmt.hash = val->hash;
         vfmt.value = val->data.unum;
         fwrite(&vfmt, sizeof(val_fmt), 1, fp);
     }
@@ -44,6 +46,7 @@ static void load_values(size_t len, ValList* store, FILE* fp)
         val->isAssigned = valf.isAssigned;
         val->isConst = valf.isConst;
         val->isLiteral = valf.isLiteral;
+        val->hash = valf.hash;
         val->data.unum = valf.value;
         store->list[idx] = val;
     }

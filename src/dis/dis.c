@@ -44,7 +44,34 @@ void disassemble(VMachine* vm)
                 break;
 
             // 16 bit operand
-            case OP_CALL:
+            case OP_CALL: {
+                    uint16_t oper = READ16(vm);
+                    printf("%s\t%4d\t", opToStr(inst), oper);
+                    printVal(getVal(vm->val_store, oper));
+                }
+                break;
+
+            case OP_CALL8: {
+                    uint8_t type = READ8(vm);
+                    uint8_t valu = READ8(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_CALL16: {
+                    uint8_t type = READ8(vm);
+                    uint16_t valu = READ16(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_CALL32: {
+                    uint8_t type = READ8(vm);
+                    uint32_t valu = READ32(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
             case OP_CALLX:
             case OP_SAVE:
             case OP_PUSH: {
@@ -54,12 +81,82 @@ void disassemble(VMachine* vm)
                 }
                 break;
 
+            case OP_PUSH8: {
+                    uint8_t type = READ8(vm);
+                    uint8_t valu = READ8(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_PUSH16: {
+                    uint8_t type = READ8(vm);
+                    uint16_t valu = READ16(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_PUSH32: {
+                    uint8_t type = READ8(vm);
+                    uint32_t valu = READ32(vm);
+                    printf("%s\t\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    // TODO: display the proper type
+                }
+                break;
+
             // 16 bit signed operand
-            case OP_JMP:
+            case OP_JMP: {
+                    uint16_t oper = READ16(vm);
+                    printf("%s\t%4d\t", opToStr(inst), oper);
+                    printVal(getVal(vm->val_store, oper));
+                }
+                break;
+
+            case OP_JMP8: {
+                    uint8_t type = READ8(vm);
+                    uint8_t valu = READ8(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_JMP16: {
+                    uint8_t type = READ8(vm);
+                    uint16_t valu = READ16(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_JMP32: {
+                    uint8_t type = READ8(vm);
+                    uint32_t valu = READ32(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
             case OP_JMPIF: {
                     int oper = (int)READ16(vm);
                     printf("%s\t%d\t", opToStr(inst), oper);
                     printVal(getVal(vm->val_store, oper));
+                }
+                break;
+
+            case OP_JMPIF8: {
+                    uint8_t type = READ8(vm);
+                    uint8_t valu = READ8(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_JMPIF16: {
+                    uint8_t type = READ8(vm);
+                    uint16_t valu = READ16(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
+                }
+                break;
+
+            case OP_JMPIF32: {
+                    uint8_t type = READ8(vm);
+                    uint32_t valu = READ32(vm);
+                    printf("%s\t%s\t%4d\t", opToStr(inst), valToStr(type), valu);
                 }
                 break;
 
@@ -68,11 +165,11 @@ void disassemble(VMachine* vm)
                 break;
 
             case OP_CAST: {
+                    int type = (int)READ8(vm);
                     int oper = (int)READ16(vm);
                     printf("%s\t%d\t", opToStr(inst), oper);
                     printVal(getVal(vm->val_store, oper));
-                    oper = (int)READ8(vm);
-                    printf("          cast to %s\n", valToStr(oper));
+                    printf("          cast to %s\n", valToStr(type));
                 }
                 break;
 

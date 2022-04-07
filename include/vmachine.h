@@ -19,6 +19,7 @@ typedef struct _vmachine_ {
     InstStore* inst;
     ValList* val_stack;
     ValList* val_store;
+    ValList* cons_store;
     StrStore* str_store;
     bool zflag;
 } VMachine;

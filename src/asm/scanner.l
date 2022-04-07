@@ -159,21 +159,21 @@ static void update_loc(void){
 
 [0-9]+ {
         //yylval.literal.intval = strtol(yytext, NULL, 10);
-        yylval.inum = strtol(yytext, NULL, 10);
+        yylval.inum = (int32_t)strtol(yytext, NULL, 10);
         return TOK_INUM;
     }
 
     /* recognize a float */
 ([0-9]*\.)?[0-9]+([Ee][-+]?[0-9]+)? {
         //yylval.literal.fpval = strtod(yytext, NULL);
-        yylval.fnum = strtod(yytext, NULL);
+        yylval.fnum = strtof(yytext, NULL);
         //printf("number: %0.3f\n", yylval.fnum);
         return TOK_FNUM;
     }
 
 0[Xx][0-9a-fA-F]+ {
         //yylval.literal.uintval = strtol(yytext, NULL, 16);
-        yylval.unum = strtol(yytext, NULL, 16);
+        yylval.unum = (uint32_t)strtol(yytext, NULL, 16);
         return TOK_UNUM;
     }
 

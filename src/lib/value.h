@@ -20,10 +20,11 @@ typedef struct {
     bool isAssigned;// has a value
     bool isConst;   // declared as constant
     bool isLiteral; // not connected to a symbol
+    uint32_t hash;
     union {
-        uint64_t unum;
-        int64_t inum;
-        double fnum;
+        uint32_t unum;
+        int32_t inum;
+        float fnum;
         bool boolean;
         Index obj;
     } data;
@@ -32,17 +33,20 @@ typedef struct {
 typedef GenericPtrList ValList;
 
 #define destroyValList(vl)  destroyGPL(vl)
-#define addVal(vl, obj)     addGPL(vl, obj)
+//#define addVal(vl, obj)     addGPL(vl, obj)
 #define getVal(vl, idx)     getGPL(vl, idx)
-#define setVal(vl, idx, obj)    setGPL(vl, idx, obj)
+//#define setVal(vl, idx, obj)    setGPL(vl, idx, obj)
 #define pushVal(vl, obj)    pushGPL(vl, obj)
 #define popVal(vl)          popGPL(vl)
 #define peekVal(vl)         peekGPL(vl)
 
 ValList* createValList();
 Value* createVal(ValType type);
+int addVal(ValList* lst, Value* val);
+void setVal(ValList* lst, int idx, Value* val);
 void assignVal(Value* obj, Value* val);
 void dumpVals();
+uint32_t hashValue(Value* val);
 void printVal(Value* obj);
 const char* valToStr(ValType type);
 

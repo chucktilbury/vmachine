@@ -33,6 +33,29 @@ ValList* createValList()
 }
 
 /**
+ * @brief Hash the value
+ *
+ * @param val
+ *
+ * @return uint32_t
+ */
+uint32_t hashValue(Value* val)
+{
+    uint32_t h = 5623; // largeish prime number
+    char* ptr = (char*)val;
+    int len = sizeof(Value);
+
+    for (int i = 0; i < len; i++) {
+        h ^= *(ptr++);
+        h *= 0x5bd1e995;
+        h ^= h >> 15;
+    }
+
+    return h;
+}
+
+
+/**
  * @brief Create a Val object
  *
  * @param type
@@ -48,8 +71,23 @@ Value* createVal(ValType type)
     val->isLiteral = false;
     val->data.unum = 0;
 
+    val->hash = hashValue(val);
     return val;
 }
+
+int addVal(ValList* vl, Value* val)
+{
+    int retv = addGPL(vl, val);
+    val->hash = hashValue(val);
+    return retv;
+}
+
+void setVal(ValList* vl, int idx, Value* val)
+{
+    setVal(vl, idx, val);
+    val->hash = hashValue(val);
+}
+
 
 /**
  * @brief Assign one value type to another, with error checking.
@@ -101,10 +139,10 @@ void assignVal(Value* obj, Value* val)
                         obj->data.unum = val->data.unum;
                         break;
                     case VAL_INUM:
-                        obj->data.unum = (uint64_t)val->data.inum;
+                        obj->data.unum = (uint32_t)val->data.inum;
                         break;
                     case VAL_FNUM:
-                        obj->data.unum = (uint64_t)((int64_t)val->data.fnum);
+                        obj->data.unum = (uint32_t)((int32_t)val->data.fnum);
                         break;
                     case VAL_ADDRESS:
                         obj->data.unum = val->data.unum;
@@ -122,16 +160,16 @@ void assignVal(Value* obj, Value* val)
             case VAL_INUM:
                 switch(val->type) {
                     case VAL_UNUM:
-                        obj->data.inum = (int64_t)val->data.unum;
+                        obj->data.inum = (int32_t)val->data.unum;
                         break;
                     case VAL_INUM:
                         obj->data.inum = val->data.inum;
                         break;
                     case VAL_FNUM:
-                        obj->data.inum = (int64_t)val->data.fnum;
+                        obj->data.inum = (int32_t)val->data.fnum;
                         break;
                     case VAL_ADDRESS:
-                        obj->data.inum = (int64_t)val->data.unum;
+                        obj->data.inum = (int32_t)val->data.unum;
                         break;
                     // errors
                     case VAL_BOOL:
@@ -146,7 +184,7 @@ void assignVal(Value* obj, Value* val)
             case VAL_FNUM:
                 switch(val->type) {
                     case VAL_UNUM:
-                        obj->data.fnum = (double)((int64_t)val->data.unum);
+                        obj->data.fnum = (double)((int32_t)val->data.unum);
                         break;
                     case VAL_INUM:
                         obj->data.fnum = (double)val->data.inum;
@@ -155,7 +193,7 @@ void assignVal(Value* obj, Value* val)
                         obj->data.fnum = val->data.fnum;
                         break;
                     case VAL_ADDRESS:
-                        obj->data.fnum = (double)((int64_t)val->data.unum);
+                        obj->data.fnum = (double)((int32_t)val->data.unum);
                         break;
                     // errors
                     case VAL_BOOL:
@@ -200,7 +238,7 @@ void assignVal(Value* obj, Value* val)
                         obj->data.unum = val->data.unum;
                         break;
                     case VAL_INUM:
-                        obj->data.unum = (uint64_t)val->data.inum;
+                        obj->data.unum = (uint32_t)val->data.inum;
                         break;
                     case VAL_ADDRESS:
                         obj->data.unum = val->data.unum;
@@ -220,6 +258,7 @@ void assignVal(Value* obj, Value* val)
                 runtimeError("xx attempt to assign an unknown object type: %s", valToStr(obj->type));
             }
     }
+    obj->hash = hashValue(obj);
 }
 
 /**
@@ -266,14 +305,14 @@ void printVal(Value* obj)
             }
             break;
         case VAL_UNUM: {
-                int slen = snprintf(NULL, 0, "0x%lX", obj->data.unum);
-                printf("0x%lX%*s", obj->data.unum, pad_len - slen, " ");
+                int slen = snprintf(NULL, 0, "0x%X", obj->data.unum);
+                printf("0x%X%*s", obj->data.unum, pad_len - slen, " ");
             }
             break;
         case VAL_ADDRESS:
         case VAL_INUM: {
-                int slen = snprintf(NULL, 0, "%ld", obj->data.inum);
-                printf("%ld%*s", obj->data.inum, pad_len - slen, " ");
+                int slen = snprintf(NULL, 0, "%d", obj->data.inum);
+                printf("%d%*s", obj->data.inum, pad_len - slen, " ");
             }
             break;
         case VAL_FNUM: {
@@ -291,9 +330,13 @@ void printVal(Value* obj)
             break;
     }
 
-    printf("assigned: %s const: %s literal: %s\n",
+    printf("assigned: %-5s const: %-5s literal: %-5s ",
            obj->isAssigned ? "true" : "false",
            obj->isConst ? "true" : "false",
            obj->isLiteral ? "true" : "false");
+    printf("hash: 0x%08X\n", obj->hash);
+
+    // printf("raw data: 0x%08X\n", obj->data.unum);
+
 }
 

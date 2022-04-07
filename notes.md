@@ -1,5 +1,5 @@
 
-* Change values to all pointers.
+* Make values 32 bits instead of 64. Supporting immediate instructions.
 
 * Need a way to delete/free values.
 
@@ -23,3 +23,5 @@ code. Fix the parser for that.
 
 * When joining together several files, how to fix up the indexes. Almost
 have to simulate the whole program....
+
+* create immediate instructions for push, call and jmp.

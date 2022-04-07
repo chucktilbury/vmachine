@@ -33,6 +33,22 @@ const char* opToStr(OpCodes op)
            (op == OP_CAST) ? "OP_CAST" :
            (op == OP_SAVE) ? "OP_SAVE" :
            //(op == OP_TRAP)? "OP_TRAP":
-           (op == OP_PRINT) ? "OP_PRINT" : "UNKNOWN";
+           (op == OP_PRINT) ? "OP_PRINT" :
+
+           (op == OP_CALL8) ? "OP_CALL8" :
+           (op == OP_CALL16) ? "OP_CALL16" :
+           (op == OP_CALL32) ? "OP_CALL32" :
+
+           (op == OP_PUSH8) ? "OP_PUSH8" :
+           (op == OP_PUSH16) ? "OP_PUSH16" :
+           (op == OP_PUSH32) ? "OP_PUSH32" :
+
+           (op == OP_JMP8) ? "OP_JMP8" :
+           (op == OP_JMP16) ? "OP_JMP16" :
+           (op == OP_JMP32) ? "OP_JMP32" :
+
+           (op == OP_JMPIF8) ? "OP_JMPIF8" :
+           (op == OP_JMPIF16) ? "OP_JMPIF16" :
+           (op == OP_JMPIF32) ? "OP_JMPIF32" :  "UNKNOWN";
 }
 

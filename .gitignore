@@ -1,10 +1,10 @@
 bin/
 obj/
 docs/out/
-asmparser.c
-asmparser.h
-asmparser.output
-asmscanner.c
+parser.c
+parser.h
+parser.output
+scanner.c
 
 # Prerequisites
 *.d

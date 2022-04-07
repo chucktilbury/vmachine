@@ -16,6 +16,7 @@ SLST	=	error.c \
 			symbols.c \
 			utils.c \
 			value.c \
+			runner.c \
 			support.c
 
 all: $(TARGET)
