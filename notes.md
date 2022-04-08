@@ -1,11 +1,9 @@
 
-* Make values 32 bits instead of 64. Supporting immediate instructions.
+* Make expressions.c do the whole operation instead of the runner.
+
+* mechanism for comparing objects.
 
 * Need a way to delete/free values.
-
-* Distinguish literals from variables.
-
-* Figure out how to push a value on the stack without creating a new value.
 
 * Fix casting. (values to pointers)
 
@@ -23,5 +21,3 @@ code. Fix the parser for that.
 
 * When joining together several files, how to fix up the indexes. Almost
 have to simulate the whole program....
-
-* create immediate instructions for push, call and jmp.

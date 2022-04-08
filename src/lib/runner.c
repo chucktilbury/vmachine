@@ -1,10 +1,6 @@
 
 #include "common.h"
 
-#define CBINARY(op) do {\
-        VTRACE(5, "%08d %s", IP(vm), opToStr(opcode)); \
-    } while(0)
-
 void runMachine(VMachine* vm)
 {
     bool finished = false;
@@ -48,23 +44,70 @@ void runMachine(VMachine* vm)
 
             // no operand binary operation pops 2 values and pushes a
             // boolean result.
-            case OP_EQ:
-                CBINARY( ==);
+            case OP_EQ: {
+                    VTRACE(5, "%-10s\n", opToStr(opcode));
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
+                    POP(vm, left);
+                    POP(vm, right);
+                    eqVal(result, right, left);
+                    PUSH(vm, result);
+                }
                 break;
-            case OP_NEQ:
-                CBINARY( !=);
+
+            case OP_NEQ: {
+                    VTRACE(5, "%-10s\n", opToStr(opcode));
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
+                    POP(vm, left);
+                    POP(vm, right);
+                    neqVal(result, right, left);
+                    PUSH(vm, result);
+                }
                 break;
-            case OP_LEQ:
-                CBINARY( <=);
+
+            case OP_LEQ: {
+                    VTRACE(5, "%-10s\n", opToStr(opcode));
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
+                    POP(vm, left);
+                    POP(vm, right);
+                    leqVal(result, right, left);
+                    PUSH(vm, result);
+                }
                 break;
-            case OP_GEQ:
-                CBINARY( >=);
+
+            case OP_GEQ: {
+                    VTRACE(5, "%-10s\n", opToStr(opcode));
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
+                    POP(vm, left);
+                    POP(vm, right);
+                    geqVal(result, right, left);
+                    PUSH(vm, result);
+                }
                 break;
-            case OP_LESS:
-                CBINARY( <);
+
+            case OP_LESS: {
+                    VTRACE(5, "%-10s\n", opToStr(opcode));
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
+                    POP(vm, left);
+                    POP(vm, right);
+                    lessVal(result, right, left);
+                    PUSH(vm, result);
+                }
                 break;
-            case OP_GTR:
-                CBINARY( >);
+
+            case OP_GTR: {
+                    VTRACE(5, "%-10s\n", opToStr(opcode));
+                    Value* left, *right;
+                    Value* result = createVal(VAL_ERROR);
+                    POP(vm, left);
+                    POP(vm, right);
+                    gtrVal(result, right, left);
+                    PUSH(vm, result);
+                }
                 break;
 
             // no operand binary operation pops 2 operands and pushes a

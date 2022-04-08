@@ -1,4 +1,6 @@
 
+CC	=	gcc
+
 OBJDIR	=	obj
 BINDIR	=	bin
 SRCDIR	=	.

@@ -321,6 +321,7 @@ void printVal(Value* obj)
             }
             break;
         case VAL_BOOL: {
+                //printf("bool: 0x%08X\n", obj->data.unum);
                 int slen = snprintf(NULL, 0, "%s", obj->data.boolean ? "TRUE" : "FALSE");
                 printf("%s%*s", obj->data.boolean ? "TRUE" : "FALSE", pad_len - slen, " ");
             }

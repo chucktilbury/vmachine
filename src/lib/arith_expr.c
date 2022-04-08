@@ -11,6 +11,9 @@
  * An operation containing an int and a uint result in an int.
  *
  * An operation containing only uints results in a uint.
+ *
+ * This code is miles of slog. It could be implemented as tables, but the
+ * switch/case style is faster.
  */
 
 #include <math.h>

@@ -164,11 +164,12 @@ void emitPUSH(VMachine* vm, Value* val)
 %token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT
 %token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD
 %token <type> TOK_UNUM_TYPE TOK_INUM_TYPE TOK_FNUM_TYPE TOK_CONST
-%token <type> TOK_STR_TYPE TOK_BOOL_TYPE TOK_CAST
+%token <type> TOK_STR_TYPE TOK_BOOL_TYPE TOK_CAST TOK_TRUE TOK_FALSE
 %token TOK_INCLUDE
 
 %type <value> type_spec expression expression_factor
 %type <str> label
+%type <type> bool_val
 
 %right '='
 %left '+' '-'
@@ -176,9 +177,6 @@ void emitPUSH(VMachine* vm, Value* val)
 %left NEGATE
 
 %%
-    /*
-        Module rules.
-     */
 program
     : module_item_list
     ;
@@ -221,9 +219,6 @@ type_spec
     | TOK_FNUM_TYPE {
         $$ = createVal(VAL_FNUM);
     }
-    | TOK_BOOL_TYPE {
-        $$ = createVal(VAL_BOOL);
-    }
     | TOK_CONST TOK_UNUM_TYPE {
         Value* val = createVal(VAL_UNUM);
         val->isConst = true;
@@ -239,15 +234,15 @@ type_spec
         val->isConst = true;
         $$ = val;
     }
-    | TOK_CONST TOK_BOOL_TYPE {
-        Value* val = createVal(VAL_BOOL);
-        val->isConst = true;
-        $$ = val;
-    }
     ;
 
 include_statement
     : TOK_INCLUDE TOK_STR { open_file($2); }
+    ;
+
+bool_val
+    : TOK_TRUE { $$ = $1; }
+    | TOK_FALSE { $$ = $1; }
     ;
 
 data_definition
@@ -273,6 +268,16 @@ data_definition
             $1->isAssigned = true;
             assignVal($1, getVal(vm->val_store, findSymbol($4)));
             addSymbol($2, addVal(vm->val_store, $1));
+        }
+    }
+    | TOK_BOOL_TYPE TOK_SYMBOL '=' bool_val {
+        if(findSymbol($2))
+            syntaxError("symbol \"%s\" has already been defined", $2);
+        else {
+            Value* val = createVal(VAL_BOOL);
+            val->data.boolean = ($4 == TOK_TRUE)? true: false;
+            val->isAssigned = true;
+            addSymbol($2, addVal(vm->val_store, val));
         }
     }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
@@ -316,40 +321,52 @@ class1_instruction
         constant value */
 class2_instruction
     : TOK_CALL expression {
-        //WRITE8(vm, OP_CALL);
         emitCALL(vm, $2);
-        //WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_CALL TOK_SYMBOL {
-        WRITE8(vm, OP_CALL);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_CALL);
+            WRITE16(vm, slot);
+        }
     }
     | TOK_JMP expression {
-        //WRITE8(vm, OP_JMP);
         emitJMP(vm, $2);
-        //WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_JMP TOK_SYMBOL {
-        WRITE8(vm, OP_JMP);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_JMP);
+            WRITE16(vm, slot);
+        }
     }
     | TOK_JMPIF expression {
-        //WRITE8(vm, OP_JMPIF);
         emitJMPIF(vm, $2);
-        //WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_JMPIF TOK_SYMBOL {
-        WRITE8(vm, OP_JMPIF);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_JMPIF);
+            WRITE16(vm, slot);
+        }
     }
     | TOK_PUSH expression {
-        //WRITE8(vm, OP_PUSH);
         emitPUSH(vm, $2);
-        //WRITE16(vm, addVal(vm->val_store, $2));
     }
     | TOK_PUSH TOK_SYMBOL {
-        WRITE8(vm, OP_PUSH);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_PUSH);
+            WRITE16(vm, slot);
+        }
     }
     ;
 
@@ -364,12 +381,22 @@ class4_instruction
         }
     }
     | TOK_EXCEPT TOK_SYMBOL {
-        WRITE8(vm, OP_EXCEPT);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_EXCEPT);
+            WRITE16(vm, slot);
+        }
     }
     | TOK_ERROR TOK_SYMBOL {
-        WRITE8(vm, OP_ERROR);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_ERROR);
+            WRITE16(vm, slot);
+        }
     }
     | TOK_SAVE TOK_SYMBOL {
         int slot = findSymbol($2);
@@ -385,9 +412,14 @@ class4_instruction
 
 class3_instruction
     : TOK_CAST TOK_SYMBOL type_spec {
-        WRITE8(vm, OP_CAST);
-        WRITE8(vm, $3->type);
-        WRITE16(vm, findSymbol($2));
+        int slot = findSymbol($2);
+        if(slot == 0)
+            syntaxError("undefined symbol: \"%s\"", $2);
+        else {
+            WRITE8(vm, OP_CAST);
+            WRITE8(vm, $3->type);
+            WRITE16(vm, slot);
+        }
     }
     ;
 

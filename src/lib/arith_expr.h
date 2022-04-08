@@ -1,5 +1,5 @@
-#ifndef _EXPRESSIONS_H_
-#define _EXPRESSIONS_H_
+#ifndef _ARITH_EXPR_H_
+#define _ARITH_EXPR_H_
 
 #include "value.h"
 

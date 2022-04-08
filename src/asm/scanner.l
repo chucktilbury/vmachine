@@ -99,6 +99,8 @@ static void update_loc(void){
 "bool"          { yylval.type = VAL_BOOL; return TOK_BOOL_TYPE; }
 
 "const"         { return TOK_CONST; }
+"true"          { yylval.type = TOK_TRUE; return TOK_TRUE; }
+"false"         { yylval.type = TOK_FALSE; return TOK_FALSE; }
 
 "cast"          { yylval.opcode = OP_CAST; return TOK_CAST; }
 "error"         { yylval.opcode = OP_ERROR; return TOK_ERROR; }
