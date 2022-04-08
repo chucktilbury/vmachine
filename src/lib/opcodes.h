@@ -21,6 +21,19 @@ typedef enum {
     OP_JMPIF16,
     OP_JMPIF32,
 
+    OP_CALLR,    // call a signed relative address (constatant)
+    OP_CALLR8,
+    OP_CALLR16,
+    OP_CALLR32,
+    OP_JMPR,     // jump to a signed relative address (constatant)
+    OP_JMPR8,
+    OP_JMPR16,
+    OP_JMPR32,
+    OP_JMPIFR,   // conditional jump to a signed relative address (constatant)
+    OP_JMPIFR8,
+    OP_JMPIFR16,
+    OP_JMPIFR32,
+
     OP_PUSH,    // push the value slot on the value stack (variable)
     OP_PUSH8,
     OP_PUSH16,
@@ -54,8 +67,8 @@ typedef enum {
 
     OP_PRINT,   // print the value at the top of the stack
 
-    OP_SETZ,    // set the zero flag
-    OP_CLRZ,    // clear the zero flag
+    // OP_SETZ,    // set the zero flag
+    // OP_CLRZ,    // clear the zero flag
 
     //OP_TRAP,    // immediate is an 8 bit trap number
     //OP_FREE,     // not found a use yet

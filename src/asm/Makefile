@@ -8,6 +8,8 @@ make_dirs := $(shell mkdir -p $(OBJDIR))
 
 SLST	=	parser.c \
 			scanner.c \
+			arith_expr.c \
+			jumps.c \
 			main.c
 
 all: $(TARGET)

@@ -112,23 +112,20 @@ void disassemble(VMachine* vm)
                 break;
 
             case OP_JMP8: {
-                    uint8_t type = READ8(vm);
                     uint8_t valu = READ8(vm);
-                    printf("%s\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    printf("%s\t%4d\n", opToStr(inst), valu);
                 }
                 break;
 
             case OP_JMP16: {
-                    uint8_t type = READ8(vm);
                     uint16_t valu = READ16(vm);
-                    printf("%s\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    printf("%s\t%4d\n", opToStr(inst), valu);
                 }
                 break;
 
             case OP_JMP32: {
-                    uint8_t type = READ8(vm);
                     uint32_t valu = READ32(vm);
-                    printf("%s\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    printf("%s\t%4d\n", opToStr(inst), valu);
                 }
                 break;
 
@@ -140,23 +137,20 @@ void disassemble(VMachine* vm)
                 break;
 
             case OP_JMPIF8: {
-                    uint8_t type = READ8(vm);
                     uint8_t valu = READ8(vm);
-                    printf("%s\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    printf("%s\t%4d\n", opToStr(inst), valu);
                 }
                 break;
 
             case OP_JMPIF16: {
-                    uint8_t type = READ8(vm);
                     uint16_t valu = READ16(vm);
-                    printf("%s\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    printf("%s\t%4d\n", opToStr(inst), valu);
                 }
                 break;
 
             case OP_JMPIF32: {
-                    uint8_t type = READ8(vm);
                     uint32_t valu = READ32(vm);
-                    printf("%s\t%s\t%4d\n", opToStr(inst), valToStr(type), valu);
+                    printf("%s\t%4d\n", opToStr(inst), valu);
                 }
                 break;
 

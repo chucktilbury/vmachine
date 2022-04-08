@@ -12,6 +12,8 @@
 #include <stdarg.h>
 
 #include "scanner.h"
+#include "arith_expr.h"
+#include "jumps.h"
 //#include "expressions.h"
 
 // defined by flex
@@ -26,117 +28,6 @@ extern int error_count;
 void syntaxError(const char*, ...);
 
 #define TOKSTR get_tok_str()
-
-static int get_bits(Value *val)
-{
-    int retv = 0;
-    uint32_t n = val->data.unum; // get the raw bits
-
-    if(val->type == VAL_FNUM)
-        retv = 32;
-    else {
-        int count = 0;
-        for(int i = 0; i < 32; i++) {
-            if(n & (0x01 << i))
-                count++;
-        }
-
-        if(count >= 0 && count < 7)
-            retv = 8;
-        else if(count >= 8 && count < 15)
-            retv = 16;
-        else
-            retv = 32;
-    }
-
-    return retv;
-}
-
-void emitJMP(VMachine* vm, Value* val)
-{
-    switch(get_bits(val)) {
-        case 8:
-            WRITE8(vm, OP_JMP8);
-            WRITE8(vm, val->type);
-            WRITE8(vm, val->data.unum);
-            break;
-        case 16:
-            WRITE8(vm, OP_JMP16);
-            WRITE8(vm, val->type);
-            WRITE16(vm, val->data.unum);
-            break;
-        case 32:
-            WRITE8(vm, OP_JMP32);
-            WRITE8(vm, val->type);
-            WRITE32(vm, val->data.unum);
-            break;
-    }
-}
-
-void emitJMPIF(VMachine* vm, Value* val)
-{
-    switch(get_bits(val)) {
-        case 8:
-            WRITE8(vm, OP_JMPIF8);
-            WRITE8(vm, val->type);
-            WRITE8(vm, val->data.unum);
-            break;
-        case 16:
-            WRITE8(vm, OP_JMPIF16);
-            WRITE8(vm, val->type);
-            WRITE16(vm, val->data.unum);
-            break;
-        case 32:
-            WRITE8(vm, OP_JMPIF32);
-            WRITE8(vm, val->type);
-            WRITE32(vm, val->data.unum);
-            break;
-    }
-}
-
-void emitCALL(VMachine* vm, Value* val)
-{
-    switch(get_bits(val)) {
-        case 8:
-            WRITE8(vm, OP_CALL8);
-            WRITE8(vm, val->type);
-            WRITE8(vm, val->data.unum);
-            break;
-        case 16:
-            WRITE8(vm, OP_CALL16);
-            WRITE8(vm, val->type);
-            WRITE16(vm, val->data.unum);
-            break;
-        case 32:
-            WRITE8(vm, OP_CALL32);
-            WRITE8(vm, val->type);
-            WRITE32(vm, val->data.unum);
-            break;
-    }
-}
-
-void emitPUSH(VMachine* vm, Value* val)
-{
-    switch(get_bits(val)) {
-        case 8:
-            WRITE8(vm, OP_PUSH8);
-            WRITE8(vm, val->type);
-            WRITE8(vm, val->data.unum);
-            break;
-        case 16:
-            WRITE8(vm, OP_PUSH16);
-            WRITE8(vm, val->type);
-            WRITE16(vm, val->data.unum);
-            break;
-        case 32:
-            WRITE8(vm, OP_PUSH32);
-            WRITE8(vm, val->type);
-            // printf("val->unum = 0x%08X\n", val->data.unum);
-            // printf("val->fnum = %0.3f\n", val->data.fnum);
-            WRITE32(vm, val->data.unum);
-            break;
-    }
-}
 
 %}
 

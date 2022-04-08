@@ -8,8 +8,6 @@ TARGET	=	$(DESTDIR)/libvm.a
 make_dirs := $(shell mkdir -p $(OBJDIR) )
 
 SLST	=	error.c \
-			arith_expr.c \
-			comp_expr.c \
 			file_io.c \
 			instr.c \
 			opcodes.c \
@@ -17,7 +15,6 @@ SLST	=	error.c \
 			symbols.c \
 			utils.c \
 			value.c \
-			runner.c \
 			support.c
 
 all: $(TARGET)

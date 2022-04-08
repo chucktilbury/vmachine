@@ -6,7 +6,17 @@ TARGET	=	$(DESTDIR)/vm
 
 make_dirs := $(shell mkdir -p $(OBJDIR))
 
-SLST	=	vm.c
+SLST	=	run_arith.c \
+			run_call.c \
+			run_comp.c \
+			run_jmp.c \
+			run_jmpif.c \
+			run_other.c \
+			run_push.c \
+			runner.c \
+			arith_expr.c \
+			comp_expr.c \
+			vm.c
 
 all: $(TARGET)
 

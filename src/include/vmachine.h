@@ -13,8 +13,6 @@ typedef struct _vmachine_ VMachine;
 #include "error.h"
 #include "opcodes.h"
 #include "file_io.h"
-#include "arith_expr.h"
-#include "comp_expr.h"
 
 typedef struct _vmachine_ {
     InstStore* inst;

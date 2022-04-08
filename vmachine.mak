@@ -14,7 +14,7 @@ EXE_TRACE	=	-DDEBUG_EXE_TRACE
 #DEBUG	=	-g3 -Og
 DEBUG	=	-g
 #OPTO	=	-Ofast
-INCS	= 	-I../../include -I../lib -I../asm
+INCS	= 	-I../include -I../lib -I../asm
 COPTS	=	-Wall -Wextra -std=c99 $(INCS) $(VM_TRACE) $(EXE_TRACE) $(OPTO) $(DEBUG)
 LIBS	=	-L../../$(BINDIR) -lreadline -lvm -lm
 

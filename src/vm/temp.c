@@ -1,6 +1,4 @@
 
-#include "common.h"
-
 void runMachine(VMachine* vm)
 {
     bool finished = false;
@@ -231,10 +229,194 @@ void runMachine(VMachine* vm)
                 }
                 break;
 
-            case OP_CALL:
-            case OP_CALLX:
-            case OP_JMP:
+            case OP_CALL:{
+                    Index idx = READ16(vm);
+                    Value* val = getVal(vm->val_store, idx);
+                    VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
+                    printVal(val);
+                    vm->inst->index = val->data.unum;
+                }
+                break;
+
+            case OP_CALL8: {
+                    int addr = (uint8_t)READ8(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_CALL16: {
+                    int addr = (uint16_t)READ16(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_CALL32: {
+                    int addr = (uint32_t)READ32(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_JMP:{
+                    Index idx = READ16(vm);
+                    Value* val = getVal(vm->val_store, idx);
+                    VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
+                    printVal(val);
+                    vm->inst->index = val->data.unum;
+                }
+                break;
+
+            case OP_JMP8:{
+                    int addr = (uint8_t)READ8(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_JMP16:{
+                    int addr = (uint16_t)READ16(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_JMP32:{
+                    int addr = (uint32_t)READ32(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
             case OP_JMPIF: {
+                    Index idx = READ16(vm);
+                    Value* val = getVal(vm->val_store, idx);
+                    Value* result;
+                    POP(vm, result);
+                    VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
+                    printVal(val);
+                    switch(val->type) {
+                        case VAL_ADDRESS:
+                        case VAL_UNUM:
+                            if(!result->data.boolean)
+                                vm->inst->index = val->data.unum;
+                            break;
+                        case VAL_INUM:
+                            if(!result->data.boolean)
+                                vm->inst->index = val->data.inum;
+                            break;
+                        case VAL_BOOL:
+                        case VAL_ERROR:
+                        case VAL_FNUM:
+                        case VAL_OBJ:
+                            runtimeError("cannot use a %s as a jmp destination", valToStr(val->type));
+                            break;
+                    }
+                }
+                break;
+
+            case OP_JMPIF8: {
+                    int addr = (uint8_t)READ8(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    Value* val;
+                    POP(vm, val);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_JMPIF16: {
+                    int addr = (uint16_t)READ16(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_JMPIF32: {
+                    int addr = (uint32_t)READ32(vm);
+                    VTRACE(5, "%-10s%04d\n", opToStr(opcode), addr);
+                    vm->inst->index = addr;
+                }
+                break;
+
+            case OP_CALLR:{
+                    Index idx = READ16(vm);
+                    VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
+                    printVal(getVal(vm->val_store, idx));
+                }
+                break;
+
+            case OP_CALLR8: {
+                    int addr = (int8_t)READ8(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_CALLR16: {
+                    int addr = (int16_t)READ16(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_CALLR32: {
+                    int addr = (int32_t)READ32(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPR:{
+                    Index idx = READ16(vm);
+                    VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
+                    printVal(getVal(vm->val_store, idx));
+                    //vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPR8:{
+                    int addr = (int8_t)READ8(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPR16:{
+                    int addr = (int16_t)READ16(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPR32:{
+                    int addr = (int32_t)READ32(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPIFR: {
+                    Index idx = READ16(vm);
+                    VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
+                    printVal(getVal(vm->val_store, idx));
+                }
+                break;
+
+            case OP_JMPIFR8: {
+                    int addr = (int8_t)READ8(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPIFR16: {
+                    int addr = (int16_t)READ16(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+            case OP_JMPIFR32: {
+                    int addr = (int32_t)READ32(vm);
+                    vm->inst->index += addr;
+                }
+                break;
+
+
+            case OP_CALLX:{
                     Index idx = READ16(vm);
                     VTRACE(5, "%-10s%04d\t", opToStr(opcode), idx);
                     printVal(getVal(vm->val_store, idx));
