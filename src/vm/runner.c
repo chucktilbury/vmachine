@@ -80,7 +80,7 @@ void runMachine(VMachine* vm)
         }
         else {
             VTRACE(5, "%-10s\t", opToStr(opcode));
-            finished = (*opcode_table[opcode])(opcode);
+            finished = (*opcode_table[opcode])(vm);
         }
         VTRACE(5, "\n");
     }

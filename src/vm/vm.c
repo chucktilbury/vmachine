@@ -24,7 +24,7 @@ int virtualMachine(const char* fname)
 
 int main(int argc, char** argv)
 {
-    setTraceLevel(5);
+    setTraceLevel(3);
 
     if(argc < 2) {
         fprintf(stderr, "use: %s filename\n", argv[0]);

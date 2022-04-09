@@ -33,16 +33,20 @@ void yyerror(const char* s)
 
 int main(int argc, char** argv)
 {
-    if(argc < 3) {
-        fprintf(stderr, "USE: %s infile outfile\n\n", argv[0]);
-        exit(1);
-    }
+    // if(argc < 3) {
+    //     fprintf(stderr, "USE: %s infile outfile\n\n", argv[0]);
+    //     exit(1);
+    // }
+    cmd_line cl = create_cmd_line("Virtual machine assembler.");
+    add_str_param(cl, "infile" , "-i", "name of the input file", NULL, CF_REQD);
+    add_str_param(cl, "outfile", "-o", "name of the output file", "t.out", 0);
+    parse_cmd_line(cl, argc, argv);
 
-    open_file(argv[1]);
+    open_file(get_str_param(cl, "infile"));
     vm = createVMachine();
     yyparse();
     if(error_count == 0) {
-        saveVM(vm, argv[2]);
+        saveVM(vm, get_str_param(cl, "outfile"));
     }
 
     dumpSymbols(vm);

@@ -60,6 +60,10 @@ int do_OP_MOD(VMachine* vm)
 
 int do_OP_NEG(VMachine* vm)
 {
+    Value* val;
+    POP(vm, val);
+    negVal(val);
+    PUSH(vm, val);
     return 0;
 }
 

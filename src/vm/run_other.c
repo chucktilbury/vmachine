@@ -30,7 +30,9 @@ int do_OP_PRINT(VMachine* vm)
 {
     Value* result;
     PEEK(vm, result);
+    printf("\n");
     printVal(result);
+    printf("\n");
     return 0;
 }
 

@@ -111,6 +111,7 @@ static void dump(VMachine* vm, Symbol* sym)
 
     printf("key: %-15s index: %-4u ", sym->key, sym->idx);
     printVal(getVal(vm->val_store, sym->idx));
+    printf("\n");
 }
 
 void dumpSymbols(VMachine* vm)

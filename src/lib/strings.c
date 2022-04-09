@@ -50,7 +50,7 @@ Index addStr(StrStore* ss, const char* str)
 {
     Index slot = find_slot(ss, str);
     ss->list[slot].len = strlen(str) + 1;
-    ss->list[slot].str = strdup(str);
+    ss->list[slot].str = _strdup(str);
 
     return slot;
 }

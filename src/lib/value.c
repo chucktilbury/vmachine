@@ -286,6 +286,7 @@ void dumpVals(ValList* lst)
     while(NULL != (val = iterGPL(lst))) {
         printf("%3d. ", lst->idx);
         printVal(val);
+        printf("\n");
     }
 }
 
@@ -335,7 +336,7 @@ void printVal(Value* obj)
            obj->isAssigned ? "true" : "false",
            obj->isConst ? "true" : "false",
            obj->isLiteral ? "true" : "false");
-    printf("hash: 0x%08X\n", obj->hash);
+    printf("hash: 0x%08X", obj->hash);
 
     // printf("raw data: 0x%08X\n", obj->data.unum);
 

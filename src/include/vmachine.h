@@ -5,7 +5,7 @@ typedef uint16_t Index;
 // forward declaration
 typedef struct _vmachine_ VMachine;
 
-#include "utils.h"
+#include "memory.h"
 #include "instr.h"
 #include "value.h"
 #include "strings.h"
@@ -13,6 +13,7 @@ typedef struct _vmachine_ VMachine;
 #include "error.h"
 #include "opcodes.h"
 #include "file_io.h"
+#include "cmd_line.h"
 
 typedef struct _vmachine_ {
     InstStore* inst;

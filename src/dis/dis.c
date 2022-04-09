@@ -3,6 +3,8 @@
 #include "common.h"
 #include <stdarg.h>
 
+#define PRINT(v)    do { printVal(v); fputc('\n', stdout); } while(0)
+
 void disassemble(VMachine* vm)
 {
     bool finished = false;
@@ -47,7 +49,7 @@ void disassemble(VMachine* vm)
             case OP_CALL: {
                     uint16_t oper = READ16(vm);
                     printf("%s\t%4d\t", opToStr(inst), oper);
-                    printVal(getVal(vm->val_store, oper));
+                    PRINT(getVal(vm->val_store, oper));
                 }
                 break;
 
@@ -77,7 +79,7 @@ void disassemble(VMachine* vm)
             case OP_PUSH: {
                     uint16_t oper = READ16(vm);
                     printf("%s\t%4d\t", opToStr(inst), oper);
-                    printVal(getVal(vm->val_store, oper));
+                    PRINT(getVal(vm->val_store, oper));
                 }
                 break;
 
@@ -107,7 +109,7 @@ void disassemble(VMachine* vm)
             case OP_JMP: {
                     uint16_t oper = READ16(vm);
                     printf("%s\t%4d\t", opToStr(inst), oper);
-                    printVal(getVal(vm->val_store, oper));
+                    PRINT(getVal(vm->val_store, oper));
                 }
                 break;
 
@@ -132,7 +134,7 @@ void disassemble(VMachine* vm)
             case OP_JMPIF: {
                     int oper = (int)READ16(vm);
                     printf("%s\t%d\t", opToStr(inst), oper);
-                    printVal(getVal(vm->val_store, oper));
+                    PRINT(getVal(vm->val_store, oper));
                 }
                 break;
 
@@ -162,7 +164,7 @@ void disassemble(VMachine* vm)
                     int type = (int)READ8(vm);
                     int oper = (int)READ16(vm);
                     printf("%s\t%d\t", opToStr(inst), oper);
-                    printVal(getVal(vm->val_store, oper));
+                    PRINT(getVal(vm->val_store, oper));
                     printf("          cast to %s\n", valToStr(type));
                 }
                 break;

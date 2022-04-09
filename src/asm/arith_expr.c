@@ -22,6 +22,9 @@
 #include "common.h"
 #include "scanner.h"
 
+// defined in main.c
+void syntaxError(const char* fmt, ...);
+
 /**
  * @brief Change the type of the value to the type given by the parameter.
  *
