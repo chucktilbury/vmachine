@@ -44,7 +44,7 @@ void castToType(Value* val, ValType type)
                         v = (uint32_t)((int32_t)val->data.fnum);
                         break;
                     default:
-                        runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
                         break;
                 }
                 val->type = VAL_UNUM;
@@ -64,7 +64,7 @@ void castToType(Value* val, ValType type)
                         v = (int32_t)val->data.fnum;
                         break;
                     default:
-                        runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
                         break;
                 }
                 val->type = VAL_INUM;
@@ -84,7 +84,7 @@ void castToType(Value* val, ValType type)
                     case VAL_FNUM:
                         break;
                     default:
-                        runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
                         break;
                 }
                 val->type = VAL_FNUM;
@@ -93,7 +93,7 @@ void castToType(Value* val, ValType type)
             break;
 
         default:
-            runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+            syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
             break;
     }
     val->hash = hashValue(val);
@@ -117,7 +117,7 @@ void addVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -136,7 +136,7 @@ void addVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -155,12 +155,12 @@ void addVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
     dest->hash = hashValue(dest);
@@ -185,7 +185,7 @@ void subVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -204,7 +204,7 @@ void subVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -223,12 +223,12 @@ void subVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
     dest->hash = hashValue(dest);
@@ -252,7 +252,7 @@ void mulVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -271,7 +271,7 @@ void mulVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -290,12 +290,12 @@ void mulVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
     dest->hash = hashValue(dest);
@@ -306,24 +306,24 @@ void divVals(Value* dest, Value* left, Value* right)
     switch(right->type) {
         case VAL_UNUM:
             if(right->data.unum == 0) {
-                runtimeError("divide by zero");
+                syntaxError("divide by zero");
                 return;
             }
             break;
         case VAL_INUM:
             if(right->data.inum == 0) {
-                runtimeError("divide by zero");
+                syntaxError("divide by zero");
                 return;
             }
             break;
         case VAL_FNUM:
             if(right->data.fnum == 0.0) {
-                runtimeError("divide by zero");
+                syntaxError("divide by zero");
                 return;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
 
@@ -343,7 +343,7 @@ void divVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -362,7 +362,7 @@ void divVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -381,12 +381,12 @@ void divVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
     dest->hash = hashValue(dest);
@@ -397,24 +397,24 @@ void modVals(Value* dest, Value* left, Value* right)
     switch(right->type) {
         case VAL_UNUM:
             if(right->data.unum == 0) {
-                runtimeError("divide by zero");
+                syntaxError("divide by zero");
                 return;
             }
             break;
         case VAL_INUM:
             if(right->data.inum == 0) {
-                runtimeError("divide by zero");
+                syntaxError("divide by zero");
                 return;
             }
             break;
         case VAL_FNUM:
             if(right->data.fnum == 0.0) {
-                runtimeError("divide by zero");
+                syntaxError("divide by zero");
                 return;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
 
@@ -434,7 +434,7 @@ void modVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -453,7 +453,7 @@ void modVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
@@ -472,12 +472,12 @@ void modVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    syntaxError("only numbers allowed in expressions");
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
     dest->hash = hashValue(dest);
@@ -496,7 +496,7 @@ void negVal(Value* val)
             val->data.fnum = -val->data.fnum;
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            syntaxError("only numbers allowed in expressions");
             break;
     }
     val->hash = hashValue(val);
