@@ -14,7 +14,7 @@
 #include "scanner.h"
 #include "arith_expr.h"
 #include "jumps.h"
-//#include "expressions.h"
+#include "symbols.h"
 
 // defined by flex
 extern int yylex(void);
@@ -22,10 +22,12 @@ extern int yyparse(void);
 extern FILE *yyin;
 void yyerror(const char* s);
 
+// defined in main.c
 extern VMachine* vm;
 extern Symbol* sym_table;
 extern int error_count;
 void syntaxError(const char*, ...);
+void verifySymbolTable(VMachine* vm);
 
 #define TOKSTR get_tok_str()
 
@@ -69,7 +71,9 @@ void syntaxError(const char*, ...);
 
 %%
 program
-    : module_item_list
+    : module_item_list {
+        verifySymbolTable(vm);
+    }
     ;
 
 module_item_list
@@ -87,8 +91,18 @@ module_item
 label
     : TOK_SYMBOL {
         // create an address object
-        if(findSymbol($1))
-            syntaxError("symbol \"%s\" has already been defined", $1);
+        int slot = findSymbol($1);
+        if(slot != 0) {
+            Value* val = getVal(vm->val_store, slot);
+            if(val->isAssigned)
+                syntaxError("symbol \"%s\" has already been defined", $1);
+            else {
+                val->isAssigned = true;
+                val->isConst = true;
+                val->isLiteral = true;
+                val->data.unum = vm->inst->len;
+            }
+        }
         else {
             Value* val = createVal(VAL_ADDRESS);
             val->isAssigned = true;
@@ -216,48 +230,64 @@ class2_instruction
     }
     | TOK_CALL TOK_SYMBOL {
         int slot = findSymbol($2);
-        if(slot == 0)
-            syntaxError("undefined symbol: \"%s\"", $2);
-        else {
-            WRITE8(vm, OP_CALL);
-            WRITE16(vm, slot);
+        if(slot == 0) {
+            Value* val = createVal(VAL_ADDRESS);
+            val->isAssigned = false;
+            val->isConst = true;
+            val->isLiteral = true;
+            slot = addVal(vm->val_store, val);
+            addSymbol($2, slot);
         }
+        WRITE8(vm, OP_CALL);
+        WRITE16(vm, slot);
     }
     | TOK_JMP expression {
         emitJMP(vm, $2);
     }
     | TOK_JMP TOK_SYMBOL {
         int slot = findSymbol($2);
-        if(slot == 0)
-            syntaxError("undefined symbol: \"%s\"", $2);
-        else {
-            WRITE8(vm, OP_JMP);
-            WRITE16(vm, slot);
+        if(slot == 0) {
+            Value* val = createVal(VAL_ADDRESS);
+            val->isAssigned = false;
+            val->isConst = true;
+            val->isLiteral = true;
+            slot = addVal(vm->val_store, val);
+            addSymbol($2, slot);
         }
+        WRITE8(vm, OP_JMP);
+        WRITE16(vm, slot);
     }
     | TOK_JMPIF expression {
         emitJMPIF(vm, $2);
     }
     | TOK_JMPIF TOK_SYMBOL {
         int slot = findSymbol($2);
-        if(slot == 0)
-            syntaxError("undefined symbol: \"%s\"", $2);
-        else {
-            WRITE8(vm, OP_JMPIF);
-            WRITE16(vm, slot);
+        if(slot == 0) {
+            Value* val = createVal(VAL_ADDRESS);
+            val->isAssigned = false;
+            val->isConst = true;
+            val->isLiteral = true;
+            slot = addVal(vm->val_store, val);
+            addSymbol($2, slot);
         }
+        WRITE8(vm, OP_JMPIF);
+        WRITE16(vm, slot);
     }
     | TOK_PUSH expression {
         emitPUSH(vm, $2);
     }
     | TOK_PUSH TOK_SYMBOL {
         int slot = findSymbol($2);
-        if(slot == 0)
-            syntaxError("undefined symbol: \"%s\"", $2);
-        else {
-            WRITE8(vm, OP_PUSH);
-            WRITE16(vm, slot);
+        if(slot == 0) {
+            Value* val = createVal(VAL_ADDRESS);
+            val->isAssigned = false;
+            val->isConst = true;
+            val->isLiteral = true;
+            slot = addVal(vm->val_store, val);
+            addSymbol($2, slot);
         }
+        WRITE8(vm, OP_PUSH);
+        WRITE16(vm, slot);
     }
     ;
 

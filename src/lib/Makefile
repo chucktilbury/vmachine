@@ -13,10 +13,9 @@ SLST	=	error.c \
 			instr.c \
 			opcodes.c \
 			strings.c \
-			symbols.c \
 			value.c \
 			cmd_line.c \
-			generic_tree.c \
+			generic_list.c \
 			support.c
 
 all: $(TARGET)

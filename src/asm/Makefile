@@ -10,6 +10,7 @@ SLST	=	parser.c \
 			scanner.c \
 			arith_expr.c \
 			jumps.c \
+			symbols.c \
 			main.c
 
 all: $(TARGET)
@@ -27,5 +28,5 @@ clean:
 	-$(RM) -r $(OBJDIR) $(TARGET) parser.c parser.h scanner.c
 
 format: $(PROJDIR)/astyle.rc main.c
-	astyle -v --options=$(PROJDIR)/astyle.rc main.c; \
+	astyle -v --options=$(PROJDIR)/astyle.rc $(SRCS) $(HEADERS); \
 	mv -vf *.bak $(OBJDIR) || true

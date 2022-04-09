@@ -4,6 +4,10 @@
 
 int do_OP_NOT(VMachine* vm)
 {
+    Value* val, *result = createVal(VAL_ERROR);
+    POP(vm, val);
+    notVal(result, val);
+    PUSH(vm, result);
     return 0;
 }
 

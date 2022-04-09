@@ -1,6 +1,8 @@
 
 
 #include "common.h"
+#include "scanner.h"
+#include "symbols.h"
 
 extern Symbol* sym_table;
 
@@ -74,6 +76,11 @@ void addSymbol(const char* key, Index idx)
     obj->idx = idx;
     obj->key = strdup(key);
     obj->len = strlen(key);
+    // info from the scanner
+    obj->line = get_line_number();
+    obj->col = get_col_number();
+    obj->filename = get_file_name();
+
     if(sym_table != NULL) {
         add(sym_table, obj);
     }

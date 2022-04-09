@@ -4,6 +4,7 @@
 #include "vmachine.h"
 #include "scanner.h"
 #include "parser.h"
+#include "symbols.h"
 
 int error_count = 0;
 VMachine* vm = NULL;
@@ -12,6 +13,28 @@ Symbol* sym_table = NULL;
 #include <stdio.h>
 
 extern char yytext[];
+
+static void verifySym(VMachine* vm, Symbol* sym)
+{
+    if(sym->right != NULL) {
+        verifySym(vm, sym->right);
+    }
+
+    if(sym->left != NULL) {
+        verifySym(vm, sym->left);
+    }
+
+    Value* val = getVal(vm->val_store, sym->idx);
+    if(!val->isAssigned) {
+        fprintf(stderr, "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n", sym->filename, sym->line, sym->col);
+        error_count++;
+    }
+}
+
+void verifySymbolTable(VMachine* vm)
+{
+    verifySym(vm, sym_table);
+}
 
 void syntaxError(const char* fmt, ...)
 {

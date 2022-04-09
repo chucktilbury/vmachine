@@ -38,7 +38,8 @@ int do_OP_PRINT(VMachine* vm)
 
 int do_OP_EXCEPT(VMachine* vm)
 {
-    Index idx = READ16(vm);
+    //Index idx = READ16(vm);
+    READ16(vm);
     return 0;
 }
 

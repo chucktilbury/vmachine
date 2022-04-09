@@ -9,7 +9,6 @@ typedef struct _vmachine_ VMachine;
 #include "instr.h"
 #include "value.h"
 #include "strings.h"
-#include "symbols.h"
 #include "error.h"
 #include "opcodes.h"
 #include "file_io.h"

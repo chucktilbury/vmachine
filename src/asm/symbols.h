@@ -8,6 +8,9 @@ typedef struct _sym_ {
     const char* key;
     size_t len;
     Index idx; // the value that this symbol references
+    int line;
+    int col;
+    const char* filename;
     struct _sym_* left;
     struct _sym_* right;
 } Symbol;

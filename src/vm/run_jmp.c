@@ -68,7 +68,8 @@ int do_OP_JMP32(VMachine* vm)
 int do_OP_JMPR(VMachine* vm)
 {
     Index idx = READ16(vm);
-    //vm->inst->index += addr;
+    Value* val = getVal(vm->val_store, idx);
+    vm->inst->index += val->data.unum;
     return 0;
 }
 

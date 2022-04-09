@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "vmachine.h"
-#include "generic_tree.h"
+#include "generic_list.h"
 
 typedef enum {
     VAL_ERROR,
