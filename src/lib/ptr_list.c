@@ -1,6 +1,6 @@
 
 #include "common.h"
-#include "generic_list.h"
+#include "ptr_list.h"
 
 GenericPtrList* createGPL()
 {

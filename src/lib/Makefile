@@ -15,7 +15,7 @@ SLST	=	error.c \
 			strings.c \
 			value.c \
 			cmd_line.c \
-			generic_list.c \
+			ptr_list.c \
 			support.c
 
 all: $(TARGET)

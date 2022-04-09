@@ -1,13 +1,8 @@
 
-* Labels need to be used before they have been defined. This has an effect
-on the JMP, JMPIF, and CALL instructions. Do not really want to -require-
-using a label. Could use any int or unsigned.
 
-* use the isAssigned flag to pre-declare vars. Check all symbols at the end
-to make sure they were all assigned a value.
+* Implement jmpif instructions
 
-* Symbol names need to store the line number so that an error message can be
-generated if they are never assigned a value.
+* Implement call instructions
 
 * assembler needs to have the logic to do relative jumps to labels and
 automatically select abs or rel jmp.
