@@ -15,6 +15,7 @@ do_opcode_func opcode_table[] = {
     [OP_NOOP] = do_OP_NOOP,
     [OP_EXIT] = do_OP_EXIT,
     [OP_RETURN] = do_OP_RETURN,
+    [OP_TRAP] = do_OP_TRAP,
     [OP_CALL] = do_OP_CALL,
     [OP_CALL8] = do_OP_CALL8,
     [OP_CALL16] = do_OP_CALL16,

@@ -2,33 +2,41 @@
 #define _OPCODES_H_
 
 typedef enum {
+    OP_ERROR,   // payload is a string with the error, set by the VM
     OP_NOOP,    // no operation
     OP_EXIT,    // cause the VM to exit
-    OP_RETURN,  // return from a call
+    OP_SAVE,    // save the top of the stack to the slot number (constant)
 
-    // immediate is a 16 bit unsigned indexes into the value store
-    // TODO: Implement the call stack
+    OP_CAST,    // change the type of a variable at a slot number
+    OP_PRINT,   // print the value at the top of the stack
+
+    OP_TRAP,    // (N.I.) immediate is an 8 bit trap number
+    OP_EXCEPT,  // (N.I.) raise an exception and process an exception handler (constatant)
+    OP_CALLX,   // (N.I.) call an externally defined function (constatant)
+
     OP_CALL,    // call an absolute address (constatant)
     OP_CALL8,
     OP_CALL16,
     OP_CALL32,
-    OP_JMP,     // jump to an absolute address (constatant)
-    OP_JMP8,
-    OP_JMP16,
-    OP_JMP32,
-    OP_JMPIF,   // conditional jump to an absolute address (constatant)
-    OP_JMPIF8,
-    OP_JMPIF16,
-    OP_JMPIF32,
-
     OP_CALLR,    // call a signed relative address (constatant)
     OP_CALLR8,
     OP_CALLR16,
     OP_CALLR32,
+    OP_RETURN,  // return from a call
+
+    OP_JMP,     // jump to an absolute address (constatant)
+    OP_JMP8,
+    OP_JMP16,
+    OP_JMP32,
     OP_JMPR,     // jump to a signed relative address (constatant)
     OP_JMPR8,
     OP_JMPR16,
     OP_JMPR32,
+
+    OP_JMPIF,   // conditional jump to an absolute address (constatant)
+    OP_JMPIF8,
+    OP_JMPIF16,
+    OP_JMPIF32,
     OP_JMPIFR,   // conditional jump to a signed relative address (constatant)
     OP_JMPIFR8,
     OP_JMPIFR16,
@@ -38,13 +46,7 @@ typedef enum {
     OP_PUSH8,
     OP_PUSH16,
     OP_PUSH32,
-
-    OP_EXCEPT,  // process an exception handler (constatant)
-    OP_CALLX,   // call an externally defined function (constatant)
-
-    OP_SAVE,    // NEW: save the top of the stack to the slot number (constant)
     OP_POP,     // pop the value from the stack and throw it away
-    OP_ERROR,   // payload is a string with the error, set by the VM
 
     // comparison operators
     OP_NOT,     // unary not conditional
@@ -62,16 +64,6 @@ typedef enum {
     OP_MUL,     // arithmetic multiply
     OP_DIV,     // arithmetic divide
     OP_MOD,     // arithmetic modulo
-
-    OP_CAST,    // var index and type
-
-    OP_PRINT,   // print the value at the top of the stack
-
-    // OP_SETZ,    // set the zero flag
-    // OP_CLRZ,    // clear the zero flag
-
-    //OP_TRAP,    // immediate is an 8 bit trap number
-    //OP_FREE,     // not found a use yet
 } OpCodes;
 
 const char* opToStr(OpCodes op);

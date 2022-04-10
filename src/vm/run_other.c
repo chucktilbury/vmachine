@@ -38,9 +38,9 @@ int do_OP_PRINT(VMachine* vm)
 
 int do_OP_EXCEPT(VMachine* vm)
 {
-    //Index idx = READ16(vm);
-    READ16(vm);
-    return 0;
+    (void)vm;
+    runtimeError("EXCEPT is not implemented");
+    return 1;
 }
 
 int do_OP_SAVE(VMachine* vm)
@@ -56,5 +56,12 @@ int do_OP_ERROR(VMachine* vm)
 {
     (void)vm;
     runtimeError("encountered error instruction");
+    return 1;
+}
+
+int do_OP_TRAP(VMachine* vm)
+{
+    (void)vm;
+    runtimeError("TRAP is not implemented");
     return 1;
 }

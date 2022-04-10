@@ -17,6 +17,8 @@ that can do that? Maybe modify return or pop to accept a parameter.
 
 # Prove that values can change at runtime.
 
+------------------
+
 * Jump and call instructions that use the top of the stack as an operand. Note
 that jmpif already uses the top of the stack and must be implemented in asm
 code.
@@ -44,4 +46,17 @@ automatically select abs or rel jmp.
 
 * Bitwise operations?
 
-Build debugger with trace, breakpoints, and watches.
+-----------
+
+* Need to have the assembler set the entry point to the program with a
+dedicated symbol.
+
+* Integrate the disassembler into the assembler and have it generate a
+"listing" from the command line parameters. Integrate the symbol table into
+this.
+
+* The assembler can accept a list of files. Have it maintain the parser state
+when switching so that all of the files are part of the same output. Push the
+files on the file stack in the reverse order from the command line.
+
+* Build debugger with trace, breakpoints, and watches.

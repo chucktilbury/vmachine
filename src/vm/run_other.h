@@ -7,5 +7,6 @@ int do_OP_PRINT(VMachine* vm);
 int do_OP_EXCEPT(VMachine* vm);
 int do_OP_SAVE(VMachine* vm);
 int do_OP_ERROR(VMachine* vm);
+int do_OP_TRAP(VMachine* vm);
 
 #endif

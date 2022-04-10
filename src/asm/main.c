@@ -33,6 +33,7 @@ static void verifySym(VMachine* vm, Symbol* sym)
 
 void verifySymbolTable(VMachine* vm)
 {
+    // TODO: add the "start" symbol and require it.
     verifySym(vm, sym_table);
 }
 

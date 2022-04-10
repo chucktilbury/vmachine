@@ -1,5 +1,6 @@
 
 #include "common.h"
+#include "arith_expr.h"
 
 /**
  * @brief Jump to the absolute address given by the immediate variable index

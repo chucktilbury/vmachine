@@ -3,8 +3,9 @@
 
 int do_OP_CALLX(VMachine* vm)
 {
-    Index idx = READ16(vm);
-    return 0;
+    (void)vm;
+    runtimeError("CALLX is not implemented");
+    return 1;
 }
 
 /**
