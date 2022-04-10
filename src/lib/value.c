@@ -51,6 +51,7 @@ uint32_t hashValue(Value* val)
         h ^= h >> 15;
     }
 
+    val->hash = h;
     return h;
 }
 
@@ -71,21 +72,21 @@ Value* createVal(ValType type)
     val->isLiteral = false;
     val->data.unum = 0;
 
-    val->hash = hashValue(val);
+    hashValue(val);
     return val;
 }
 
 int addVal(ValList* vl, Value* val)
 {
     int retv = addGPL(vl, val);
-    val->hash = hashValue(val);
+    hashValue(val);
     return retv;
 }
 
 void setVal(ValList* vl, int idx, Value* val)
 {
     setVal(vl, idx, val);
-    val->hash = hashValue(val);
+    hashValue(val);
 }
 
 

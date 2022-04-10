@@ -502,3 +502,25 @@ void negVal(Value* val)
     val->hash = hashValue(val);
 }
 
+// peek at the top of the expression stack and return true if its boolean
+// value can be considered false.
+bool isFalse(Value* val)
+{
+    switch(val->type) {
+        case VAL_ERROR:
+        case VAL_OBJ:
+        case VAL_ADDRESS:
+            return false;    // these are always true for this (so return false)
+        case VAL_UNUM:
+            return (val->data.unum == 0)? true: false;
+        case VAL_INUM:
+            return (val->data.inum == 0)? true: false;
+        case VAL_FNUM:
+            return (val->data.fnum == 0.0)? true: false;
+        case VAL_BOOL:
+            return val->data.boolean;
+        default:
+            return true;
+    }
+
+}

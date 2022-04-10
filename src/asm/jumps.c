@@ -4,6 +4,12 @@
 // defined in main.c
 void syntaxError(const char* fmt, ...);
 
+// Notes: If the value is a constant, then the relative instruction can be
+// used. This is useful because a short immediate relative instruction is
+// more efficient than looking up a variable value. Note that labels are
+// automatically marked as constant literals. Compare the val value to the
+// current value of the IP and decide what to do.
+
 static int get_bits(Value *val)
 {
     int retv = 0;

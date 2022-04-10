@@ -38,8 +38,8 @@ typedef GenericPtrList ValList;
 #define getVal(vl, idx)     getGPL(vl, idx)
 //#define setVal(vl, idx, obj)    setGPL(vl, idx, obj)
 #define pushVal(vl, obj)    pushGPL(vl, obj)
-#define popVal(vl)          popGPL(vl)
-#define peekVal(vl)         peekGPL(vl)
+#define popVal(vl)          (Value*)popGPL(vl)
+#define peekVal(vl)         (Value*)peekGPL(vl)
 
 ValList* createValList();
 Value* createVal(ValType type);

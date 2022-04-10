@@ -10,5 +10,6 @@ void divVals(Value* dest, Value* left, Value* right);
 void modVals(Value* dest, Value* left, Value* right);
 void negVal(Value* val);
 void castToType(Value* val, ValType type);
+bool isFalse(Value* val);
 
 #endif

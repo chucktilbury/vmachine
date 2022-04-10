@@ -101,6 +101,7 @@ label
                 val->isConst = true;
                 val->isLiteral = true;
                 val->data.unum = vm->inst->len;
+                hashValue(val);
             }
         }
         else {
@@ -232,9 +233,6 @@ class2_instruction
         int slot = findSymbol($2);
         if(slot == 0) {
             Value* val = createVal(VAL_ADDRESS);
-            val->isAssigned = false;
-            val->isConst = true;
-            val->isLiteral = true;
             slot = addVal(vm->val_store, val);
             addSymbol($2, slot);
         }
@@ -248,9 +246,6 @@ class2_instruction
         int slot = findSymbol($2);
         if(slot == 0) {
             Value* val = createVal(VAL_ADDRESS);
-            val->isAssigned = false;
-            val->isConst = true;
-            val->isLiteral = true;
             slot = addVal(vm->val_store, val);
             addSymbol($2, slot);
         }
@@ -264,9 +259,6 @@ class2_instruction
         int slot = findSymbol($2);
         if(slot == 0) {
             Value* val = createVal(VAL_ADDRESS);
-            val->isAssigned = false;
-            val->isConst = true;
-            val->isLiteral = true;
             slot = addVal(vm->val_store, val);
             addSymbol($2, slot);
         }
@@ -279,15 +271,12 @@ class2_instruction
     | TOK_PUSH TOK_SYMBOL {
         int slot = findSymbol($2);
         if(slot == 0) {
-            Value* val = createVal(VAL_ADDRESS);
-            val->isAssigned = false;
-            val->isConst = true;
-            val->isLiteral = true;
-            slot = addVal(vm->val_store, val);
-            addSymbol($2, slot);
+            syntaxError("undefined symbol: \"%s\"", $2);
         }
-        WRITE8(vm, OP_PUSH);
-        WRITE16(vm, slot);
+        else {
+            WRITE8(vm, OP_PUSH);
+            WRITE16(vm, slot);
+        }
     }
     ;
 
