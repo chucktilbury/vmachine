@@ -323,7 +323,7 @@ void divVals(Value* dest, Value* left, Value* right)
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
             break;
     }
 
@@ -343,7 +343,7 @@ void divVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
                     break;
             }
             break;
@@ -362,7 +362,7 @@ void divVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
                     break;
             }
             break;
@@ -381,12 +381,12 @@ void divVals(Value* dest, Value* left, Value* right)
                     dest->type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions");
+                    runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            runtimeError("only numbers allowed in expressions: %s", valToStr(left->type));
             break;
     }
     dest->hash = hashValue(dest);

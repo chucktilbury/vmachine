@@ -19,6 +19,11 @@ int do_OP_CALL(VMachine* vm)
 {
     Index idx = READ16(vm);
     Value* val = getVal(vm->val_store, idx);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index = val->data.unum;
     return 0;
 }
@@ -33,6 +38,11 @@ int do_OP_CALL(VMachine* vm)
 int do_OP_CALL8(VMachine* vm)
 {
     int addr = (uint8_t)READ8(vm);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index = addr;
     return 0;
 }
@@ -47,6 +57,11 @@ int do_OP_CALL8(VMachine* vm)
 int do_OP_CALL16(VMachine* vm)
 {
     int addr = (uint16_t)READ16(vm);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index = addr;
     return 0;
 }
@@ -61,6 +76,11 @@ int do_OP_CALL16(VMachine* vm)
 int do_OP_CALL32(VMachine* vm)
 {
     int addr = (uint32_t)READ32(vm);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index = addr;
     return 0;
 }
@@ -77,7 +97,13 @@ int do_OP_CALL32(VMachine* vm)
 int do_OP_CALLR(VMachine* vm)
 {
     Index idx = READ16(vm);
-    printVal(getVal(vm->val_store, idx));
+    Value* val = getVal(vm->val_store, idx);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
+    vm->inst->index += val->data.unum;
     return 0;
 }
 
@@ -91,6 +117,11 @@ int do_OP_CALLR(VMachine* vm)
 int do_OP_CALLR8(VMachine* vm)
 {
     int addr = (int8_t)READ8(vm);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index += addr;
     return 0;
 }
@@ -105,6 +136,11 @@ int do_OP_CALLR8(VMachine* vm)
 int do_OP_CALLR16(VMachine* vm)
 {
     int addr = (int16_t)READ16(vm);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index += addr;
     return 0;
 }
@@ -119,6 +155,11 @@ int do_OP_CALLR16(VMachine* vm)
 int do_OP_CALLR32(VMachine* vm)
 {
     int addr = (int32_t)READ32(vm);
+
+    Value* ret = createVal(VAL_ADDRESS);
+    ret->data.unum = vm->inst->index;
+    PUSH(vm, ret);
+
     vm->inst->index += addr;
     return 0;
 }
@@ -133,6 +174,9 @@ int do_OP_CALLR32(VMachine* vm)
  */
 int do_OP_RETURN(VMachine* vm)
 {
+    Value* val;
+    POP(vm, val);
+    vm->inst->index = val->data.unum;
     return 0;
 }
 
