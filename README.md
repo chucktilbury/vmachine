@@ -1,4 +1,5 @@
 # Virtual Machine
+(This readme is horribly out of date)
 
 These notes are random thoughts about a potential virtual machine that I could create.
 
