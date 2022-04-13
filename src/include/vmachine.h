@@ -13,6 +13,7 @@ typedef struct _vmachine_ VMachine;
 #include "opcodes.h"
 #include "file_io.h"
 #include "cmd_line.h"
+#include "call_stack.h"
 
 typedef struct _vmachine_ {
     InstStore* inst;

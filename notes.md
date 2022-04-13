@@ -1,36 +1,17 @@
 
 
-* Need a way to "see" values on the stack. Set up a protocol for calling a
-function and  returning a value. Assembler macros?
+# Current
 
-push v3 = parameter 1
-push v2 = parm 2
-push v1 = blank slot to hold the return value
-call v0 = return address from call. this is top of stack for return
+* Create a separate call stack that maintains the value stack position for the parameters and local vars. THe return address is also returned on this stack in such a ways as to only require a simple assignment instead of passing pointers around.
 
-How to refer to parameters in terms of their position on the stack?
+* Fix expression stack so that it does not allocate data. The value structs are assigned as if they were an int instead of as a pointer. Stack values are not the same as the value store. They are more simple.
 
-Need to pop the 3 parameters after the call. Do I need a single instruction
-that can do that? Maybe modify return or pop to accept a parameter.
-
-# POP needs to destroy values when they are popped.
-
-# Prove that values can change at runtime.
-
-------------------
-
-* Jump and call instructions that use the top of the stack as an operand. Note
-that jmpif already uses the top of the stack and must be implemented in asm
-code.
-
-* What about a callif instruction? What about jmp/call if true?
+# Random
 
 * assembler needs to have the logic to do relative jumps to labels and
 automatically select abs or rel jmp.
 
 * mechanism for comparing objects. (implement strings)
-
-* Need a way to delete/free values.
 
 * figure out a way to store symbol tables in the ASM file for debugging.
 
@@ -42,11 +23,21 @@ automatically select abs or rel jmp.
 
 * make exec trace switchable on the command line
 
-* Fix the many memory leaks in the assembler.
-
 * Bitwise operations?
 
------------
+* Callif instructions?
+
+* Make command line parser capable of using concatenated switches and not having to put a space between a parameter and its args.
+
+* Move the disassembler into the assembler and create a listing according to the command line parameters.
+
+* Get rid of the VM data structure and have its elements run by the modules that manage it. This will help get rid of some indirection.
+
+* Fix memory allocation routines to detect and report memory leaks. This feature should be disabled for "release" builds.
+
+# Future
+
+* Reduce the library code to a few headers if possible.
 
 * Need to have the assembler set the entry point to the program with a
 dedicated symbol.
@@ -60,3 +51,7 @@ when switching so that all of the files are part of the same output. Push the
 files on the file stack in the reverse order from the command line.
 
 * Build debugger with trace, breakpoints, and watches.
+
+# Completed
+
+* Prove that values can change at runtime.

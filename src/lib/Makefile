@@ -16,6 +16,7 @@ SLST	=	error.c \
 			value.c \
 			cmd_line.c \
 			ptr_list.c \
+			call_stack.c \
 			support.c
 
 all: $(TARGET)

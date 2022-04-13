@@ -1,13 +1,6 @@
 
 #include "common.h"
 
-int do_OP_CALLX(VMachine* vm)
-{
-    (void)vm;
-    runtimeError("CALLX is not implemented");
-    return 1;
-}
-
 /**
  * @brief Call the absolute address contained in the variable which is given
  * by the immediate variable index.
@@ -21,11 +14,30 @@ int do_OP_CALL(VMachine* vm)
     Index idx = READ16(vm);
     Value* val = getVal(vm->val_store, idx);
 
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
+    // Value* ret = createVal(VAL_ADDRESS);
+    // ret->data.unum = vm->inst->index;
+    // PUSH(vm, ret);
+    pushCall(initCallElem(vm->inst->index, vm->val_stack->len));
 
     vm->inst->index = val->data.unum;
+    return 0;
+}
+
+/**
+ * @brief Return from a call instruction. The top of the stack should be the
+ * absolute return address of the call.
+ *
+ * @param opcode
+ *
+ * @return int
+ */
+int do_OP_RETURN(VMachine* vm)
+{
+    // Value* val;
+    // POP(vm, val);
+    // vm->inst->index = val->data.unum;
+    CallElem ce = popCall();
+    vm->inst->index = ce.ret_addr;
     return 0;
 }
 
@@ -165,19 +177,10 @@ int do_OP_CALLR32(VMachine* vm)
     return 0;
 }
 
-/**
- * @brief Return from a call instruction. The top of the stack should be the
- * absolute return address of the call.
- *
- * @param opcode
- *
- * @return int
- */
-int do_OP_RETURN(VMachine* vm)
+int do_OP_CALLX(VMachine* vm)
 {
-    Value* val;
-    POP(vm, val);
-    vm->inst->index = val->data.unum;
-    return 0;
+    (void)vm;
+    runtimeError("CALLX is not implemented");
+    return 1;
 }
 

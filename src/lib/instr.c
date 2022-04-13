@@ -8,7 +8,6 @@ static inline void grow_list(InstStore* is, size_t size)
             is->cap <<= 1;
         }
         is->list = _realloc_ds_array(is->list, uint8_t, is->cap);
-        assert(is->list != NULL);
     }
     // else do nothing
 }

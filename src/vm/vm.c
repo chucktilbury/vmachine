@@ -14,6 +14,7 @@ int virtualMachine(const char* fname)
 {
     // load the file
     VMachine* vm = loadVM(fname); //createVirtualMachine();
+    createCallStack();
 
     // run the program
     runMachine(vm);
