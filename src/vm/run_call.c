@@ -1,5 +1,6 @@
 
 #include "common.h"
+#include "var_store.h"
 
 /**
  * @brief Call the absolute address contained in the variable which is given
@@ -9,17 +10,17 @@
  *
  * @return int
  */
-int do_OP_CALL(VMachine* vm)
+int do_OP_CALL()
 {
-    Index idx = READ16(vm);
-    Value* val = getVal(vm->val_store, idx);
+    uint16_t idx = read16();
+    Variable* var = getVar(idx);
 
     // Value* ret = createVal(VAL_ADDRESS);
     // ret->data.unum = vm->inst->index;
     // PUSH(vm, ret);
-    pushCall(initCallElem(vm->inst->index, vm->val_stack->len));
+    pushCall(initCallElem(getIndex(), getValStackLen()));
 
-    vm->inst->index = val->data.unum;
+    setIndex(var->data.addr);
     return 0;
 }
 
@@ -31,13 +32,13 @@ int do_OP_CALL(VMachine* vm)
  *
  * @return int
  */
-int do_OP_RETURN(VMachine* vm)
+int do_OP_RETURN()
 {
     // Value* val;
     // POP(vm, val);
     // vm->inst->index = val->data.unum;
     CallElem ce = popCall();
-    vm->inst->index = ce.ret_addr;
+    setIndex(ce.ret_addr);
     return 0;
 }
 
@@ -48,16 +49,10 @@ int do_OP_RETURN(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALL8(VMachine* vm)
+int do_OP_CALL8()
 {
-    int addr = (uint8_t)READ8(vm);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index = addr;
-    return 0;
+    runtimeError("CALL8 is not implemented");
+    return 1;
 }
 
 /**
@@ -67,16 +62,10 @@ int do_OP_CALL8(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALL16(VMachine* vm)
+int do_OP_CALL16()
 {
-    int addr = (uint16_t)READ16(vm);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index = addr;
-    return 0;
+    runtimeError("CALL16 is not implemented");
+    return 1;
 }
 
 /**
@@ -86,16 +75,10 @@ int do_OP_CALL16(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALL32(VMachine* vm)
+int do_OP_CALL32()
 {
-    int addr = (uint32_t)READ32(vm);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index = addr;
-    return 0;
+    runtimeError("CALL32 is not implemented");
+    return 1;
 }
 
 /**
@@ -107,17 +90,10 @@ int do_OP_CALL32(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALLR(VMachine* vm)
+int do_OP_CALLR()
 {
-    Index idx = READ16(vm);
-    Value* val = getVal(vm->val_store, idx);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index += val->data.unum;
-    return 0;
+    runtimeError("CALLR is not implemented");
+    return 1;
 }
 
 /**
@@ -127,16 +103,10 @@ int do_OP_CALLR(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALLR8(VMachine* vm)
+int do_OP_CALLR8()
 {
-    int addr = (int8_t)READ8(vm);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index += addr;
-    return 0;
+    runtimeError("CALLR8 is not implemented");
+    return 1;
 }
 
 /**
@@ -146,16 +116,10 @@ int do_OP_CALLR8(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALLR16(VMachine* vm)
+int do_OP_CALLR16()
 {
-    int addr = (int16_t)READ16(vm);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index += addr;
-    return 0;
+    runtimeError("CALLR16 is not implemented");
+    return 1;
 }
 
 /**
@@ -165,21 +129,14 @@ int do_OP_CALLR16(VMachine* vm)
  *
  * @return int
  */
-int do_OP_CALLR32(VMachine* vm)
+int do_OP_CALLR32()
 {
-    int addr = (int32_t)READ32(vm);
-
-    Value* ret = createVal(VAL_ADDRESS);
-    ret->data.unum = vm->inst->index;
-    PUSH(vm, ret);
-
-    vm->inst->index += addr;
-    return 0;
+    runtimeError("CALLR32 is not implemented");
+    return 1;
 }
 
-int do_OP_CALLX(VMachine* vm)
+int do_OP_CALLX()
 {
-    (void)vm;
     runtimeError("CALLX is not implemented");
     return 1;
 }

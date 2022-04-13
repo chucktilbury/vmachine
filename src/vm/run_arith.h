@@ -1,12 +1,12 @@
 #ifndef _RUN_ARITH_H_
 #define _RUN_ARITH_H_
 
-int do_OP_ADD(VMachine* vm);
-int do_OP_SUB(VMachine* vm);
-int do_OP_MUL(VMachine* vm);
-int do_OP_DIV(VMachine* vm);
-int do_OP_MOD(VMachine* vm);
-int do_OP_NEG(VMachine* vm);
-int do_OP_CAST(VMachine* vm);
+int do_OP_ADD();
+int do_OP_SUB();
+int do_OP_MUL();
+int do_OP_DIV();
+int do_OP_MOD();
+int do_OP_NEG();
+int do_OP_CAST();
 
 #endif

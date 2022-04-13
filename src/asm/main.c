@@ -7,34 +7,33 @@
 #include "symbols.h"
 
 int error_count = 0;
-VMachine* vm = NULL;
 Symbol* sym_table = NULL;
 
 #include <stdio.h>
 
 extern char yytext[];
 
-static void verifySym(VMachine* vm, Symbol* sym)
+static void verifySym(Symbol* sym)
 {
     if(sym->right != NULL) {
-        verifySym(vm, sym->right);
+        verifySym(sym->right);
     }
 
     if(sym->left != NULL) {
-        verifySym(vm, sym->left);
+        verifySym(sym->left);
     }
 
-    Value* val = getVal(vm->val_store, sym->idx);
-    if(!val->isAssigned) {
+    Variable* var = getVar(sym->idx);
+    if(!var->isAssigned) {
         fprintf(stderr, "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n", sym->filename, sym->line, sym->col);
         error_count++;
     }
 }
 
-void verifySymbolTable(VMachine* vm)
+void verifySymbolTable()
 {
     // TODO: add the "start" symbol and require it.
-    verifySym(vm, sym_table);
+    verifySym(sym_table);
 }
 
 void syntaxError(const char* fmt, ...)
@@ -67,15 +66,15 @@ int main(int argc, char** argv)
     parse_cmd_line(cl, argc, argv);
 
     open_file(get_str_param(cl, "infile"));
-    vm = createVMachine();
+    createVMachine();
     yyparse();
     if(error_count == 0) {
-        saveVM(vm, get_str_param(cl, "outfile"));
+        saveVM(get_str_param(cl, "outfile"));
     }
 
-    dumpSymbols(vm);
+    dumpSymbols();
 
-    destroyVMachine(vm);
+    destroyVMachine();
     destroySymbols(sym_table);
 
     printf("error count = %d\n", error_count);

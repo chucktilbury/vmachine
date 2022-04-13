@@ -8,11 +8,11 @@
  *
  * @return int
  */
-int do_OP_JMP(VMachine* vm)
+int do_OP_JMP()
 {
-    Index idx = READ16(vm);
-    Value* val = getVal(vm->val_store, idx);
-    vm->inst->index = val->data.unum;
+    uint16_t idx = read16();
+    Variable* var = getVar(idx);
+    setIndex(var->data.addr);
     return 0;
 }
 
@@ -23,11 +23,10 @@ int do_OP_JMP(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMP8(VMachine* vm)
+int do_OP_JMP8()
 {
-    int addr = (uint8_t)READ8(vm);
-    vm->inst->index = addr;
-    return 0;
+    runtimeError("JMP8 not implemented");
+    return 1;
 }
 
 /**
@@ -37,11 +36,10 @@ int do_OP_JMP8(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMP16(VMachine* vm)
+int do_OP_JMP16()
 {
-    int addr = (uint16_t)READ16(vm);
-    vm->inst->index = addr;
-    return 0;
+    runtimeError("JMP16 not implemented");
+    return 1;
 }
 
 /**
@@ -51,11 +49,10 @@ int do_OP_JMP16(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMP32(VMachine* vm)
+int do_OP_JMP32()
 {
-    int addr = (uint32_t)READ32(vm);
-    vm->inst->index = addr;
-    return 0;
+    runtimeError("JMP32 not implemented");
+    return 1;
 }
 
 /**
@@ -65,12 +62,10 @@ int do_OP_JMP32(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMPR(VMachine* vm)
+int do_OP_JMPR()
 {
-    Index idx = READ16(vm);
-    Value* val = getVal(vm->val_store, idx);
-    vm->inst->index += val->data.unum;
-    return 0;
+    runtimeError("JMPR not implemented");
+    return 1;
 }
 
 /**
@@ -80,11 +75,10 @@ int do_OP_JMPR(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMPR8(VMachine* vm)
+int do_OP_JMPR8()
 {
-    int addr = (int8_t)READ8(vm);
-    vm->inst->index += addr;
-    return 0;
+    runtimeError("JMPR8 not implemented");
+    return 1;
 }
 
 /**
@@ -94,11 +88,10 @@ int do_OP_JMPR8(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMPR16(VMachine* vm)
+int do_OP_JMPR16()
 {
-    int addr = (int16_t)READ16(vm);
-    vm->inst->index += addr;
-    return 0;
+    runtimeError("JMPR16 not implemented");
+    return 1;
 }
 
 /**
@@ -108,9 +101,8 @@ int do_OP_JMPR16(VMachine* vm)
  *
  * @return int
  */
-int do_OP_JMPR32(VMachine* vm)
+int do_OP_JMPR32()
 {
-    int addr = (int32_t)READ32(vm);
-    vm->inst->index += addr;
-    return 0;
+    runtimeError("JMPR32 not implemented");
+    return 1;
 }

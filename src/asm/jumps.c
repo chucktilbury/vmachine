@@ -10,7 +10,7 @@ void syntaxError(const char* fmt, ...);
 // automatically marked as constant literals. Compare the val value to the
 // current value of the IP and decide what to do.
 
-static int get_bits(Value *val)
+static int get_bits(Variable *val)
 {
     int retv = 0;
     uint32_t n = val->data.unum; // get the raw bits
@@ -35,7 +35,7 @@ static int get_bits(Value *val)
     return retv;
 }
 
-void emitJMP(VMachine* vm, Value* val)
+void emitJMP(Variable* val)
 {
     if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
         syntaxError("jump instruction requires an address or an unsigned number");
@@ -44,21 +44,21 @@ void emitJMP(VMachine* vm, Value* val)
 
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_JMP8);
-            WRITE8(vm, val->data.unum);
+            write8(OP_JMP8);
+            write8(val->data.unum);
             break;
         case 16:
-            WRITE8(vm, OP_JMP16);
-            WRITE16(vm, val->data.unum);
+            write8(OP_JMP16);
+            write16(val->data.unum);
             break;
         case 32:
-            WRITE8(vm, OP_JMP32);
-            WRITE32(vm, val->data.unum);
+            write8(OP_JMP32);
+            write32(val->data.unum);
             break;
     }
 }
 
-void emitJMPIF(VMachine* vm, Value* val)
+void emitJMPIF(Variable* val)
 {
     if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
         syntaxError("jump instruction requires an address or an unsigned number");
@@ -67,21 +67,21 @@ void emitJMPIF(VMachine* vm, Value* val)
 
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_JMPIF8);
-            WRITE8(vm, val->data.unum);
+            write8(OP_JMPIF8);
+            write8(val->data.unum);
             break;
         case 16:
-            WRITE8(vm, OP_JMPIF16);
-            WRITE16(vm, val->data.unum);
+            write8(OP_JMPIF16);
+            write16(val->data.unum);
             break;
         case 32:
-            WRITE8(vm, OP_JMPIF32);
-            WRITE32(vm, val->data.unum);
+            write8(OP_JMPIF32);
+            write32(val->data.unum);
             break;
     }
 }
 
-void emitCALL(VMachine* vm, Value* val)
+void emitCALL(Variable* val)
 {
     if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
         syntaxError("call instruction requires an address or an unsigned number");
@@ -90,21 +90,21 @@ void emitCALL(VMachine* vm, Value* val)
 
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_CALL8);
-            WRITE8(vm, val->data.unum);
+            write8(OP_CALL8);
+            write8(val->data.unum);
             break;
         case 16:
-            WRITE8(vm, OP_CALL16);
-            WRITE16(vm, val->data.unum);
+            write8(OP_CALL16);
+            write16(val->data.unum);
             break;
         case 32:
-            WRITE8(vm, OP_CALL32);
-            WRITE32(vm, val->data.unum);
+            write8(OP_CALL32);
+            write32(val->data.unum);
             break;
     }
 }
 
-void emitJMPR(VMachine* vm, Value* val)
+void emitJMPR(Variable* val)
 {
     if(val->type != VAL_INUM) {
         syntaxError("jump relative instruction requires a signed number");
@@ -113,21 +113,21 @@ void emitJMPR(VMachine* vm, Value* val)
 
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_JMPR8);
-            WRITE8(vm, val->data.inum);
+            write8(OP_JMPR8);
+            write8(val->data.inum);
             break;
         case 16:
-            WRITE8(vm, OP_JMPR16);
-            WRITE16(vm, val->data.inum);
+            write8(OP_JMPR16);
+            write16(val->data.inum);
             break;
         case 32:
-            WRITE8(vm, OP_JMPR32);
-            WRITE32(vm, val->data.inum);
+            write8(OP_JMPR32);
+            write32(val->data.inum);
             break;
     }
 }
 
-void emitJMPIFR(VMachine* vm, Value* val)
+void emitJMPIFR(Variable* val)
 {
     if(val->type != VAL_INUM) {
         syntaxError("jmpif relative instruction requires a signed number");
@@ -136,21 +136,21 @@ void emitJMPIFR(VMachine* vm, Value* val)
 
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_JMPIFR8);
-            WRITE8(vm, val->data.inum);
+            write8(OP_JMPIFR8);
+            write8(val->data.inum);
             break;
         case 16:
-            WRITE8(vm, OP_JMPIFR16);
-            WRITE16(vm, val->data.inum);
+            write8(OP_JMPIFR16);
+            write16(val->data.inum);
             break;
         case 32:
-            WRITE8(vm, OP_JMPIFR32);
-            WRITE32(vm, val->data.inum);
+            write8(OP_JMPIFR32);
+            write32(val->data.inum);
             break;
     }
 }
 
-void emitCALLR(VMachine* vm, Value* val)
+void emitCALLR(Variable* val)
 {
     if(val->type != VAL_INUM) {
         syntaxError("call relative instruction requires a signed number");
@@ -159,37 +159,37 @@ void emitCALLR(VMachine* vm, Value* val)
 
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_CALLR8);
-            WRITE8(vm, val->data.inum);
+            write8(OP_CALLR8);
+            write8(val->data.inum);
             break;
         case 16:
-            WRITE8(vm, OP_CALLR16);
-            WRITE16(vm, val->data.inum);
+            write8(OP_CALLR16);
+            write16(val->data.inum);
             break;
         case 32:
-            WRITE8(vm, OP_CALLR32);
-            WRITE32(vm, val->data.inum);
+            write8(OP_CALLR32);
+            write32(val->data.inum);
             break;
     }
 }
 
-void emitPUSH(VMachine* vm, Value* val)
+void emitPUSH(Variable* val)
 {
     switch(get_bits(val)) {
         case 8:
-            WRITE8(vm, OP_PUSH8);
-            WRITE8(vm, val->type);
-            WRITE8(vm, val->data.unum);
+            write8(OP_PUSH8);
+            write8(val->type);
+            write8(val->data.unum);
             break;
         case 16:
-            WRITE8(vm, OP_PUSH16);
-            WRITE8(vm, val->type);
-            WRITE16(vm, val->data.unum);
+            write8(OP_PUSH16);
+            write8(val->type);
+            write16(val->data.unum);
             break;
         case 32:
-            WRITE8(vm, OP_PUSH32);
-            WRITE8(vm, val->type);
-            WRITE32(vm, val->data.unum);
+            write8(OP_PUSH32);
+            write8(val->type);
+            write32(val->data.unum);
             break;
     }
 }

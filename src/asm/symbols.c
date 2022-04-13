@@ -32,7 +32,7 @@ int add(Symbol* tree, Symbol* node)
     }
 }
 
-static Index find(Symbol* tree, const char* key)
+static uint16_t find(Symbol* tree, const char* key)
 {
     int val = strcmp(tree->key, key);
     if(val > 0) {
@@ -70,7 +70,7 @@ static void destroy(Symbol* tree)
     _free(tree);
 }
 
-void addSymbol(const char* key, Index idx)
+void addSymbol(const char* key, uint16_t idx)
 {
     Symbol* obj = _alloc_ds(Symbol);
     obj->idx = idx;
@@ -89,7 +89,7 @@ void addSymbol(const char* key, Index idx)
     }
 }
 
-Index findSymbol(const char* key)
+uint16_t findSymbol(const char* key)
 {
     if(sym_table != NULL) {
         return find(sym_table, key);
@@ -106,24 +106,24 @@ void destroySymbols()
     }
 }
 
-static void dump(VMachine* vm, Symbol* sym)
+static void dump(Symbol* sym)
 {
     if(sym->right != NULL) {
-        dump(vm, sym->right);
+        dump(sym->right);
     }
 
     if(sym->left != NULL) {
-        dump(vm, sym->left);
+        dump(sym->left);
     }
 
     printf("key: %-15s index: %-4u ", sym->key, sym->idx);
-    printVal(getVal(vm->val_store, sym->idx));
+    printVar(getVar(sym->idx));
     printf("\n");
 }
 
-void dumpSymbols(VMachine* vm)
+void dumpSymbols()
 {
-    dump(vm, sym_table);
+    dump(sym_table);
 }
 
 

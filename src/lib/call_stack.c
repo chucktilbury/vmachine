@@ -10,7 +10,7 @@ void createCallStack()
     call_stack = _alloc_ds(CallStack);
     call_stack->cap = 0x01 << 8;
     call_stack->len = 0;
-    call_stack->list = _alloc_ds_array(CallStack, call_stack->cap);
+    call_stack->list = _alloc_ds_array(CallElem, call_stack->cap);
 }
 
 void destroyCallStack()

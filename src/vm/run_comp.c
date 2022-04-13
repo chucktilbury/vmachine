@@ -2,78 +2,78 @@
 #include "common.h"
 #include "comp_expr.h"
 
-int do_OP_NOT(VMachine* vm)
+int do_OP_NOT()
 {
-    Value* val, *result = createVal(VAL_ERROR);
-    POP(vm, val);
-    notVal(result, val);
-    PUSH(vm, result);
+    StkVal val, result;
+    popVal(val);
+    result = notVal(val);
+    pushVal(result);
     return 0;
 }
 
-int do_OP_EQ(VMachine* vm)
+int do_OP_EQ()
 {
-    Value* left, *right;
-    Value* result = createVal(VAL_ERROR);
-    POP(vm, left);
-    POP(vm, right);
-    eqVal(result, right, left);
-    PUSH(vm, result);
+    StkVal left, right;
+    StkVal result;
+    popVal(left);
+    popVal(right);
+    result = eqVal(right, left);
+    pushVal(result);
     return 0;
 }
 
-int do_OP_NEQ(VMachine* vm)
+int do_OP_NEQ()
 {
-    Value* left, *right;
-    Value* result = createVal(VAL_ERROR);
-    POP(vm, left);
-    POP(vm, right);
-    neqVal(result, right, left);
-    PUSH(vm, result);
+    StkVal left, right;
+    StkVal result;
+    popVal(left);
+    popVal(right);
+    result = neqVal(right, left);
+    pushVal(result);
     return 0;
 }
 
-int do_OP_LEQ(VMachine* vm)
+int do_OP_LEQ()
 {
-    Value* left, *right;
-    Value* result = createVal(VAL_ERROR);
-    POP(vm, left);
-    POP(vm, right);
-    leqVal(result, right, left);
-    PUSH(vm, result);
+    StkVal left, right;
+    StkVal result;
+    popVal(left);
+    popVal(right);
+    result = leqVal(right, left);
+    pushVal(result);
     return 0;
 }
 
-int do_OP_GEQ(VMachine* vm)
+int do_OP_GEQ()
 {
-    Value* left, *right;
-    Value* result = createVal(VAL_ERROR);
-    POP(vm, left);
-    POP(vm, right);
-    geqVal(result, right, left);
-    PUSH(vm, result);
+    StkVal left, right;
+    StkVal result;
+    popVal(left);
+    popVal(right);
+    result = geqVal(right, left);
+    pushVal(result);
     return 0;
 }
 
-int do_OP_LESS(VMachine* vm)
+int do_OP_LESS()
 {
-    Value* left, *right;
-    Value* result = createVal(VAL_ERROR);
-    POP(vm, left);
-    POP(vm, right);
-    lessVal(result, right, left);
-    PUSH(vm, result);
+    StkVal left, right;
+    StkVal result;
+    popVal(left);
+    popVal(right);
+    result = lessVal(right, left);
+    pushVal(result);
     return 0;
 }
 
-int do_OP_GTR(VMachine* vm)
+int do_OP_GTR()
 {
-    Value* left, *right;
-    Value* result = createVal(VAL_ERROR);
-    POP(vm, left);
-    POP(vm, right);
-    gtrVal(result, right, left);
-    PUSH(vm, result);
+    StkVal left, right;
+    StkVal result;
+    popVal(left);
+    popVal(right);
+    result = gtrVal(right, left);
+    pushVal(result);
     return 0;
 }
 

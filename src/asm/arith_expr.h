@@ -1,14 +1,15 @@
 #ifndef _ARITH_EXPR_H_
 #define _ARITH_EXPR_H_
 
-#include "value.h"
+//#include "value.h"
+#include "var_store.h"
 
-void addVals(Value* dest, Value* left, Value* right);
-void subVals(Value* dest, Value* left, Value* right);
-void mulVals(Value* dest, Value* left, Value* right);
-void divVals(Value* dest, Value* left, Value* right);
-void modVals(Value* dest, Value* left, Value* right);
-void negVal(Value* val);
-void castToType(Value* val, ValType type);
+void addVals(Variable* dest, Variable* left, Variable* right);
+void subVals(Variable* dest, Variable* left, Variable* right);
+void mulVals(Variable* dest, Variable* left, Variable* right);
+void divVals(Variable* dest, Variable* left, Variable* right);
+void modVals(Variable* dest, Variable* left, Variable* right);
+void negVal(Variable* val);
+void castToType(Variable* val, uint16_t type);
 
 #endif

@@ -1,15 +1,12 @@
 
 make_dirs := $(shell mkdir -p bin)
 
-all: lib dis vm asm
+all: lib vm asm
 
 lib:
 	make -C src/lib
 
  bin/libvm.a: lib
-
-dis: bin/libvm.a
-	make -C src/dis
 
 vm: bin/libvm.a
 	make -C src/vm
@@ -19,13 +16,11 @@ asm: bin/libvm.a
 
 clean:
 	make -C src/lib clean
-	make -C src/dis clean
 	make -C src/vm clean
 	make -C src/asm clean
 
 format:
 	make -C src/lib format
-	make -C src/dis format
 	make -C src/vm format
 	make -C src/asm format
 

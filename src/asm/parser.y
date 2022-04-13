@@ -23,11 +23,10 @@ extern FILE *yyin;
 void yyerror(const char* s);
 
 // defined in main.c
-extern VMachine* vm;
 extern Symbol* sym_table;
 extern int error_count;
 void syntaxError(const char*, ...);
-void verifySymbolTable(VMachine* vm);
+void verifySymbolTable();
 
 #define TOKSTR get_tok_str()
 
@@ -43,8 +42,8 @@ void verifySymbolTable(VMachine* vm);
     float fnum;
     int opcode;
     char* str;
-    Value* value;
-    Index string;
+    Variable* value;
+    uint16_t string;
 };
 
 %token <str> TOK_SYMBOL
@@ -72,7 +71,7 @@ void verifySymbolTable(VMachine* vm);
 %%
 program
     : module_item_list {
-        verifySymbolTable(vm);
+        verifySymbolTable();
     }
     ;
 
@@ -93,52 +92,51 @@ label
         // create an address object
         int slot = findSymbol($1);
         if(slot != 0) {
-            Value* val = getVal(vm->val_store, slot);
+            Variable* val = getVar(slot);
             if(val->isAssigned)
                 syntaxError("symbol \"%s\" has already been defined", $1);
             else {
                 val->isAssigned = true;
                 val->isConst = true;
                 val->isLiteral = true;
-                val->data.unum = vm->inst->len;
-                hashValue(val);
+                val->data.unum = getLen();
             }
         }
         else {
-            Value* val = createVal(VAL_ADDRESS);
+            Variable* val = createVar(VAL_ADDRESS);
             val->isAssigned = true;
             val->isConst = true;
             val->isLiteral = true;
-            val->data.unum = vm->inst->len;
-            addSymbol($1, addVal(vm->val_store, val));
+            val->data.unum = getLen();
+            addSymbol($1, addVar(val));
         }
     }
     ;
 
 type_spec
     : TOK_UNUM_TYPE {
-        $$ = createVal(VAL_UNUM);
+        $$ = createVar(VAL_UNUM);
     }
     | TOK_INUM_TYPE {
-        $$ = createVal(VAL_INUM);
+        $$ = createVar(VAL_INUM);
     }
     | TOK_FNUM_TYPE {
-        $$ = createVal(VAL_FNUM);
+        $$ = createVar(VAL_FNUM);
     }
     | TOK_CONST TOK_UNUM_TYPE {
-        Value* val = createVal(VAL_UNUM);
-        val->isConst = true;
-        $$ = val;
+        Variable* var = createVar(VAL_UNUM);
+        var->isConst = true;
+        $$ = var;
     }
     | TOK_CONST TOK_INUM_TYPE {
-        Value* val = createVal(VAL_INUM);
-        val->isConst = true;
-        $$ = val;
+        Variable* var = createVar(VAL_INUM);
+        var->isConst = true;
+        $$ = var;
     }
     | TOK_CONST TOK_FNUM_TYPE {
-        Value* val = createVal(VAL_FNUM);
-        val->isConst = true;
-        $$ = val;
+        Variable* var = createVar(VAL_FNUM);
+        var->isConst = true;
+        $$ = var;
     }
     ;
 
@@ -156,117 +154,118 @@ data_definition
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else
-            addSymbol($2, addVal(vm->val_store, $1));
+            addSymbol($2, addVar($1));
     }
     | type_spec TOK_SYMBOL '=' expression {
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
+            $1 = copyVar($4);
             $1->isAssigned = true;
-            assignVal($1, $4);
-            addSymbol($2, addVal(vm->val_store, $1));
+            // destroyVar($4);
+            addSymbol($2, addVar($1));
         }
     }
     | type_spec TOK_SYMBOL '=' TOK_SYMBOL {
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
+            $1 = copyVar(getVar(findSymbol($4)));
             $1->isAssigned = true;
-            assignVal($1, getVal(vm->val_store, findSymbol($4)));
-            addSymbol($2, addVal(vm->val_store, $1));
+            addSymbol($2, addVar($1));
         }
     }
     | TOK_BOOL_TYPE TOK_SYMBOL '=' bool_val {
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            Value* val = createVal(VAL_BOOL);
+            Variable* val = createVar(VAL_BOOL);
             val->data.boolean = ($4 == TOK_TRUE)? true: false;
             val->isAssigned = true;
-            addSymbol($2, addVal(vm->val_store, val));
+            addSymbol($2, addVar(val));
         }
     }
     | TOK_STR_TYPE TOK_SYMBOL '=' TOK_STR {
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            Value* val = createVal(VAL_OBJ);
-            //Index idx = addStr(vm->str_store, $4);
+            Variable* val = createVar(VAL_OBJ);
+            //uint16_t idx = addStr(vm->str_store, $4);
             //initVal(&val, $1);
             // TODO: FIX ME.
             val->isAssigned = true;
             val->data.obj = 0; //idx;
-            addSymbol($2, addVal(vm->val_store, val));
+            addSymbol($2, addVar(val));
         }
     }
     ;
 
     /* instructions that have no operand */
 class1_instruction
-    : TOK_EXIT { WRITE8(vm, OP_EXIT); }
-    | TOK_NOOP { WRITE8(vm, OP_NOOP); }
-    | TOK_RETURN { WRITE8(vm, OP_RETURN); }
-    | TOK_POP { WRITE8(vm, OP_POP); }
-    | TOK_NOT { WRITE8(vm, OP_NOT); }
-    | TOK_NEG { WRITE8(vm, OP_NEG); }
-    | TOK_EQ { WRITE8(vm, OP_EQ); }
-    | TOK_NEQ { WRITE8(vm, OP_NEQ); }
-    | TOK_LEQ { WRITE8(vm, OP_LEQ); }
-    | TOK_GEQ { WRITE8(vm, OP_GEQ); }
-    | TOK_LESS { WRITE8(vm, OP_LESS); }
-    | TOK_GTR { WRITE8(vm, OP_GTR); }
-    | TOK_ADD { WRITE8(vm, OP_ADD); }
-    | TOK_SUB { WRITE8(vm, OP_SUB); }
-    | TOK_MUL { WRITE8(vm, OP_MUL); }
-    | TOK_DIV { WRITE8(vm, OP_DIV); }
-    | TOK_MOD { WRITE8(vm, OP_MOD); }
-    | TOK_PRINT { WRITE8(vm, OP_PRINT); }
+    : TOK_EXIT { write8(OP_EXIT); }
+    | TOK_NOOP { write8(OP_NOOP); }
+    | TOK_RETURN { write8(OP_RETURN); }
+    | TOK_POP { write8(OP_POP); }
+    | TOK_NOT { write8(OP_NOT); }
+    | TOK_NEG { write8(OP_NEG); }
+    | TOK_EQ { write8(OP_EQ); }
+    | TOK_NEQ { write8(OP_NEQ); }
+    | TOK_LEQ { write8(OP_LEQ); }
+    | TOK_GEQ { write8(OP_GEQ); }
+    | TOK_LESS { write8(OP_LESS); }
+    | TOK_GTR { write8(OP_GTR); }
+    | TOK_ADD { write8(OP_ADD); }
+    | TOK_SUB { write8(OP_SUB); }
+    | TOK_MUL { write8(OP_MUL); }
+    | TOK_DIV { write8(OP_DIV); }
+    | TOK_MOD { write8(OP_MOD); }
+    | TOK_PRINT { write8(OP_PRINT); }
     ;
 
     /* instructions that have an immediate operand. the operand is a
         constant value */
 class2_instruction
     : TOK_CALL expression {
-        emitCALL(vm, $2);
+        emitCALL($2);
     }
     | TOK_CALL TOK_SYMBOL {
         int slot = findSymbol($2);
         if(slot == 0) {
-            Value* val = createVal(VAL_ADDRESS);
-            slot = addVal(vm->val_store, val);
+            Variable* val = createVar(VAL_ADDRESS);
+            slot = addVar(val);
             addSymbol($2, slot);
         }
-        WRITE8(vm, OP_CALL);
-        WRITE16(vm, slot);
+        write8(OP_CALL);
+        write16(slot);
     }
     | TOK_JMP expression {
-        emitJMP(vm, $2);
+        emitJMP($2);
     }
     | TOK_JMP TOK_SYMBOL {
         int slot = findSymbol($2);
         if(slot == 0) {
-            Value* val = createVal(VAL_ADDRESS);
-            slot = addVal(vm->val_store, val);
+            Variable* val = createVar(VAL_ADDRESS);
+            slot = addVar(val);
             addSymbol($2, slot);
         }
-        WRITE8(vm, OP_JMP);
-        WRITE16(vm, slot);
+        write8(OP_JMP);
+        write16(slot);
     }
     | TOK_JMPIF expression {
-        emitJMPIF(vm, $2);
+        emitJMPIF($2);
     }
     | TOK_JMPIF TOK_SYMBOL {
         int slot = findSymbol($2);
         if(slot == 0) {
-            Value* val = createVal(VAL_ADDRESS);
-            slot = addVal(vm->val_store, val);
+            Variable* val = createVar(VAL_ADDRESS);
+            slot = addVar(val);
             addSymbol($2, slot);
         }
-        WRITE8(vm, OP_JMPIF);
-        WRITE16(vm, slot);
+        write8(OP_JMPIF);
+        write16(slot);
     }
     | TOK_PUSH expression {
-        emitPUSH(vm, $2);
+        emitPUSH($2);
     }
     | TOK_PUSH TOK_SYMBOL {
         int slot = findSymbol($2);
@@ -274,8 +273,8 @@ class2_instruction
             syntaxError("undefined symbol: \"%s\"", $2);
         }
         else {
-            WRITE8(vm, OP_PUSH);
-            WRITE16(vm, slot);
+            write8(OP_PUSH);
+            write16(slot);
         }
     }
     ;
@@ -286,8 +285,8 @@ class4_instruction
         if(slot == 0)
             syntaxError("undefined symbol: \"%s\"", $2);
         else {
-            WRITE8(vm, OP_CALLX);
-            WRITE16(vm, slot);
+            write8(OP_CALLX);
+            write16(slot);
         }
     }
     | TOK_EXCEPT TOK_SYMBOL {
@@ -295,8 +294,8 @@ class4_instruction
         if(slot == 0)
             syntaxError("undefined symbol: \"%s\"", $2);
         else {
-            WRITE8(vm, OP_EXCEPT);
-            WRITE16(vm, slot);
+            write8(OP_EXCEPT);
+            write16(slot);
         }
     }
     | TOK_ERROR TOK_SYMBOL {
@@ -304,8 +303,8 @@ class4_instruction
         if(slot == 0)
             syntaxError("undefined symbol: \"%s\"", $2);
         else {
-            WRITE8(vm, OP_ERROR);
-            WRITE16(vm, slot);
+            write8(OP_ERROR);
+            write16(slot);
         }
     }
     | TOK_SAVE TOK_SYMBOL {
@@ -313,8 +312,8 @@ class4_instruction
         if(slot == 0)
             syntaxError("undefined symbol: \"%s\"", $2);
         else {
-            WRITE8(vm, OP_SAVE);
-            WRITE16(vm, slot);
+            write8(OP_SAVE);
+            write16(slot);
         }
     }
     ;
@@ -326,9 +325,9 @@ class3_instruction
         if(slot == 0)
             syntaxError("undefined symbol: \"%s\"", $2);
         else {
-            WRITE8(vm, OP_CAST);
-            WRITE8(vm, $3->type);
-            WRITE16(vm, slot);
+            write8(OP_CAST);
+            write8($3->type);
+            write16(slot);
         }
     }
     ;
@@ -354,17 +353,17 @@ instruction_list
         assembly language. */
 expression_factor
     : TOK_UNUM {
-        $$ = createVal(VAL_UNUM);
+        $$ = createVar(VAL_UNUM);
         $$->data.unum = $1;
         $$->isLiteral = true;
     }
     | TOK_INUM {
-        $$ = createVal(VAL_INUM);
+        $$ = createVar(VAL_INUM);
         $$->data.inum = $1;
         $$->isLiteral = true;
     }
     | TOK_FNUM {
-        $$ = createVal(VAL_FNUM);
+        $$ = createVar(VAL_FNUM);
         $$->data.fnum = $1;
         $$->isLiteral = true;
     }

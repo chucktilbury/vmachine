@@ -2,12 +2,13 @@
 #define _SYMBOLS_H_
 
 #include <stddef.h>
+#include <stdint.h>
 #include "vmachine.h"
 
 typedef struct _sym_ {
     const char* key;
     size_t len;
-    Index idx; // the value that this symbol references
+    uint16_t idx; // the value that this symbol references
     int line;
     int col;
     const char* filename;
@@ -17,9 +18,9 @@ typedef struct _sym_ {
 
 void destroySymbols();
 
-void addSymbol(const char* key, Index idx);
-Index findSymbol(const char* key);
+void addSymbol(const char* key, uint16_t idx);
+uint16_t findSymbol(const char* key);
 
-void dumpSymbols(VMachine* vm);
+void dumpSymbols();
 
 #endif

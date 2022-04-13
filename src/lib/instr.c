@@ -1,93 +1,121 @@
 
 #include "common.h"
 
-static inline void grow_list(InstStore* is, size_t size)
+typedef struct {
+    uint8_t* list;
+    size_t cap;
+    size_t len;
+    size_t index;
+} InstStore;
+
+static InstStore store;
+
+static inline void grow_list(size_t size)
 {
-    if(is->cap < is->len + size) {
-        while(is->cap < is->len + size) {
-            is->cap <<= 1;
+    if(store.cap < store.len + size) {
+        while(store.cap < store.len + size) {
+            store.cap <<= 1;
         }
-        is->list = _realloc_ds_array(is->list, uint8_t, is->cap);
+        store.list = _realloc_ds_array(store.list, uint8_t, store.cap);
     }
     // else do nothing
 }
 
-InstStore* createInstStore()
+void createInstStore()
 {
-    InstStore* is = _alloc_ds(InstStore);
-
-    is->cap = 0x01 << 3;
-    is->len = 0;
-    is->index = 0;
-    is->list = _alloc_ds_array(uint8_t, is->cap);
-
-    return is;
+    store.cap = 0x01 << 3;
+    store.len = 0;
+    store.index = 0;
+    store.list = _alloc_ds_array(uint8_t, store.cap);
 }
 
-void destroyInstStore(InstStore* is)
+void destroyInstStore()
 {
-    if(is != NULL) {
-        if(is->list != NULL) {
-            _free(is->list);
-        }
-        _free(is);
+    if(store.list != NULL) {
+        _free(store.list);
     }
 }
 
-void write8InstStore(InstStore* is, uint8_t val)
+void write8(uint8_t val)
 {
-    grow_list(is, 1);
-    *((uint8_t*)&is->list[is->len]) = val;
-    is->len += 1;
+    grow_list(1);
+    *((uint8_t*)&store.list[store.len]) = val;
+    store.len += 1;
 }
 
-void write16InstStore(InstStore* is, uint16_t val)
+void write16(uint16_t val)
 {
-    grow_list(is, 2);
-    *((uint16_t*)&is->list[is->len]) = val;
-    is->len += 2;
+    grow_list(2);
+    *((uint16_t*)&store.list[store.len]) = val;
+    store.len += 2;
 }
 
-void write32InstStore(InstStore* is, uint32_t val)
+void write32(uint32_t val)
 {
-    grow_list(is, 4);
-    *((uint32_t*)&is->list[is->len]) = val;
-    is->len += 4;
+    grow_list(4);
+    *((uint32_t*)&store.list[store.len]) = val;
+    store.len += 4;
 }
 
-uint8_t read8InstStore(InstStore* is)
+uint8_t read8()
 {
-    uint8_t val = *((uint8_t*)&is->list[is->index]);
-    is->index += 1;
+    uint8_t val = *((uint8_t*)&store.list[store.index]);
+    store.index += 1;
     return val;
 }
 
-uint16_t read16InstStore(InstStore* is)
+uint16_t read16()
 {
-    uint16_t val = *((uint16_t*)&is->list[is->index]);
-    is->index += 2;
+    uint16_t val = *((uint16_t*)&store.list[store.index]);
+    store.index += 2;
     return val;
 }
 
-uint32_t read32InstStore(InstStore* is)
+uint32_t read32()
 {
-    uint32_t val = *((uint32_t*)&is->list[is->index]);
-    is->index += 4;
+    uint32_t val = *((uint32_t*)&store.list[store.index]);
+    store.index += 4;
     return val;
 }
 
-int getIndex(InstStore* is)
+int getIndex()
 {
-    return is->index;
+    return store.index;
 }
 
-int setIndex(InstStore* is, int idx)
+int getLen()
 {
-    return (is->index = idx);
+    return store.len;
 }
 
-int addIndex(InstStore* is, int idx)
+int setIndex(int idx)
+{
+    return (store.index = idx);
+}
+
+int addIndex(int idx)
 {
     // idx could be negative
-    return (is->index += idx);
+    return (store.index += idx);
+}
+
+void saveInstStore(FILE* fp)
+{
+    fwrite(&store.len, sizeof(size_t), 1, fp);
+    fwrite(store.list, sizeof(char), store.len, fp);
+}
+
+void loadInstStore(FILE* fp)
+{
+    memset(&store, 0, sizeof(InstStore));
+    fread(&store.len, sizeof(size_t), 1, fp);
+
+    store.cap = 1;
+    while((store.len+1) > store.cap)
+        store.cap <<= 1;
+
+    store.list = _alloc_ds_array(uint8_t, store.cap);
+
+    fread(store.list, sizeof(uint8_t), store.len, fp);
+    //printf("len: %lu cap: %lu list: %p\n", store.len, store.cap, store.list);
 }

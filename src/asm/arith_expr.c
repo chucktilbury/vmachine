@@ -32,7 +32,7 @@ void syntaxError(const char* fmt, ...);
  * @param type
  *
  */
-void castToType(Value* val, ValType type)
+void castToType(Variable* val, uint16_t type)
 {
     switch(type) {
         case VAL_UNUM: {
@@ -47,7 +47,7 @@ void castToType(Value* val, ValType type)
                         v = (uint32_t)((int32_t)val->data.fnum);
                         break;
                     default:
-                        syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
                         break;
                 }
                 val->type = VAL_UNUM;
@@ -67,7 +67,7 @@ void castToType(Value* val, ValType type)
                         v = (int32_t)val->data.fnum;
                         break;
                     default:
-                        syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
                         break;
                 }
                 val->type = VAL_INUM;
@@ -87,7 +87,7 @@ void castToType(Value* val, ValType type)
                     case VAL_FNUM:
                         break;
                     default:
-                        syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
                         break;
                 }
                 val->type = VAL_FNUM;
@@ -96,13 +96,12 @@ void castToType(Value* val, ValType type)
             break;
 
         default:
-            syntaxError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+            syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
             break;
     }
-    val->hash = hashValue(val);
 }
 
-void addVals(Value* dest, Value* left, Value* right)
+void addVals(Variable* dest, Variable* left, Variable* right)
 {
     switch(left->type) {
         case VAL_UNUM:
@@ -166,11 +165,9 @@ void addVals(Value* dest, Value* left, Value* right)
             syntaxError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
-
 }
 
-void subVals(Value* dest, Value* left, Value* right)
+void subVals(Variable* dest, Variable* left, Variable* right)
 {
     switch(left->type) {
         case VAL_UNUM:
@@ -234,10 +231,9 @@ void subVals(Value* dest, Value* left, Value* right)
             syntaxError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
 }
 
-void mulVals(Value* dest, Value* left, Value* right)
+void mulVals(Variable* dest, Variable* left, Variable* right)
 {
     switch(left->type) {
         case VAL_UNUM:
@@ -301,10 +297,9 @@ void mulVals(Value* dest, Value* left, Value* right)
             syntaxError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
 }
 
-void divVals(Value* dest, Value* left, Value* right)
+void divVals(Variable* dest, Variable* left, Variable* right)
 {
     switch(right->type) {
         case VAL_UNUM:
@@ -392,10 +387,9 @@ void divVals(Value* dest, Value* left, Value* right)
             syntaxError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
 }
 
-void modVals(Value* dest, Value* left, Value* right)
+void modVals(Variable* dest, Variable* left, Variable* right)
 {
     switch(right->type) {
         case VAL_UNUM:
@@ -483,10 +477,9 @@ void modVals(Value* dest, Value* left, Value* right)
             syntaxError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
 }
 
-void negVal(Value* val)
+void negVal(Variable* val)
 {
     switch(val->type) {
         case VAL_UNUM:
@@ -502,6 +495,5 @@ void negVal(Value* val)
             syntaxError("only numbers allowed in expressions");
             break;
     }
-    val->hash = hashValue(val);
 }
 

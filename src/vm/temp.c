@@ -1,5 +1,5 @@
 
-void runMachine(VMachine* vm)
+void runMachine()
 {
     bool finished = false;
     int opcode = 0;

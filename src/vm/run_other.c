@@ -7,9 +7,8 @@
  *
  * @return int
  */
-int do_OP_NOOP(VMachine* vm)
+int do_OP_NOOP()
 {
-    (void)vm;
     return 0; // do nothing
 }
 
@@ -20,48 +19,39 @@ int do_OP_NOOP(VMachine* vm)
  *
  * @return int
  */
-int do_OP_EXIT(VMachine* vm)
+int do_OP_EXIT()
 {
-    (void)vm;
     return 1;   // that's all!
 }
 
-int do_OP_PRINT(VMachine* vm)
+int do_OP_PRINT()
 {
-    Value* result;
-    PEEK(vm, result);
     printf("\n");
-    printVal(result);
+    printVar(convertValToVar(peekVal()));
     printf("\n");
     return 0;
 }
 
-int do_OP_EXCEPT(VMachine* vm)
+int do_OP_EXCEPT()
 {
-    (void)vm;
     runtimeError("EXCEPT is not implemented");
     return 1;
 }
 
-int do_OP_SAVE(VMachine* vm)
+int do_OP_SAVE()
 {
-    Index idx = READ16(vm);
-    Value* val;
-    PEEK(vm, val);
-    assignVal(vm->val_store->list[idx], val);
-    return 0;
+    runtimeError("SAVE is not implemented");
+    return 1;
 }
 
-int do_OP_ERROR(VMachine* vm)
+int do_OP_ERROR()
 {
-    (void)vm;
     runtimeError("encountered error instruction");
     return 1;
 }
 
-int do_OP_TRAP(VMachine* vm)
+int do_OP_TRAP()
 {
-    (void)vm;
     runtimeError("TRAP is not implemented");
     return 1;
 }

@@ -12,6 +12,7 @@
         "INUM",
         "JMPIF",
         "JMPR",
+        "nvar",
         "retv",
         "SETZ",
         "sfmt",
@@ -31,6 +32,7 @@
     "files.associations": {
         "iterator": "c",
         "sstream": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "typeinfo": "c"
     }
 }

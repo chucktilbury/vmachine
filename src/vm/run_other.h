@@ -1,12 +1,12 @@
 #ifndef _RUN_OTHER_H_
 #define _RUN_OTHER_H_
 
-int do_OP_NOOP(VMachine* vm);
-int do_OP_EXIT(VMachine* vm);
-int do_OP_PRINT(VMachine* vm);
-int do_OP_EXCEPT(VMachine* vm);
-int do_OP_SAVE(VMachine* vm);
-int do_OP_ERROR(VMachine* vm);
-int do_OP_TRAP(VMachine* vm);
+int do_OP_NOOP();
+int do_OP_EXIT();
+int do_OP_PRINT();
+int do_OP_EXCEPT();
+int do_OP_SAVE();
+int do_OP_ERROR();
+int do_OP_TRAP();
 
 #endif

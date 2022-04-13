@@ -67,21 +67,21 @@ do_opcode_func opcode_table[] = {
 };
 #define NUM_OPCODES (sizeof(opcode_table) / sizeof(do_opcode_func))
 
-void runMachine(VMachine* vm)
+void runMachine()
 {
     bool finished = false;
     uint32_t opcode = 0;
 
     while(!finished) {
-        VTRACE(5, "%04d ", IP(vm));
-        opcode = READ8(vm);
+        VTRACE(5, "%04d ", getIndex());
+        opcode = read8();
         if(opcode > NUM_OPCODES) {
-            runtimeError("invalid opcode: 0x%02X at 0x%08X", opcode, IP(vm));
+            runtimeError("invalid opcode: 0x%02X at 0x%08X", opcode, getIndex());
             finished = true;
         }
         else {
             VTRACE(5, "%-10s\t", opToStr(opcode));
-            finished = (*opcode_table[opcode])(vm);
+            finished = (*opcode_table[opcode])();
         }
         VTRACE(5, "\n");
     }

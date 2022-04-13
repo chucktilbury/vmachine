@@ -1,6 +1,8 @@
 
 #include "common.h"
 
+void runMachine(); // defined in runner.c
+
 void dump_buffer(uint8_t* buffer, int size)
 {
 
@@ -13,13 +15,13 @@ void dump_buffer(uint8_t* buffer, int size)
 int virtualMachine(const char* fname)
 {
     // load the file
-    VMachine* vm = loadVM(fname); //createVirtualMachine();
+    loadVM(fname); //createVirtualMachine();
     createCallStack();
 
     // run the program
-    runMachine(vm);
+    runMachine();
 
-    destroyVMachine(vm);
+    destroyVMachine();
     return 0;
 }
 

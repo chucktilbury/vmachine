@@ -1,48 +1,44 @@
 
 #include "common.h"
 
-int do_OP_PUSH(VMachine* vm)
+int do_OP_PUSH()
 {
-    uint16_t idx = READ16(vm);
-    COPY(vm, idx); // copy from val_store to val_stack
+    uint16_t idx = read16();
+    Variable* var = getVar(idx);
+    pushVal(convertVarToVal(var));
     return 0;
 }
 
-int do_OP_PUSH8(VMachine* vm)
+int do_OP_PUSH8()
 {
-    uint8_t type = READ8(vm);
-    uint8_t valu = READ8(vm);
-    Value* val = createVal(type);
-    val->data.unum = (uint32_t)valu;
-    pushVal(vm->val_stack, val);
+    uint8_t type = read8();
+    uint8_t valu = read8();
+    StkVal val = initVal(type, &valu);
+    pushVal(val);
     return 0;
 }
 
-int do_OP_PUSH16(VMachine* vm)
+int do_OP_PUSH16()
 {
-    uint8_t type = READ8(vm);
-    uint16_t valu = READ16(vm);
-    Value* val = createVal(type);
-    val->data.unum = (uint32_t)valu;
-    pushVal(vm->val_stack, val);
+    uint8_t type = read8();
+    uint16_t valu = read16();
+    StkVal val = initVal(type, &valu);
+    pushVal(val);
     return 0;
 }
 
-int do_OP_PUSH32(VMachine* vm)
+int do_OP_PUSH32()
 {
-    uint8_t type = READ8(vm);
-    uint32_t valu = READ32(vm);
-    Value* val = createVal(type);
-    val->data.unum = valu;
-    pushVal(vm->val_stack, val);
+    uint8_t type = read8();
+    uint32_t valu = read32();
+    StkVal val = initVal(type, &valu);
+    pushVal(val);
     return 0;
 }
 
-int do_OP_POP(VMachine* vm)
+int do_OP_POP()
 {
-    Value* obj;
-    POP(vm, obj);
-    (void)obj;
+    popVal();
     return 0;
 }
 

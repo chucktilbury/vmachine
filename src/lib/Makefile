@@ -7,17 +7,20 @@ TARGET	=	$(DESTDIR)/libvm.a
 
 make_dirs := $(shell mkdir -p $(OBJDIR) )
 
+#			value.c \
+#			strings.c \
+#			ptr_list.c \
+
 SLST	=	error.c \
-			memory.c \
 			file_io.c \
+			memory.c \
 			instr.c \
 			opcodes.c \
-			strings.c \
-			value.c \
 			cmd_line.c \
-			ptr_list.c \
 			call_stack.c \
-			support.c
+			var_store.c \
+			val_stack.c \
+			misc.c
 
 all: $(TARGET)
 

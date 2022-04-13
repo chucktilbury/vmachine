@@ -29,92 +29,94 @@
  * @param type
  *
  */
-void castToType(Value* val, ValType type)
+StkVal castToType(StkVal val, ValType type)
 {
     switch(type) {
         case VAL_UNUM: {
                 uint32_t v;
-                switch(val->type) {
+                switch(val.type) {
                     case VAL_UNUM:
                         break;
                     case VAL_INUM:
-                        v = (uint32_t)val->data.inum;
+                        v = (uint32_t)val.data.inum;
                         break;
                     case VAL_FNUM:
-                        v = (uint32_t)((int32_t)val->data.fnum);
+                        v = (uint32_t)((int32_t)val.data.fnum);
                         break;
                     default:
-                        runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
                         break;
                 }
-                val->type = VAL_UNUM;
-                val->data.unum = v;
+                val.type = VAL_UNUM;
+                val.data.unum = v;
             }
             break;
 
         case VAL_INUM: {
                 int32_t v;
-                switch(val->type) {
+                switch(val.type) {
                     case VAL_UNUM:
-                        v = (int32_t)val->data.unum;
+                        v = (int32_t)val.data.unum;
                         break;
                     case VAL_INUM:
                         break;
                     case VAL_FNUM:
-                        v = (int32_t)val->data.fnum;
+                        v = (int32_t)val.data.fnum;
                         break;
                     default:
-                        runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
                         break;
                 }
-                val->type = VAL_INUM;
-                val->data.inum = v;
+                val.type = VAL_INUM;
+                val.data.inum = v;
             }
             break;
 
         case VAL_FNUM: {
                 double v;
-                switch(val->type) {
+                switch(val.type) {
                     case VAL_UNUM:
-                        v = (double)((int32_t)val->data.unum);
+                        v = (double)((int32_t)val.data.unum);
                         break;
                     case VAL_INUM:
-                        v = (double)val->data.fnum;
+                        v = (double)val.data.fnum;
                         break;
                     case VAL_FNUM:
                         break;
                     default:
-                        runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+                        runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
                         break;
                 }
-                val->type = VAL_FNUM;
-                val->data.fnum = v;
+                val.type = VAL_FNUM;
+                val.data.fnum = v;
             }
             break;
 
         default:
-            runtimeError("cannot cast a %s to a %s", valToStr(val->type), valToStr(type));
+            runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
             break;
     }
-    val->hash = hashValue(val);
+    //val.hash = hashValue(val);
+    return val;
 }
 
-void addVals(Value* dest, Value* left, Value* right)
+StkVal addVals(StkVal left, StkVal right)
 {
-    switch(left->type) {
+    StkVal dest;
+    switch(left.type) {
         case VAL_UNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.unum = left->data.unum + right->data.unum;
-                    dest->type = VAL_UNUM;
+                    dest.data.unum = left.data.unum + right.data.unum;
+                    dest.type = VAL_UNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = (int32_t)left->data.unum + right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = (int32_t)left.data.unum + right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)((int32_t)left->data.unum) + right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)((int32_t)left.data.unum) + right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -122,18 +124,18 @@ void addVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_INUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.inum = left->data.inum + (int32_t)right->data.unum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum + (int32_t)right.data.unum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = left->data.inum + right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum + right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)left->data.inum + right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)left.data.inum + right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -141,18 +143,18 @@ void addVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_FNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.fnum = left->data.fnum + (double)((int32_t)right->data.unum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum + (double)((int32_t)right.data.unum);
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.fnum = left->data.fnum + (double)right->data.inum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum + (double)right.data.inum;
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = left->data.fnum + right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum + right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -163,26 +165,27 @@ void addVals(Value* dest, Value* left, Value* right)
             runtimeError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
-
+    //dest.hash = hashValue(dest);
+    return dest;
 }
 
-void subVals(Value* dest, Value* left, Value* right)
+StkVal subVals(StkVal left, StkVal right)
 {
-    switch(left->type) {
+    StkVal dest;
+    switch(left.type) {
         case VAL_UNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.unum = left->data.unum - right->data.unum;
-                    dest->type = VAL_UNUM;
+                    dest.data.unum = left.data.unum - right.data.unum;
+                    dest.type = VAL_UNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = (int32_t)left->data.unum - right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = (int32_t)left.data.unum - right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)((int32_t)left->data.unum) - right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)((int32_t)left.data.unum) - right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -190,18 +193,18 @@ void subVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_INUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.inum = left->data.inum - (int32_t)right->data.unum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum - (int32_t)right.data.unum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = left->data.inum - right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum - right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)left->data.inum - right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)left.data.inum - right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -209,18 +212,18 @@ void subVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_FNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.fnum = left->data.fnum - (double)((int32_t)right->data.unum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum - (double)((int32_t)right.data.unum);
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.fnum = left->data.fnum - (double)right->data.inum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum - (double)right.data.inum;
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = left->data.fnum - right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum - right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -231,25 +234,27 @@ void subVals(Value* dest, Value* left, Value* right)
             runtimeError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
+    //dest.hash = hashValue(dest);
+    return dest;
 }
 
-void mulVals(Value* dest, Value* left, Value* right)
+StkVal mulVals(StkVal left, StkVal right)
 {
-    switch(left->type) {
+    StkVal dest;
+    switch(left.type) {
         case VAL_UNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.unum = left->data.unum * right->data.unum;
-                    dest->type = VAL_UNUM;
+                    dest.data.unum = left.data.unum * right.data.unum;
+                    dest.type = VAL_UNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = (int32_t)left->data.unum * right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = (int32_t)left.data.unum * right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)((int32_t)left->data.unum) * right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)((int32_t)left.data.unum) * right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -257,18 +262,18 @@ void mulVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_INUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.inum = left->data.inum * (int32_t)right->data.unum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum * (int32_t)right.data.unum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = left->data.inum * right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum * right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)left->data.inum * right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)left.data.inum * right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -276,18 +281,18 @@ void mulVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_FNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.fnum = left->data.fnum * (double)((int32_t)right->data.unum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum * (double)((int32_t)right.data.unum);
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.fnum = left->data.fnum * (double)right->data.inum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum * (double)right.data.inum;
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = left->data.fnum * right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum * right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -298,119 +303,123 @@ void mulVals(Value* dest, Value* left, Value* right)
             runtimeError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
+    //dest.hash = hashValue(dest);
+    return dest;
 }
 
-void divVals(Value* dest, Value* left, Value* right)
+StkVal divVals(StkVal left, StkVal right)
 {
-    switch(right->type) {
+    StkVal dest;
+    switch(right.type) {
         case VAL_UNUM:
-            if(right->data.unum == 0) {
+            if(right.data.unum == 0) {
                 runtimeError("divide by zero");
-                return;
+                exit(1);
             }
             break;
         case VAL_INUM:
-            if(right->data.inum == 0) {
+            if(right.data.inum == 0) {
                 runtimeError("divide by zero");
-                return;
+                exit(1);
             }
             break;
         case VAL_FNUM:
-            if(right->data.fnum == 0.0) {
+            if(right.data.fnum == 0.0) {
                 runtimeError("divide by zero");
-                return;
+                exit(1);
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
+            runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
             break;
     }
 
-    switch(left->type) {
+    switch(left.type) {
         case VAL_UNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.unum = left->data.unum / right->data.unum;
-                    dest->type = VAL_UNUM;
+                    dest.data.unum = left.data.unum / right.data.unum;
+                    dest.type = VAL_UNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = (int32_t)left->data.unum / right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = (int32_t)left.data.unum / right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)((int32_t)left->data.unum) / right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)((int32_t)left.data.unum) / right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
+                    runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
                     break;
             }
             break;
         case VAL_INUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.inum = left->data.inum / (int32_t)right->data.unum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum / (int32_t)right.data.unum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = left->data.inum / right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum / right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = (double)left->data.inum / right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = (double)left.data.inum / right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
+                    runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
                     break;
             }
             break;
         case VAL_FNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.fnum = left->data.fnum / (double)((int32_t)right->data.unum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum / (double)((int32_t)right.data.unum);
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.fnum = left->data.fnum / (double)right->data.inum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum / (double)right.data.inum;
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = left->data.fnum / right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = left.data.fnum / right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
-                    runtimeError("only numbers allowed in expressions: %s", valToStr(right->type));
+                    runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
                     break;
             }
             break;
         default:
-            runtimeError("only numbers allowed in expressions: %s", valToStr(left->type));
+            runtimeError("only numbers allowed in expressions: %s", varTypeToStr(left.type));
             break;
     }
-    dest->hash = hashValue(dest);
+    //dest.hash = hashValue(dest);
+    return dest;
 }
 
-void modVals(Value* dest, Value* left, Value* right)
+StkVal modVals(StkVal left, StkVal right)
 {
-    switch(right->type) {
+    StkVal dest;
+    switch(right.type) {
         case VAL_UNUM:
-            if(right->data.unum == 0) {
+            if(right.data.unum == 0) {
                 runtimeError("divide by zero");
-                return;
+                exit(1);
             }
             break;
         case VAL_INUM:
-            if(right->data.inum == 0) {
+            if(right.data.inum == 0) {
                 runtimeError("divide by zero");
-                return;
+                exit(1);
             }
             break;
         case VAL_FNUM:
-            if(right->data.fnum == 0.0) {
+            if(right.data.fnum == 0.0) {
                 runtimeError("divide by zero");
-                return;
+                exit(1);
             }
             break;
         default:
@@ -418,20 +427,20 @@ void modVals(Value* dest, Value* left, Value* right)
             break;
     }
 
-    switch(left->type) {
+    switch(left.type) {
         case VAL_UNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.unum = left->data.unum % right->data.unum;
-                    dest->type = VAL_UNUM;
+                    dest.data.unum = left.data.unum % right.data.unum;
+                    dest.type = VAL_UNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = (int32_t)left->data.unum % right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = (int32_t)left.data.unum % right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = fmod((double)((int32_t)left->data.unum), right->data.fnum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = fmod((double)((int32_t)left.data.unum), right.data.fnum);
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -439,18 +448,18 @@ void modVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_INUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.inum = left->data.inum % (int32_t)right->data.unum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum % (int32_t)right.data.unum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_INUM:
-                    dest->data.inum = left->data.inum % right->data.inum;
-                    dest->type = VAL_INUM;
+                    dest.data.inum = left.data.inum % right.data.inum;
+                    dest.type = VAL_INUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.inum = left->data.inum % (int32_t)right->data.fnum;
-                    dest->type = VAL_FNUM;
+                    dest.data.inum = left.data.inum % (int32_t)right.data.fnum;
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -458,18 +467,18 @@ void modVals(Value* dest, Value* left, Value* right)
             }
             break;
         case VAL_FNUM:
-            switch(right->type) {
+            switch(right.type) {
                 case VAL_UNUM:
-                    dest->data.fnum = fmod(left->data.fnum, (double)((int32_t)right->data.unum));
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = fmod(left.data.fnum, (double)((int32_t)right.data.unum));
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_INUM:
-                    dest->data.fnum = fmod(left->data.fnum, (double)right->data.inum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = fmod(left.data.fnum, (double)right.data.inum);
+                    dest.type = VAL_FNUM;
                     break;
                 case VAL_FNUM:
-                    dest->data.fnum = fmod(left->data.fnum, right->data.fnum);
-                    dest->type = VAL_FNUM;
+                    dest.data.fnum = fmod(left.data.fnum, right.data.fnum);
+                    dest.type = VAL_FNUM;
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
@@ -480,45 +489,47 @@ void modVals(Value* dest, Value* left, Value* right)
             runtimeError("only numbers allowed in expressions");
             break;
     }
-    dest->hash = hashValue(dest);
+    //dest.hash = hashValue(dest);
+    return dest;
 }
 
-void negVal(Value* val)
+StkVal negVal(StkVal val)
 {
-    switch(val->type) {
+    switch(val.type) {
         case VAL_UNUM:
-            val->data.unum = -val->data.unum;
+            val.data.unum = -val.data.unum;
             break;
         case VAL_INUM:
-            val->data.inum = -val->data.inum;
+            val.data.inum = -val.data.inum;
             break;
         case VAL_FNUM:
-            val->data.fnum = -val->data.fnum;
+            val.data.fnum = -val.data.fnum;
             break;
         default:
             runtimeError("only numbers allowed in expressions");
             break;
     }
-    val->hash = hashValue(val);
+    //val.hash = hashValue(val);
+    return val;
 }
 
 // peek at the top of the expression stack and return true if its boolean
 // value can be considered false.
-bool isFalse(Value* val)
+bool isFalse(StkVal val)
 {
-    switch(val->type) {
+    switch(val.type) {
         case VAL_ERROR:
         case VAL_OBJ:
         case VAL_ADDRESS:
             return false;    // these are always true for this (so return false)
         case VAL_UNUM:
-            return (val->data.unum == 0)? true: false;
+            return (val.data.unum == 0)? true: false;
         case VAL_INUM:
-            return (val->data.inum == 0)? true: false;
+            return (val.data.inum == 0)? true: false;
         case VAL_FNUM:
-            return (val->data.fnum == 0.0)? true: false;
+            return (val.data.fnum == 0.0)? true: false;
         case VAL_BOOL:
-            return val->data.boolean;
+            return val.data.boolean;
         default:
             return true;
     }

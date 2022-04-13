@@ -3,62 +3,62 @@
 
 const char* opToStr(OpCodes op)
 {
-    return (op == OP_NOOP) ? "OP_NOOP" :
-           (op == OP_ERROR) ? "OP_ERROR" :
-           (op == OP_EXIT) ? "OP_EXIT" :
-           (op == OP_EXCEPT) ? "OP_EXCEPT" :
+    return (op == OP_NOOP) ? "NOOP" :
+           (op == OP_ERROR) ? "ERROR" :
+           (op == OP_EXIT) ? "EXIT" :
+           (op == OP_EXCEPT) ? "EXCEPT" :
 
-           (op == OP_EQ) ? "OP_EQ" :
-           (op == OP_NEQ) ? "OP_NEQ" :
-           (op == OP_LEQ) ? "OP_LEQ" :
-           (op == OP_GEQ) ? "OP_GEQ" :
-           (op == OP_LESS) ? "OP_LESS" :
-           (op == OP_GTR) ? "OP_GTR" :
+           (op == OP_EQ) ? "EQ" :
+           (op == OP_NEQ) ? "NEQ" :
+           (op == OP_LEQ) ? "LEQ" :
+           (op == OP_GEQ) ? "GEQ" :
+           (op == OP_LESS) ? "LESS" :
+           (op == OP_GTR) ? "GTR" :
 
-           (op == OP_ADD) ? "OP_ADD" :
-           (op == OP_SUB) ? "OP_SUB" :
-           (op == OP_MUL) ? "OP_MUL" :
-           (op == OP_DIV) ? "OP_DIV" :
-           (op == OP_MOD) ? "OP_MOD" :
-           (op == OP_CAST) ? "OP_CAST" :
+           (op == OP_ADD) ? "ADD" :
+           (op == OP_SUB) ? "SUB" :
+           (op == OP_MUL) ? "MUL" :
+           (op == OP_DIV) ? "DIV" :
+           (op == OP_MOD) ? "MOD" :
+           (op == OP_CAST) ? "CAST" :
 
-           (op == OP_SAVE) ? "OP_SAVE" :
-           (op == OP_PRINT) ? "OP_PRINT" :
+           (op == OP_SAVE) ? "SAVE" :
+           (op == OP_PRINT) ? "PRINT" :
 
-           (op == OP_PUSH) ? "OP_PUSH" :
-           (op == OP_PUSH8) ? "OP_PUSH8" :
-           (op == OP_PUSH16) ? "OP_PUSH16" :
-           (op == OP_PUSH32) ? "OP_PUSH32" :
-           (op == OP_POP) ? "OP_POP" :
+           (op == OP_PUSH) ? "PUSH" :
+           (op == OP_PUSH8) ? "PUSH8" :
+           (op == OP_PUSH16) ? "PUSH16" :
+           (op == OP_PUSH32) ? "PUSH32" :
+           (op == OP_POP) ? "POP" :
 
-           (op == OP_CALLX) ? "OP_CALLX" :
-           (op == OP_CALL) ? "OP_CALL" :
-           (op == OP_CALL8) ? "OP_CALL8" :
-           (op == OP_CALL16) ? "OP_CALL16" :
-           (op == OP_CALL32) ? "OP_CALL32" :
-           (op == OP_RETURN) ? "OP_RETURN" :
-           (op == OP_CALLR) ? "OP_CALLR" :
-           (op == OP_CALLR8) ? "OP_CALLR8" :
-           (op == OP_CALLR16) ? "OP_CALLR16" :
-           (op == OP_CALLR32) ? "OP_CALLR32" :
+           (op == OP_CALLX) ? "CALLX" :
+           (op == OP_CALL) ? "CALL" :
+           (op == OP_CALL8) ? "CALL8" :
+           (op == OP_CALL16) ? "CALL16" :
+           (op == OP_CALL32) ? "CALL32" :
+           (op == OP_RETURN) ? "RETURN" :
+           (op == OP_CALLR) ? "CALLR" :
+           (op == OP_CALLR8) ? "CALLR8" :
+           (op == OP_CALLR16) ? "CALLR16" :
+           (op == OP_CALLR32) ? "CALLR32" :
 
-           (op == OP_JMP) ? "OP_JMP" :
-           (op == OP_JMP8) ? "OP_JMP8" :
-           (op == OP_JMP16) ? "OP_JMP16" :
-           (op == OP_JMP32) ? "OP_JMP32" :
-           (op == OP_JMPR) ? "OP_JMPR" :
-           (op == OP_JMPR8) ? "OP_JMPR8" :
-           (op == OP_JMPR16) ? "OP_JMPR16" :
-           (op == OP_JMPR32) ? "OP_JMPR32" :
+           (op == OP_JMP) ? "JMP" :
+           (op == OP_JMP8) ? "JMP8" :
+           (op == OP_JMP16) ? "JMP16" :
+           (op == OP_JMP32) ? "JMP32" :
+           (op == OP_JMPR) ? "JMPR" :
+           (op == OP_JMPR8) ? "JMPR8" :
+           (op == OP_JMPR16) ? "JMPR16" :
+           (op == OP_JMPR32) ? "JMPR32" :
 
-           (op == OP_JMPIF) ? "OP_JMPIF" :
-           (op == OP_JMPIF8) ? "OP_JMPIF8" :
-           (op == OP_JMPIF16) ? "OP_JMPIF16" :
-           (op == OP_JMPIF32) ? "OP_JMPIF32" :
-           (op == OP_JMPIFR) ? "OP_JMPIFR" :
-           (op == OP_JMPIFR8) ? "OP_JMPIFR8" :
-           (op == OP_JMPIFR16) ? "OP_JMPIFR16" :
-           (op == OP_JMPIFR32) ? "OP_JMPIFR32" :  "UNKNOWN";
+           (op == OP_JMPIF) ? "JMPIF" :
+           (op == OP_JMPIF8) ? "JMPIF8" :
+           (op == OP_JMPIF16) ? "JMPIF16" :
+           (op == OP_JMPIF32) ? "JMPIF32" :
+           (op == OP_JMPIFR) ? "JMPIFR" :
+           (op == OP_JMPIFR8) ? "JMPIFR8" :
+           (op == OP_JMPIFR16) ? "JMPIFR16" :
+           (op == OP_JMPIFR32) ? "JMPIFR32" :  "UNKNOWN";
 
            //(op == OP_TRAP)? "OP_TRAP":
            //(op == OP_CONST)? "OP_CONST":
