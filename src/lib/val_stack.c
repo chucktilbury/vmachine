@@ -15,8 +15,9 @@ void createValStack()
 
 void destroyValStack()
 {
-    if(stack.list != NULL)
+    if(stack.list != NULL) {
         _free(stack.list);
+    }
 }
 
 int getValStackLen()
@@ -30,14 +31,30 @@ StkVal initVal(uint16_t type, void* val)
 
     switch(type) {
         case VAL_OBJ:
-        case VAL_ERROR: value.data.obj = val; break;
-        case VAL_NOTHING: value.data.obj = NULL; break;
-        case VAL_UNUM: value.data.unum = *(uint32_t*)val; break;
-        case VAL_INUM: value.data.inum = *(int32_t*)val; break;
-        case VAL_FNUM: value.data.fnum = *(float*)val; break;
-        case VAL_BOOL: value.data.inum = *(uint8_t*)val; break;
-        case VAL_ADDRESS: value.data.inum = *(uint32_t*)val; break;
-        default: fprintf(stderr, "Fatal Error: invalid value type in initVal(): 0x%02X\n", type); exit(1);
+        case VAL_ERROR:
+            value.data.obj = val;
+            break;
+        case VAL_NOTHING:
+            value.data.obj = NULL;
+            break;
+        case VAL_UNUM:
+            value.data.unum = *(uint32_t*)val;
+            break;
+        case VAL_INUM:
+            value.data.inum = *(int32_t*)val;
+            break;
+        case VAL_FNUM:
+            value.data.fnum = *(float*)val;
+            break;
+        case VAL_BOOL:
+            value.data.inum = *(uint8_t*)val;
+            break;
+        case VAL_ADDRESS:
+            value.data.inum = *(uint32_t*)val;
+            break;
+        default:
+            fprintf(stderr, "Fatal Error: invalid value type in initVal(): 0x%02X\n", type);
+            exit(1);
     }
     value.type = type;
 
@@ -46,7 +63,7 @@ StkVal initVal(uint16_t type, void* val)
 
 void pushVal(StkVal val)
 {
-    if((stack.len+1) > stack.cap) {
+    if((stack.len + 1) > stack.cap) {
         stack.cap <<= 1;
         stack.list = _realloc_ds_array(stack.list, StkVal, stack.cap);
     }
@@ -58,7 +75,7 @@ void pushVal(StkVal val)
 StkVal popVal()
 {
     // unsigned compare...
-    if(stack.len-1 > stack.len) {
+    if(stack.len - 1 > stack.len) {
         fprintf(stderr, "pop value stack under run\n");
         exit(1);
     }
@@ -69,12 +86,12 @@ StkVal popVal()
 
 StkVal peekVal()
 {
-    if(stack.len-1 > stack.len) {
+    if(stack.len - 1 > stack.len) {
         fprintf(stderr, "peek value stack under run\n");
         exit(1);
     }
 
-    return stack.list[stack.len-1];
+    return stack.list[stack.len - 1];
 }
 
 // Variable* valToVar(StkVal val)

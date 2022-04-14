@@ -60,8 +60,8 @@ const char* opToStr(OpCodes op)
            (op == OP_JMPIFR16) ? "JMPIFR16" :
            (op == OP_JMPIFR32) ? "JMPIFR32" :  "UNKNOWN";
 
-           //(op == OP_TRAP)? "OP_TRAP":
-           //(op == OP_CONST)? "OP_CONST":
-           //(op == OP_FREE)? "OP_FREE":
+    //(op == OP_TRAP)? "OP_TRAP":
+    //(op == OP_CONST)? "OP_CONST":
+    //(op == OP_FREE)? "OP_FREE":
 }
 

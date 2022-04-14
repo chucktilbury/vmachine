@@ -5,17 +5,15 @@
 
 void showListing()
 {
-    bool finished = false;
     int inst = 0;
 
-    while(!finished) {
+    while(getIndex() < getLen()) {
         printf("%04d: ", getIndex());
         inst = read8();
         //printf("instruction: %s\n", opToStr(instruction));
         switch(inst) {
             case OP_EXIT:
                 printf("%s\n", opToStr(inst));
-                finished = true;
                 break;
 
             // no operand

@@ -28,6 +28,6 @@ scanner.c: scanner.l
 clean:
 	-$(RM) -r $(OBJDIR) $(TARGET) parser.c parser.h scanner.c
 
-format: $(PROJDIR)/astyle.rc main.c
+format: $(PROJDIR)/astyle.rc $(SRCS) $(HEADERS)
 	astyle -v --options=$(PROJDIR)/astyle.rc $(SRCS) $(HEADERS); \
 	mv -vf *.bak $(OBJDIR) || true

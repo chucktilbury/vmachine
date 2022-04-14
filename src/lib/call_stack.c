@@ -16,8 +16,9 @@ void createCallStack()
 void destroyCallStack()
 {
     if(call_stack != NULL) {
-        if(call_stack->list != NULL)
+        if(call_stack->list != NULL) {
             _free(call_stack->list);
+        }
         _free(call_stack);
     }
 }
@@ -35,7 +36,7 @@ CallElem initCallElem(uint32_t ret, uint32_t base)
 
 void pushCall(CallElem ce)
 {
-    if((call_stack->len+1) > call_stack->cap) {
+    if((call_stack->len + 1) > call_stack->cap) {
         call_stack->cap <<= 1;
         call_stack->list = _realloc_ds_array(call_stack->list, CallElem, call_stack->cap);
     }
@@ -46,7 +47,7 @@ void pushCall(CallElem ce)
 
 CallElem popCall()
 {
-    if((call_stack->len-1) > call_stack->len) {
+    if((call_stack->len - 1) > call_stack->len) {
         fprintf(stderr, "Fatal Error: call pop stack under flow\n");
         exit(1);
     }
@@ -57,30 +58,30 @@ CallElem popCall()
 
 CallElem peekCall()
 {
-    if((call_stack->len-1) > call_stack->len) {
+    if((call_stack->len - 1) > call_stack->len) {
         fprintf(stderr, "Fatal Error: call peek stack under flow\n");
         exit(1);
     }
 
-    return call_stack->list[call_stack->len-1];
+    return call_stack->list[call_stack->len - 1];
 }
 
 uint32_t peekCallBase()
 {
-    if((call_stack->len-1) > call_stack->len) {
+    if((call_stack->len - 1) > call_stack->len) {
         fprintf(stderr, "Fatal Error: call peek stack under flow\n");
         exit(1);
     }
 
-    return call_stack->list[call_stack->len-1].base_ptr;
+    return call_stack->list[call_stack->len - 1].base_ptr;
 }
 
 uint32_t peekCallRet()
 {
-    if((call_stack->len-1) > call_stack->len) {
+    if((call_stack->len - 1) > call_stack->len) {
         fprintf(stderr, "Fatal Error: call peek stack under flow\n");
         exit(1);
     }
 
-    return call_stack->list[call_stack->len-1].ret_addr;
+    return call_stack->list[call_stack->len - 1].ret_addr;
 }

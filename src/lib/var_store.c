@@ -35,7 +35,7 @@ Variable* createVar(uint16_t type)
 
 int addVar(Variable* var)
 {
-    if((store.len+1) > store.cap) {
+    if((store.len + 1) > store.cap) {
         store.cap <<= 1;
         store.list = _realloc_ds_array(store.list, Variable*, store.cap);
     }
@@ -47,8 +47,9 @@ int addVar(Variable* var)
 
 Variable* getVar(int index)
 {
-    if(index >= 0 && index < (int)store.len)
+    if(index >= 0 && index < (int)store.len) {
         return store.list[index];
+    }
     else {
         printf("index: %d store: %lu\n", index, store.len);
         fprintf(stderr, "what the hell stupid kind of index is that?");
@@ -68,14 +69,30 @@ void printVar(Variable* var)
 {
     printf("%-12s", varTypeToStr(var->type));
     switch(var->type) {
-        case VAL_ERROR: printf("ERROR"); break;
-        case VAL_OBJ: printf("%p", var->data.obj); break;
-        case VAL_UNUM: printf("0x%X", var->data.unum); break;
-        case VAL_ADDRESS: printf("%d", var->data.addr); break;
-        case VAL_INUM: printf("%d", var->data.inum); break;
-        case VAL_FNUM: printf("%0.1f", var->data.fnum); break;
-        case VAL_BOOL: printf("%s", var->data.boolean ? "TRUE" : "FALSE"); break;
-        default: printf("object value not found"); break;
+        case VAL_ERROR:
+            printf("ERROR");
+            break;
+        case VAL_OBJ:
+            printf("%p", var->data.obj);
+            break;
+        case VAL_UNUM:
+            printf("0x%X", var->data.unum);
+            break;
+        case VAL_ADDRESS:
+            printf("%d", var->data.addr);
+            break;
+        case VAL_INUM:
+            printf("%d", var->data.inum);
+            break;
+        case VAL_FNUM:
+            printf("%0.1f", var->data.fnum);
+            break;
+        case VAL_BOOL:
+            printf("%s", var->data.boolean ? "TRUE" : "FALSE");
+            break;
+        default:
+            printf("object value not found");
+            break;
     }
 
     printf("\tassigned: %-5s const: %-5s literal: %-5s ",
@@ -91,22 +108,23 @@ void printVar(Variable* var)
 
 const char* varTypeToStr(int type)
 {
-    return (type == VAL_ERROR)? "ERROR" :
-        (type == VAL_NOTHING)? "NOTHING" :
-        (type == VAL_UNUM)? "UNUM" :
-        (type == VAL_INUM)? "INUM" :
-        (type == VAL_FNUM)? "FNUM" :
-        (type == VAL_BOOL)? "BOOL" :
-        (type == VAL_OBJ)? "OBJ" :
-        (type == VAL_ADDRESS)? "ADDRESS" : "UNKNOWN";
+    return (type == VAL_ERROR) ? "ERROR" :
+           (type == VAL_NOTHING) ? "NOTHING" :
+           (type == VAL_UNUM) ? "UNUM" :
+           (type == VAL_INUM) ? "INUM" :
+           (type == VAL_FNUM) ? "FNUM" :
+           (type == VAL_BOOL) ? "BOOL" :
+           (type == VAL_OBJ) ? "OBJ" :
+           (type == VAL_ADDRESS) ? "ADDRESS" : "UNKNOWN";
 }
 
 void saveVarStore(FILE* fp)
 {
     // TODO: does not handle objects.
     fwrite(&store.len, sizeof(size_t), 1, fp);
-    for(size_t i = 0; i < store.len; i++)
+    for(size_t i = 0; i < store.len; i++) {
         fwrite(store.list[i], sizeof(Variable), 1, fp);
+    }
 }
 
 void loadVarStore(FILE* fp)
@@ -116,8 +134,9 @@ void loadVarStore(FILE* fp)
     fread(&store.len, sizeof(size_t), 1, fp);
 
     store.cap = 1;
-    while((store.len+1) > store.cap)
+    while((store.len + 1) > store.cap) {
         store.cap <<= 1;
+    }
 
     store.list = _alloc_ds_array(Variable*, store.cap);
 

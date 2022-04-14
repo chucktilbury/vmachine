@@ -27,7 +27,8 @@ static void verifySym(Symbol* sym)
 
     Variable* var = getVar(sym->idx);
     if(!var->isAssigned) {
-        fprintf(stderr, "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n", sym->filename, sym->line, sym->col);
+        fprintf(stderr, "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n", sym->filename, sym->line,
+                sym->col);
         error_count++;
     }
 }
@@ -76,8 +77,9 @@ int main(int argc, char** argv)
         saveVM(get_str_param(cl, "outfile"));
     }
 
-    if(get_none_param(cl, "listing"))
+    if(get_none_param(cl, "listing")) {
         showListing();
+    }
 
     destroyVMachine();
     destroySymbols(sym_table);

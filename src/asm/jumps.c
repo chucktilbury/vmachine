@@ -10,26 +10,31 @@ void syntaxError(const char* fmt, ...);
 // automatically marked as constant literals. Compare the val value to the
 // current value of the IP and decide what to do.
 
-static int get_bits(Variable *val)
+static int get_bits(Variable* val)
 {
     int retv = 0;
     uint32_t n = val->data.unum; // get the raw bits
 
-    if(val->type == VAL_FNUM)
+    if(val->type == VAL_FNUM) {
         retv = 32;
+    }
     else {
         int count = 0;
         for(int i = 0; i < 32; i++) {
-            if(n & (0x01 << i))
+            if(n & (0x01 << i)) {
                 count++;
+            }
         }
 
-        if(count >= 0 && count < 7)
+        if(count >= 0 && count < 7) {
             retv = 8;
-        else if(count >= 8 && count < 15)
+        }
+        else if(count >= 8 && count < 15) {
             retv = 16;
-        else
+        }
+        else {
             retv = 32;
+        }
     }
 
     return retv;

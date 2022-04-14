@@ -111,8 +111,9 @@ void loadInstStore(FILE* fp)
     fread(&store.len, sizeof(size_t), 1, fp);
 
     store.cap = 1;
-    while((store.len+1) > store.cap)
+    while((store.len + 1) > store.cap) {
         store.cap <<= 1;
+    }
 
     store.list = _alloc_ds_array(uint8_t, store.cap);
 
