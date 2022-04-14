@@ -5,6 +5,7 @@ parser.c
 parser.h
 parser.output
 scanner.c
+out.bin
 
 # Prerequisites
 *.d
