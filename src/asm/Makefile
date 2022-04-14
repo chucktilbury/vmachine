@@ -11,7 +11,8 @@ SLST	=	parser.c \
 			arith_expr.c \
 			jumps.c \
 			symbols.c \
-			main.c
+			listing.c \
+			asm.c
 
 all: $(TARGET)
 

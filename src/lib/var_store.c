@@ -78,13 +78,15 @@ void printVar(Variable* var)
         default: printf("object value not found"); break;
     }
 
-    printf("assigned: %-5s const: %-5s literal: %-5s ",
+    printf("\tassigned: %-5s const: %-5s literal: %-5s ",
            var->isAssigned ? "true" : "false",
            var->isConst ? "true" : "false",
            var->isLiteral ? "true" : "false");
     //printf("hash: 0x%08X", var->hash);
 
     // printf("raw data: 0x%08X\n", var->data.unum);
+
+    printf("\n");
 }
 
 const char* varTypeToStr(int type)

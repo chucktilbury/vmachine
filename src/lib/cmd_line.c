@@ -24,11 +24,11 @@
 
 // Define this to 1 or 0 to turn the excess file functionality off or on
 #ifndef USE_EXCESS
-#define USE_EXCESS 0
+#define USE_EXCESS 1
 #endif
 // Define this to 1 or 0 to require excess file names
 #ifndef EXCESS_REQUIRED
-#define EXCESS_REQUIRED 0
+#define EXCESS_REQUIRED 1
 #endif
 
 typedef struct _cpt_ {

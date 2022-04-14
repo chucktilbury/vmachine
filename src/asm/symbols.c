@@ -116,13 +116,13 @@ static void dump(Symbol* sym)
         dump(sym->left);
     }
 
-    printf("key: %-15s index: %-4u ", sym->key, sym->idx);
+    printf("   key: %-15s index: %-4u ", sym->key, sym->idx);
     printVar(getVar(sym->idx));
-    printf("\n");
 }
 
 void dumpSymbols()
 {
+    printf("\nSymbol Table:\n");
     dump(sym_table);
 }
 
