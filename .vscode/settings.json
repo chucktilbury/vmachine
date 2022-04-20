@@ -40,6 +40,11 @@
         "hash_map": "c",
         "string_view": "c",
         "initializer_list": "c",
-        "utility": "c"
+        "utility": "c",
+        "*.tcc": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "functional": "c",
+        "streambuf": "c"
     }
 }

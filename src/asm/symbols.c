@@ -4,6 +4,7 @@
 #include "scanner.h"
 #include "symbols.h"
 
+// defined in asm.c
 extern Symbol* sym_table;
 
 int add(Symbol* tree, Symbol* node)
@@ -118,6 +119,7 @@ static void dump(Symbol* sym)
 
     printf("   key: %-15s index: %-4u ", sym->key, sym->idx);
     printVar(getVar(sym->idx));
+    printf("\n");
 }
 
 void dumpSymbols()

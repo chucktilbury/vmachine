@@ -44,6 +44,8 @@ StkVal initVal(uint16_t type, void* val);
 void pushVal(StkVal val);
 StkVal popVal();
 StkVal peekVal();
+//void printVal(StkVal val);
+void printVal(uint8_t type, void* val);
 
 // Variable* valToVar(StkVal val);
 // StkVal varToVal(Variable* var);

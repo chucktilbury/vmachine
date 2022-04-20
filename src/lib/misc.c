@@ -94,3 +94,12 @@ void assignValToVar(Variable* var, StkVal val)
 
     }
 }
+
+const char* clipFileName(const char* fname)
+{
+    char* ptr = strrchr(fname, '/');
+    if(ptr != NULL)
+        return ptr;
+    else
+        return fname;
+}

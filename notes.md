@@ -2,9 +2,7 @@
 
 # Current
 
-* Create a separate call stack that maintains the value stack position for the parameters and local vars. THe return address is also returned on this stack in such a ways as to only require a simple assignment instead of passing pointers around.
-
-* Fix expression stack so that it does not allocate data. The value structs are assigned as if they were an int instead of as a pointer. Stack values are not the same as the value store. They are more simple.
+* Integrate labels into the listing in the assembler.
 
 * Clean up comp_expr.c error messages.
 
@@ -33,10 +31,6 @@ automatically select abs or rel jmp.
 
 * Make command line parser capable of using concatenated switches and not having to put a space between a parameter and its args.
 
-* Move the disassembler into the assembler and create a listing according to the command line parameters.
-
-* Get rid of the VM data structure and have its elements run by the modules that manage it. This will help get rid of some indirection.
-
 * Fix memory allocation routines to detect and report memory leaks. This feature should be disabled for "release" builds.
 
 # Future
@@ -59,3 +53,12 @@ files on the file stack in the reverse order from the command line.
 # Completed
 
 * Prove that values can change at runtime.
+
+* Fix expression stack so that it does not allocate data. The value structs are assigned as if they were an int instead of as a pointer. Stack values are not the same as the value store. They are more simple.
+
+* Create a separate call stack that maintains the value stack position for the parameters and local vars. THe return address is also returned on this stack in such a ways as to only require a simple assignment instead of passing pointers around.
+
+* Get rid of the VM data structure and have its elements run by the modules that manage it. This will help get rid of some indirection.
+
+* Move the disassembler into the assembler and create a listing according to the command line parameters.
+

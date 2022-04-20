@@ -20,7 +20,12 @@ typedef struct {
         bool boolean;
         void* obj;
     } data;
-} Variable;
+#ifdef DEBUG_INFO
+    const char file[64];
+    int line;
+    int col;
+#endif
+} __attribute__((__packed__)) Variable;
 
 typedef struct {
     Variable** list;

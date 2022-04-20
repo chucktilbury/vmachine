@@ -1,6 +1,7 @@
 
 #include "common.h"
 #include "var_store.h"
+#include "scanner.h"
 
 static VarStore store;
 
@@ -32,6 +33,11 @@ Variable* createVar(uint16_t type)
     var->isAssigned = false;// has a value
     var->isConst = false;   // declared as constant
     var->isLiteral = false; // not connected to a symbol
+#ifdef DEBUG_INFO
+    strncpy(var->file, get_file_name(), sizeof(var->file));
+    var->line = get_line_number();
+    var->col = get_col_number();
+#endif
 
     return var;
 }
@@ -497,7 +503,7 @@ void printVar(Variable* var)
 
     // printf("raw data: 0x%08X\n", var->data.unum);
 
-    printf("\n");
+    //printf("\n");
 }
 
 const char* varTypeToStr(int type)
