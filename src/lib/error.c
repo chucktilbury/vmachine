@@ -4,18 +4,7 @@
 
 static int trace_level = 6;
 
-void runtimeError(const char* fmt, ...)
-{
-    fprintf(stderr, "Runtime Error: ");
-    va_list args;
 
-    va_start(args, fmt);
-    vfprintf(stderr, fmt, args);
-    va_end(args);
-
-    fprintf(stderr, "\n");
-    exit(1);
-}
 
 void marker(const char* fmt, ...)
 {

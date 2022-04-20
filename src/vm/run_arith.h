@@ -7,6 +7,5 @@ int do_OP_MUL();
 int do_OP_DIV();
 int do_OP_MOD();
 int do_OP_NEG();
-int do_OP_CAST();
 
 #endif

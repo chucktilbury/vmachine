@@ -21,6 +21,8 @@
 
 #include "common.h"
 #include "scanner.h"
+#include "vm.h"
+
 
 /**
  * @brief Change the type of the value to the type given by the parameter.

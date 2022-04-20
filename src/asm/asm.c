@@ -83,6 +83,7 @@ int main(int argc, char** argv)
 
     destroyVMachine();
     destroySymbols(sym_table);
+    destroy_cmd_line(cl);
 
     printf("error count = %d\n", error_count);
     return error_count;

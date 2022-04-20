@@ -1,5 +1,7 @@
 
 #include "common.h"
+#include "vm.h"
+
 
 #include "run_arith.h"
 #include "run_call.h"

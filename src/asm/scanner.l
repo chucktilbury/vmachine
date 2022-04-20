@@ -235,8 +235,8 @@ static void update_loc(void){
 <<EOF>> {
 
         _file_name_stack *name = name_stack->next;
-        free(name_stack->name);
-        free(name_stack);
+        _free(name_stack->name);
+        _free(name_stack);
         name_stack = name;
 
         memset(strbuf, 0, sizeof(strbuf));
@@ -255,8 +255,8 @@ int open_file(const char *fname) {
 
     _file_name_stack *name;
 
-    name = calloc(1, sizeof(_file_name_stack));
-    name->name = (char*)strdup(fname);
+    name = _alloc_ds(_file_name_stack); //calloc(1, sizeof(_file_name_stack));
+    name->name = (char*)_strdup(fname);
     name->next = name_stack;
     name->line_no = 1;
     name->col_no = 1;

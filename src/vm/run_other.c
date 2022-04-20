@@ -1,4 +1,6 @@
 #include "common.h"
+#include "vm.h"
+
 
 /**
  * @brief Do nothing
@@ -38,10 +40,18 @@ int do_OP_EXCEPT()
     return 1;
 }
 
+/**
+ * @brief The immediate uint16_t is the slot of the var to save the TOS into.
+ *
+ * @return int
+ */
 int do_OP_SAVE()
 {
-    runtimeError("SAVE is not implemented");
-    return 1;
+    StkVal val = popVal();
+    uint16_t slot = read16();
+    assignValToVar(getVar(slot), val);
+
+    return 0;
 }
 
 int do_OP_ERROR()
@@ -54,4 +64,12 @@ int do_OP_TRAP()
 {
     runtimeError("TRAP is not implemented");
     return 1;
+}
+
+int do_OP_CAST()
+{
+    uint8_t type = read8();
+    uint16_t idx = read16();
+    castVar(getVar(idx), type);
+    return 0;
 }

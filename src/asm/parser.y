@@ -160,9 +160,7 @@ data_definition
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            $1 = copyVar($4);
-            $1->isAssigned = true;
-            // destroyVar($4);
+            assignVar($1, $4);
             addSymbol($2, addVar($1));
         }
     }
@@ -170,8 +168,7 @@ data_definition
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            $1 = copyVar(getVar(findSymbol($4)));
-            $1->isAssigned = true;
+            assignVar($1, getVar(findSymbol($4)));
             addSymbol($2, addVar($1));
         }
     }
@@ -314,6 +311,8 @@ class4_instruction
         else {
             write8(OP_SAVE);
             write16(slot);
+            Variable* var = getVar(slot);
+            var->isAssigned = true;
         }
     }
     ;

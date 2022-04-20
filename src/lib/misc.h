@@ -9,5 +9,6 @@ void destroyVMachine();
 
 Variable* convertValToVar(StkVal val);
 StkVal convertVarToVal(Variable* var);
+void assignValToVar(Variable* var, StkVal val);
 
 #endif

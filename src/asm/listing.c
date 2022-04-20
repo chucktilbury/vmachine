@@ -3,6 +3,11 @@
 #include "vmachine.h"
 #include "symbols.h"
 
+/**
+ * Store symbol table by index to look up name. On each instruction, look up the
+ * index and print a name if it exists.
+ */
+
 void showListing()
 {
     int inst = 0;

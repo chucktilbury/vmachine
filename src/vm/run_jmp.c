@@ -1,5 +1,7 @@
 
 #include "common.h"
+#include "vm.h"
+
 
 /**
  * @brief Jump to the absolute address given by the immediate variable index.

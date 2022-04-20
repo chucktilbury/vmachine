@@ -19,12 +19,13 @@ int do_OP_ADD()
     // POP(vm, right);
     // addVals(result, right, left);
     // PUSH(vm, result);
-    StkVal left, right;
-    StkVal result;
-    left = popVal();
-    right = popVal();
-    result = addVals(right, left);
-    pushVal(result);
+    // StkVal left, right;
+    // StkVal result;
+    // left = popVal();
+    // right = popVal();
+    // result = addVals(right, left);
+    // pushVal(result);
+    pushVal(addVals(popVal(), popVal()));
     return 0;
 }
 
@@ -36,12 +37,13 @@ int do_OP_SUB()
     // POP(vm, right);
     // subVals(result, right, left);
     // PUSH(vm, result);
-    StkVal left, right;
-    StkVal result;
-    left = popVal();
-    right = popVal();
-    result = subVals(right, left);
-    pushVal(result);
+    // StkVal left, right;
+    // StkVal result;
+    // left = popVal();
+    // right = popVal();
+    // result = subVals(right, left);
+    // pushVal(result);
+    pushVal(subVals(popVal(), popVal()));
     return 0;
 }
 
@@ -53,12 +55,13 @@ int do_OP_MUL()
     // POP(vm, right);
     // mulVals(result, right, left);
     // PUSH(vm, result);
-    StkVal left, right;
-    StkVal result;
-    left = popVal();
-    right = popVal();
-    result = mulVals(right, left);
-    pushVal(result);
+    // StkVal left, right;
+    // StkVal result;
+    // left = popVal();
+    // right = popVal();
+    // result = mulVals(right, left);
+    // pushVal(result);
+    pushVal(mulVals(popVal(), popVal()));
     return 0;
 }
 
@@ -70,12 +73,13 @@ int do_OP_DIV()
     // POP(vm, right);
     // divVals(result, right, left);
     // PUSH(vm, result);
-    StkVal left, right;
-    StkVal result;
-    left = popVal();
-    right = popVal();
-    result = divVals(right, left);
-    pushVal(result);
+    // StkVal left, right;
+    // StkVal result;
+    // left = popVal();
+    // right = popVal();
+    // result = divVals(right, left);
+    // pushVal(result);
+    pushVal(divVals(popVal(), popVal()));
     return 0;
 }
 
@@ -87,32 +91,23 @@ int do_OP_MOD()
     // POP(vm, right);
     // modVals(result, right, left);
     // PUSH(vm, result);
-    StkVal left, right;
-    StkVal result;
-    left = popVal();
-    right = popVal();
-    result = modVals(right, left);
-    pushVal(result);
+    // StkVal left, right;
+    // StkVal result;
+    // left = popVal();
+    // right = popVal();
+    // result = modVals(right, left);
+    // pushVal(result);
+    pushVal(modVals(popVal(), popVal()));
     return 0;
 }
 
 int do_OP_NEG()
 {
-    StkVal val;
-    val = popVal();
-    val = negVal(val);
-    pushVal(val);
+    // StkVal val;
+    // val = popVal();
+    // val = negVal(val);
+    pushVal(negVal(popVal()));
     return 0;
 }
 
-int do_OP_CAST()
-{
-    fprintf(stderr, "CAST instruction not implemented\n");
-    exit(1);
-    // uint8_t type = READ8(vm);
-    // Index idx = READ16(vm);
-    // Value* val = getVal(vm->val_store, idx);
-    // castToType(val, type);
-    return 0;
-}
 

@@ -6,6 +6,10 @@
 
 * Fix expression stack so that it does not allocate data. The value structs are assigned as if they were an int instead of as a pointer. Stack values are not the same as the value store. They are more simple.
 
+* Clean up comp_expr.c error messages.
+
+* Use the linker to link the correct error function in common code.
+
 # Random
 
 * assembler needs to have the logic to do relative jumps to labels and

@@ -1,7 +1,21 @@
 
 #include "common.h"
+#include <stdarg.h>
 
 void runMachine(); // defined in runner.c
+
+void runtimeError(const char* fmt, ...)
+{
+    fprintf(stderr, "Runtime Error: ");
+    va_list args;
+
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+
+    fprintf(stderr, "\n");
+    exit(1);
+}
 
 void dump_buffer(uint8_t* buffer, int size)
 {

@@ -41,6 +41,7 @@ StkVal initVal(uint16_t type, void* val)
             value.data.unum = *(uint32_t*)val;
             break;
         case VAL_INUM:
+            //printf("inum = %d\n", *(int32_t*)val);
             value.data.inum = *(int32_t*)val;
             break;
         case VAL_FNUM:
@@ -70,6 +71,7 @@ void pushVal(StkVal val)
 
     stack.list[stack.len] = val;
     stack.len++;
+    //printf("TOS after push: %lu\t", stack.len);
 }
 
 StkVal popVal()
@@ -81,6 +83,7 @@ StkVal popVal()
     }
 
     stack.len--;
+    //printf("TOS after pop: %lu\t", stack.len);
     return stack.list[stack.len];
 }
 
@@ -94,26 +97,3 @@ StkVal peekVal()
     return stack.list[stack.len - 1];
 }
 
-// Variable* valToVar(StkVal val)
-// {
-//     Variable* var = createVar(val.type);
-//
-//     var->isAssigned = true;
-//     switch(val.type) {
-//         case VAL_OBJ:
-//         case VAL_ERROR: var->data.obj = val.data.obj; break;
-//         case VAL_NOTHING:  var->data.obj = NULL; break;
-//         case VAL_UNUM: var->data.unum = val.data.unum; break;
-//         case VAL_INUM: var->data.inum = val.data.inum; break;
-//         case VAL_FNUM: var->data.fnum = val.data.fnum; break;
-//         case VAL_BOOL: var->data.boolean = val.data.boolean; break;
-//         case VAL_ADDRESS: var->data.addr = val.data.addr; break;
-//     }
-//
-//     return var;
-// }
-//
-// StkVal varToVal(Variable* var)
-// {
-//     return initVal(var->type, &var->data);
-// }

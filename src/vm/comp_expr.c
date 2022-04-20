@@ -1,5 +1,7 @@
 
 #include "common.h"
+#include "vm.h"
+
 
 
 /******************************************************************************
@@ -359,7 +361,7 @@ StkVal neqVal(StkVal left, StkVal right)
             }
             break;
         default:
-            runtimeError("unknown left value type (%d) in '!=' comparison", left.type);
+            runtimeError("unknown left value type %s in '!=' comparison", varTypeToStr(left.type));
     }
 
     dest.type = VAL_BOOL;
@@ -369,6 +371,7 @@ StkVal neqVal(StkVal left, StkVal right)
 StkVal leqVal(StkVal left, StkVal right)
 {
     StkVal dest;
+    //printf("left type = %s right type = %s\t", varTypeToStr(left.type), varTypeToStr(right.type));
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {

@@ -26,7 +26,7 @@ scanner.c: scanner.l
 	flex -io scanner.c scanner.l
 
 clean:
-	-$(RM) -r $(OBJDIR) $(TARGET) parser.c parser.h scanner.c
+	-$(RM) -r $(OBJDIR) $(TARGET) parser.c parser.h scanner.c parser.output
 
 format: $(PROJDIR)/astyle.rc $(SRCS) $(HEADERS)
 	astyle -v --options=$(PROJDIR)/astyle.rc $(SRCS) $(HEADERS); \

@@ -6,7 +6,8 @@
 #include "var_type.h"
 
 typedef struct {
-    ValType type;
+    //ValType type;
+    uint8_t type;
     bool isAssigned;// has a value
     bool isConst;   // declared as constant
     bool isLiteral; // not connected to a symbol
@@ -36,6 +37,8 @@ Variable* getVar(int index);
 Variable* copyVar(Variable* var);
 void printVar(Variable* var);
 const char* varTypeToStr(int type);
+void assignVar(Variable* dest, Variable* src);
+void castVar(Variable* var, uint8_t type);
 
 void loadVarStore(FILE* fp);
 void saveVarStore(FILE* fp);

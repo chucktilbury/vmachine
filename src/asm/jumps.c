@@ -185,6 +185,7 @@ void emitPUSH(Variable* val)
             write8(OP_PUSH8);
             write8(val->type);
             write8(val->data.unum);
+            //printf("type: %s, value: %u\n", varTypeToStr(val->type), val->data.unum);
             break;
         case 16:
             write8(OP_PUSH16);

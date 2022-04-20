@@ -20,7 +20,7 @@
 #include <stdint.h>
 
 typedef struct _value_ {
-    uint16_t type;
+    uint8_t type;
     union {
         uint32_t unum; // these 3 have different names for clarity
         uint32_t addr;

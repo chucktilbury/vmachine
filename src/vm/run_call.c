@@ -1,6 +1,7 @@
 
 #include "common.h"
 #include "var_store.h"
+#include "vm.h"
 
 /**
  * @brief Call the absolute address contained in the variable which is given
