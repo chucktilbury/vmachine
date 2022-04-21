@@ -7,6 +7,7 @@ const char* opToStr(OpCodes op)
            (op == OP_ERROR) ? "ERROR" :
            (op == OP_EXIT) ? "EXIT" :
            (op == OP_EXCEPT) ? "EXCEPT" :
+           (op == OP_LOCAL) ? "LOCAL" :
 
            (op == OP_EQ) ? "EQ" :
            (op == OP_NEQ) ? "NEQ" :

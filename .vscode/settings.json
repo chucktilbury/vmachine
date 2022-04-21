@@ -21,6 +21,7 @@
         "structs",
         "sval",
         "uints",
+        "upcased",
         "valu",
         "vfmt",
         "vmachine",

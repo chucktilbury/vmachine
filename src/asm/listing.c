@@ -230,6 +230,12 @@ void showListing()
                 }
                 break;
 
+            case OP_LOCAL: {
+                    short ofst = (short)read16();
+                    printf("%d\t", ofst);
+                }
+                break;
+
             case OP_PUSH8: {
                     uint8_t type = read8();
                     uint32_t valu = read8();

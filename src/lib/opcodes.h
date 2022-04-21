@@ -6,6 +6,7 @@ typedef enum {
     OP_NOOP,    // no operation
     OP_EXIT,    // cause the VM to exit
     OP_SAVE,    // save the top of the stack to the slot number (constant)
+    OP_LOCAL,   // save top of stack to a local
 
     OP_CAST,    // change the type of a variable at a slot number
     OP_PRINTS,  // print the value at the top of the stack

@@ -54,8 +54,7 @@ StkVal initVal(uint16_t type, void* val)
             value.data.inum = *(uint32_t*)val;
             break;
         default:
-            fprintf(stderr, "Fatal Error: invalid value type in initVal(): 0x%02X\n", type);
-            exit(1);
+            fatalError("invalid value type in initVal(): 0x%02X\n", type);
     }
     value.type = type;
 
@@ -78,8 +77,7 @@ StkVal popVal()
 {
     // unsigned compare...
     if(stack.len - 1 > stack.len) {
-        fprintf(stderr, "pop value stack under run\n");
-        exit(1);
+        fatalError("pop value stack under run");
     }
 
     stack.len--;
@@ -135,6 +133,174 @@ void printVal(uint8_t type, void* val)
         default:
             printf("object value not found");
             break;
+    }
+}
+
+/**
+ * @brief Assign a value to a local var that has been allocated upon the
+ * stack.
+ *
+ * @param index
+ * @param val
+ *
+ */
+void assignVal(int index, StkVal val)
+{
+    //printf("INDEX: %d\n", index);
+    switch(stack.list[index].type) {
+        case VAL_OBJ:
+        case VAL_ERROR:
+            switch(val.type) {
+                case VAL_ERROR:
+                case VAL_OBJ:
+                    stack.list[index].data.obj = val.data.obj;
+                    break;
+                case VAL_NOTHING:
+                case VAL_UNUM:
+                case VAL_INUM:
+                case VAL_FNUM:
+                case VAL_BOOL:
+                case VAL_ADDRESS:
+                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    break;
+                default:
+                    fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
+            }
+            break;
+
+        case VAL_NOTHING:
+            fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+            break;
+
+        case VAL_UNUM:
+            switch(val.type) {
+                case VAL_ERROR:
+                case VAL_OBJ:
+                case VAL_NOTHING:
+                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    break;
+                case VAL_UNUM:
+                    stack.list[index].data.unum = val.data.unum;
+                    break;
+                case VAL_INUM:
+                    stack.list[index].data.unum = (uint32_t)val.data.inum;
+                    break;
+                case VAL_FNUM:
+                    stack.list[index].data.unum = (uint32_t)((int32_t)val.data.fnum);
+                    break;
+                case VAL_BOOL:
+                    stack.list[index].data.unum = val.data.boolean ? 1 : 0;
+                    break;
+                case VAL_ADDRESS:
+                    stack.list[index].data.unum = val.data.addr;
+                    break;
+                default:
+                    fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
+            }
+            break;
+
+        case VAL_INUM:
+            switch(val.type) {
+                case VAL_ERROR:
+                case VAL_OBJ:
+                case VAL_NOTHING:
+                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    break;
+                case VAL_UNUM:
+                    stack.list[index].data.inum = (int32_t)val.data.unum;
+                    break;
+                case VAL_INUM:
+                    stack.list[index].data.inum = val.data.inum;
+                    break;
+                case VAL_FNUM:
+                    stack.list[index].data.inum = (int32_t)val.data.fnum;
+                    break;
+                case VAL_BOOL:
+                    stack.list[index].data.inum = val.data.boolean ? 1 : 0;
+                    break;
+                case VAL_ADDRESS:
+                    stack.list[index].data.inum = (int32_t)val.data.addr;
+                    break;
+                default:
+                    fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
+            }
+            break;
+
+        case VAL_FNUM:
+            switch(val.type) {
+                case VAL_ERROR:
+                case VAL_OBJ:
+                case VAL_NOTHING:
+                case VAL_ADDRESS:
+                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    break;
+                case VAL_UNUM:
+                    stack.list[index].data.fnum = (float)((int32_t)val.data.unum);
+                    break;
+                case VAL_INUM:
+                    stack.list[index].data.fnum = (float)val.data.inum;
+                    break;
+                case VAL_FNUM:
+                    stack.list[index].data.fnum = val.data.fnum;
+                    break;
+                case VAL_BOOL:
+                    stack.list[index].data.fnum = val.data.boolean ? 1 : 0;
+                    break;
+                default:
+                    fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
+            }
+            break;
+
+        case VAL_BOOL:
+            switch(val.type) {
+                // todo: objects have their own way to give a boolean
+                case VAL_OBJ:
+                case VAL_ERROR:
+                case VAL_NOTHING:
+                case VAL_ADDRESS:
+                    stack.list[index].data.boolean = true;
+                    break;
+                case VAL_UNUM:
+                    stack.list[index].data.boolean = val.data.unum ? true : false;
+                    break;
+                case VAL_INUM:
+                    stack.list[index].data.boolean = val.data.inum ? true : false;
+                    break;
+                case VAL_FNUM:
+                    stack.list[index].data.boolean = val.data.fnum != 0.0 ? true : false;
+                    break;
+                case VAL_BOOL:
+                    stack.list[index].data.boolean = val.data.boolean;
+                    break;
+                default:
+                    fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
+            }
+            break;
+        case VAL_ADDRESS:
+            switch(val.type) {
+                case VAL_ERROR:
+                case VAL_OBJ:
+                case VAL_NOTHING:
+                case VAL_FNUM:
+                case VAL_BOOL:
+                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    break;
+                case VAL_UNUM:
+                    stack.list[index].data.addr = val.data.unum;
+                    break;
+                case VAL_INUM:
+                    stack.list[index].data.addr = (uint32_t)val.data.inum;
+                    break;
+                case VAL_ADDRESS:
+                    stack.list[index].data.addr = val.data.addr;
+                    break;
+                default:
+                    fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
+            }
+            break;
+
+        default:
+            fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
     }
 }
 

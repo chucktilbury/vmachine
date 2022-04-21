@@ -47,10 +47,8 @@ void pushCall(CallElem ce)
 
 CallElem popCall()
 {
-    if((call_stack->len - 1) > call_stack->len) {
-        fprintf(stderr, "Fatal Error: call pop stack under flow\n");
-        exit(1);
-    }
+    if((call_stack->len - 1) > call_stack->len)
+        fatalError("call pop stack under run");
 
     call_stack->len--;
     return call_stack->list[call_stack->len];
@@ -58,10 +56,8 @@ CallElem popCall()
 
 CallElem peekCall()
 {
-    if((call_stack->len - 1) > call_stack->len) {
-        fprintf(stderr, "Fatal Error: call peek stack under flow\n");
-        exit(1);
-    }
+    if((call_stack->len - 1) > call_stack->len)
+        fatalError("call peek stack under flow");
 
     return call_stack->list[call_stack->len - 1];
 }
@@ -69,9 +65,10 @@ CallElem peekCall()
 uint32_t peekCallBase()
 {
     if((call_stack->len - 1) > call_stack->len)
-        fatalError("call peek stack under flow");
-
-    return call_stack->list[call_stack->len - 1].base_ptr;
+        //fatalError("call base peek stack under flow");
+        return 0;
+    else
+        return call_stack->list[call_stack->len - 1].base_ptr;
 }
 
 uint32_t peekCallRet()

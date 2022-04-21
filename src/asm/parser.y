@@ -13,7 +13,7 @@
 
 #include "scanner.h"
 #include "arith_expr.h"
-#include "jumps.h"
+#include "emit.h"
 #include "symbols.h"
 
 // defined by flex
@@ -53,8 +53,9 @@ void verifySymbolTable();
 %token <str> TOK_STR
 %token <opcode> TOK_ERROR TOK_NOOP TOK_EXIT TOK_CALL TOK_CALLX TOK_RETURN
 %token <opcode> TOK_JMP TOK_JMPIF TOK_EXCEPT TOK_PUSH TOK_POP TOK_SAVE
-%token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT TOK_PRINTS
-%token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD TOK_PEEK
+%token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT
+%token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD
+%token <opcode> TOK_PRINTS TOK_PEEK TOK_LOCAL
 %token <type> TOK_UNUM_TYPE TOK_INUM_TYPE TOK_FNUM_TYPE TOK_CONST
 %token <type> TOK_STR_TYPE TOK_BOOL_TYPE TOK_CAST TOK_TRUE TOK_FALSE
 %token TOK_INCLUDE
@@ -341,6 +342,9 @@ class4_instruction
     }
     | TOK_PEEK expression {
         emitPeek($2);
+    }
+    | TOK_LOCAL expression {
+        emitLocal($2);
     }
     ;
 

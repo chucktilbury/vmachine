@@ -222,3 +222,26 @@ void emitPeek(Variable* val)
             fatalError("unknown variable type: %d", val->type);
     }
 }
+
+void emitLocal(Variable* val)
+{
+    write8(OP_LOCAL);
+    switch(val->type) {
+        case VAL_ERROR:
+        case VAL_NOTHING:
+        case VAL_UNUM:
+        case VAL_FNUM:
+        case VAL_BOOL:
+        case VAL_OBJ:
+        case VAL_ADDRESS:
+            syntaxError("local instruction expects a INUM, not a %s", varTypeToStr(val->type));
+            return;
+
+        case VAL_INUM:
+            write16((int16_t)val->data.inum);
+            break;
+
+        default:
+            fatalError("unknown variable type: %d", val->type);
+    }
+}

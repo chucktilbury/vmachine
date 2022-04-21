@@ -68,6 +68,7 @@ do_opcode_func opcode_table[] = {
     [OP_CAST] = do_OP_CAST,
     [OP_PRINT] = do_OP_PRINT,
     [OP_PRINTS] = do_OP_PRINTS,
+    [OP_LOCAL] = do_OP_LOCAL,
 };
 #define NUM_OPCODES (sizeof(opcode_table) / sizeof(do_opcode_func))
 

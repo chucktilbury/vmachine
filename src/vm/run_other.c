@@ -29,6 +29,7 @@ int do_OP_EXIT()
 int do_OP_PRINTS()
 {
     printf("\n");
+    printf("TOS: %d\t", getValStackLen());
     printVar(convertValToVar(peekStk()));
     printf("\n");
     return 0;
@@ -55,7 +56,7 @@ int do_OP_EXCEPT()
  */
 int do_OP_SAVE()
 {
-    StkVal val = popVal();
+    StkVal val = peekStk();
     uint16_t slot = read16();
     assignValToVar(getVar(slot), val);
 
@@ -79,5 +80,15 @@ int do_OP_CAST()
     uint8_t type = read8();
     uint16_t idx = read16();
     castVar(getVar(idx), type);
+    return 0;
+}
+
+int do_OP_LOCAL()
+{
+    short ofst = (short)read16();
+    int base = peekCallBase();
+    StkVal val = peekStk();
+    printVal(val.type, &val.data.inum); fputc('\n', stdout);
+    assignVal(ofst+base, val);
     return 0;
 }

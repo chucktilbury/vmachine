@@ -11,5 +11,6 @@ void emitJMPIFR(Variable* val);
 void emitCALLR(Variable* val);
 void emitPUSH(Variable* val);
 void emitPeek(Variable* val);
+void emitLocal(Variable* val);
 
 #endif

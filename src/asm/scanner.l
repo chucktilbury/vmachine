@@ -132,6 +132,7 @@ static void update_loc(void){
 "prints"        { yylval.opcode = OP_PRINTS; return TOK_PRINTS; }
 "print"         { yylval.opcode = OP_PRINT; return TOK_PRINT; }
 "peek"          { yylval.opcode = OP_PEEK; return TOK_PEEK; }
+"local"         { yylval.opcode = OP_LOCAL; return TOK_LOCAL; }
 
         /* arithmetic operators */
 "+"             { return '+'; }

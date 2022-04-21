@@ -194,7 +194,7 @@ void add_str_param(cmd_line cptr, const char* name, const char* parm, const char
 }
 
 /*
- * Add a boolean command line parameter to the parser. Acceptible values are
+ * Add a boolean command line parameter to the parser. Acceptable values are
  * 1, 0, true, and false. The parameters are upcased before they are checked
  * for validity.
  */
