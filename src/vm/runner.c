@@ -2,15 +2,6 @@
 #include "common.h"
 #include "vm.h"
 
-
-#include "run_arith.h"
-#include "run_call.h"
-#include "run_comp.h"
-#include "run_jmp.h"
-#include "run_jmpif.h"
-#include "run_other.h"
-#include "run_push.h"
-
 typedef int (*do_opcode_func)();
 
 do_opcode_func opcode_table[] = {

@@ -1,6 +1,5 @@
 
 #include "common.h"
-#include "var_store.h"
 #include "vm.h"
 
 /**

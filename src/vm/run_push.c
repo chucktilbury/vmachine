@@ -1,5 +1,6 @@
 
 #include "common.h"
+#include "vm.h"
 
 int do_OP_PUSH()
 {

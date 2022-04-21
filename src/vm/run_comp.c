@@ -1,6 +1,6 @@
 
 #include "common.h"
-#include "comp_expr.h"
+#include "vm.h"
 
 int do_OP_NOT()
 {

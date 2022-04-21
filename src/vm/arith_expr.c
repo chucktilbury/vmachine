@@ -20,7 +20,7 @@
 #include <stdarg.h>
 
 #include "common.h"
-#include "scanner.h"
+//#include "scanner.h"
 #include "vm.h"
 
 

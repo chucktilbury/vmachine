@@ -1,6 +1,6 @@
 
 #include "common.h"
-#include <stdarg.h>
+#include "vmachine.h"
 
 void runMachine(); // defined in runner.c
 
