@@ -2,8 +2,6 @@
 
 # Current
 
-* Integrate labels into the listing in the assembler.
-
 * Clean up comp_expr.c error messages.
 
 * Use the linker to link the correct error function in common code.
@@ -16,8 +14,6 @@ automatically select abs or rel jmp.
 * mechanism for comparing objects. (implement strings)
 
 * figure out a way to store symbol tables in the ASM file for debugging.
-
-* fix error messages for different executables.
 
 * implement some kind of trace functionality that is settable at runtime.
 
@@ -61,4 +57,6 @@ files on the file stack in the reverse order from the command line.
 * Get rid of the VM data structure and have its elements run by the modules that manage it. This will help get rid of some indirection.
 
 * Move the disassembler into the assembler and create a listing according to the command line parameters.
+
+* Integrate labels into the listing in the assembler.
 

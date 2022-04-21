@@ -3,6 +3,7 @@
 
 void setTraceLevel(int lev);
 int getTraceLevel();
+void fatalError(const char* fmt, ...);
 
 #ifdef DEBUG_VM_TRACE
 #define VTRACE(n, f, ...) do { \

@@ -22,7 +22,7 @@ static int get_bits(Variable* val)
         int count = 0;
         for(int i = 0; i < 32; i++) {
             if(n & (0x01 << i)) {
-                count++;
+                count = i;
             }
         }
 
@@ -197,5 +197,28 @@ void emitPUSH(Variable* val)
             write8(val->type);
             write32(val->data.unum);
             break;
+    }
+}
+
+void emitPeek(Variable* val)
+{
+    write8(OP_PEEK);
+    switch(val->type) {
+        case VAL_ERROR:
+        case VAL_NOTHING:
+        case VAL_UNUM:
+        case VAL_FNUM:
+        case VAL_BOOL:
+        case VAL_OBJ:
+        case VAL_ADDRESS:
+            syntaxError("peek instruction expects a INUM, not a %s", varTypeToStr(val->type));
+            return;
+
+        case VAL_INUM:
+            write16((int16_t)val->data.inum);
+            break;
+
+        default:
+            fatalError("unknown variable type: %d", val->type);
     }
 }

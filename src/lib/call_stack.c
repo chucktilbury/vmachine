@@ -68,10 +68,8 @@ CallElem peekCall()
 
 uint32_t peekCallBase()
 {
-    if((call_stack->len - 1) > call_stack->len) {
-        fprintf(stderr, "Fatal Error: call peek stack under flow\n");
-        exit(1);
-    }
+    if((call_stack->len - 1) > call_stack->len)
+        fatalError("call peek stack under flow");
 
     return call_stack->list[call_stack->len - 1].base_ptr;
 }

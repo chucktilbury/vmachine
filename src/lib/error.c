@@ -4,7 +4,17 @@
 
 static int trace_level = 6;
 
+void fatalError(const char* fmt, ...)
+{
+    va_list args;
 
+    fprintf(stderr, "Fatal Error: ");
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+    fprintf(stderr, "\n");
+    exit(1);
+}
 
 void marker(const char* fmt, ...)
 {

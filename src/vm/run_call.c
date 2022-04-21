@@ -16,9 +16,6 @@ int do_OP_CALL()
     uint16_t idx = read16();
     Variable* var = getVar(idx);
 
-    // Value* ret = createVal(VAL_ADDRESS);
-    // ret->data.unum = vm->inst->index;
-    // PUSH(vm, ret);
     pushCall(initCallElem(getIndex(), getValStackLen()));
 
     setIndex(var->data.addr);
@@ -35,9 +32,6 @@ int do_OP_CALL()
  */
 int do_OP_RETURN()
 {
-    // Value* val;
-    // POP(vm, val);
-    // vm->inst->index = val->data.unum;
     CallElem ce = popCall();
     setIndex(ce.ret_addr);
     return 0;

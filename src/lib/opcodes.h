@@ -8,7 +8,8 @@ typedef enum {
     OP_SAVE,    // save the top of the stack to the slot number (constant)
 
     OP_CAST,    // change the type of a variable at a slot number
-    OP_PRINT,   // print the value at the top of the stack
+    OP_PRINTS,  // print the value at the top of the stack
+    OP_PRINT,   // print the value given by the index operand
 
     OP_TRAP,    // (N.I.) immediate is an 8 bit trap number
     OP_EXCEPT,  // (N.I.) raise an exception and process an exception handler (constatant)
@@ -47,6 +48,7 @@ typedef enum {
     OP_PUSH16,
     OP_PUSH32,
     OP_POP,     // pop the value from the stack and throw it away
+    OP_PEEK,    // look at the value stack without popping
 
     // comparison operators
     OP_NOT,     // unary not conditional

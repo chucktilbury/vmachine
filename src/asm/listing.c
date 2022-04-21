@@ -158,7 +158,22 @@ void showListing()
             case OP_MUL:
             case OP_DIV:
             case OP_MOD:
-            case OP_PRINT:
+                break;
+
+            case OP_PRINTS:
+                printf("----\t");
+                break;
+
+            case OP_PRINT: {
+                    uint16_t oper = read16();
+                    const char* str = find_sym(oper);
+                    if(str == NULL) {
+                        printf("%4d\t", oper);
+                        printVar(getVar(oper));
+                    }
+                    else
+                        printf("%s\t", str);
+                }
                 break;
 
             // 16 bit operand
@@ -206,6 +221,12 @@ void showListing()
                     }
                     else
                         printf("%s\t", str);
+                }
+                break;
+
+            case OP_PEEK: {
+                    short ofst = (short)read16();
+                    printf("%d\t", ofst);
                 }
                 break;
 

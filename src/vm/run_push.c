@@ -44,3 +44,15 @@ int do_OP_POP()
     return 0;
 }
 
+int do_OP_PEEK()
+{
+    short ofst = (short)read16();
+    int base = peekCallBase();
+    //printf("\noffset: %d, base: %d, effective: %d", ofst, base, ofst+base);
+    StkVal val = peekVal(ofst+base);
+    //printf("\nvalue: %d\t", val.data.inum);
+    pushVal(val);
+    return 0;
+}
+
+

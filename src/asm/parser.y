@@ -53,8 +53,8 @@ void verifySymbolTable();
 %token <str> TOK_STR
 %token <opcode> TOK_ERROR TOK_NOOP TOK_EXIT TOK_CALL TOK_CALLX TOK_RETURN
 %token <opcode> TOK_JMP TOK_JMPIF TOK_EXCEPT TOK_PUSH TOK_POP TOK_SAVE
-%token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT
-%token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD
+%token <opcode> TOK_NOT TOK_EQ TOK_NEQ TOK_LEQ TOK_GEQ TOK_LESS TOK_PRINT TOK_PRINTS
+%token <opcode> TOK_GTR TOK_NEG TOK_ADD TOK_SUB TOK_MUL TOK_DIV TOK_MOD TOK_PEEK
 %token <type> TOK_UNUM_TYPE TOK_INUM_TYPE TOK_FNUM_TYPE TOK_CONST
 %token <type> TOK_STR_TYPE TOK_BOOL_TYPE TOK_CAST TOK_TRUE TOK_FALSE
 %token TOK_INCLUDE
@@ -216,7 +216,7 @@ class1_instruction
     | TOK_MUL { write8(OP_MUL); }
     | TOK_DIV { write8(OP_DIV); }
     | TOK_MOD { write8(OP_MOD); }
-    | TOK_PRINT { write8(OP_PRINT); }
+    | TOK_PRINTS { write8(OP_PRINTS); }
     ;
 
     /* instructions that have an immediate operand. the operand is a
@@ -276,7 +276,7 @@ class2_instruction
     }
     ;
 
-class4_instruction
+class3_instruction
     : TOK_CALLX TOK_SYMBOL {
         int slot = findSymbol($2);
         if(slot == 0)
@@ -315,10 +315,20 @@ class4_instruction
             var->isAssigned = true;
         }
     }
+    | TOK_PRINT TOK_SYMBOL {
+        int slot = findSymbol($2);
+        if(slot == 0) {
+            syntaxError("undefined symbol: \"%s\"", $2);
+        }
+        else {
+            write8(OP_PRINT);
+            write16(slot);
+        }
+    }
     ;
 
 
-class3_instruction
+class4_instruction
     : TOK_CAST TOK_SYMBOL type_spec {
         int slot = findSymbol($2);
         if(slot == 0)
@@ -328,6 +338,9 @@ class3_instruction
             write8($3->type);
             write16(slot);
         }
+    }
+    | TOK_PEEK expression {
+        emitPeek($2);
     }
     ;
 

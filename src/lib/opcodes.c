@@ -24,12 +24,14 @@ const char* opToStr(OpCodes op)
 
            (op == OP_SAVE) ? "SAVE" :
            (op == OP_PRINT) ? "PRINT" :
+           (op == OP_PRINTS) ? "PRINTS" :
 
            (op == OP_PUSH) ? "PUSH" :
            (op == OP_PUSH8) ? "PUSH8" :
            (op == OP_PUSH16) ? "PUSH16" :
            (op == OP_PUSH32) ? "PUSH32" :
            (op == OP_POP) ? "POP" :
+           (op == OP_PEEK) ? "PEEK" :
 
            (op == OP_CALLX) ? "CALLX" :
            (op == OP_CALL) ? "CALL" :

@@ -77,7 +77,7 @@ int main(int argc, char** argv)
         saveVM(get_str_param(cl, "outfile"));
     }
 
-    if(get_none_param(cl, "listing")) {
+    if(get_none_param(cl, "listing") && error_count == 0) {
         showListing();
     }
 

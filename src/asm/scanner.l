@@ -109,6 +109,7 @@ static void update_loc(void){
 "call"          { yylval.opcode = OP_CALL; return TOK_CALL; }
 "callx"         { yylval.opcode = OP_CALLX; return TOK_CALLX; }
 "return"        { yylval.opcode = OP_RETURN; return TOK_RETURN; }
+"ret"           { yylval.opcode = OP_RETURN; return TOK_RETURN; }
 "jmp"           { yylval.opcode = OP_JMP; return TOK_JMP; }
 "jmpif"         { yylval.opcode = OP_JMPIF; return TOK_JMPIF; }
 "except"        { yylval.opcode = OP_EXCEPT; return TOK_EXCEPT; }
@@ -128,7 +129,9 @@ static void update_loc(void){
 "mul"           { yylval.opcode = OP_MUL; return TOK_MUL; }
 "div"           { yylval.opcode = OP_DIV; return TOK_DIV; }
 "mod"           { yylval.opcode = OP_MOD; return TOK_MOD; }
+"prints"        { yylval.opcode = OP_PRINTS; return TOK_PRINTS; }
 "print"         { yylval.opcode = OP_PRINT; return TOK_PRINT; }
+"peek"          { yylval.opcode = OP_PEEK; return TOK_PEEK; }
 
         /* arithmetic operators */
 "+"             { return '+'; }

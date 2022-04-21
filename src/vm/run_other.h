@@ -4,6 +4,7 @@
 int do_OP_NOOP();
 int do_OP_EXIT();
 int do_OP_PRINT();
+int do_OP_PRINTS();
 int do_OP_EXCEPT();
 int do_OP_SAVE();
 int do_OP_ERROR();

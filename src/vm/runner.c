@@ -50,6 +50,7 @@ do_opcode_func opcode_table[] = {
     [OP_CALLX] = do_OP_CALLX,
     [OP_SAVE] = do_OP_SAVE,
     [OP_POP] = do_OP_POP,
+    [OP_PEEK] = do_OP_PEEK,
     [OP_ERROR] = do_OP_ERROR,
     [OP_NOT] = do_OP_NOT,
     [OP_EQ] = do_OP_EQ,
@@ -66,6 +67,7 @@ do_opcode_func opcode_table[] = {
     [OP_MOD] = do_OP_MOD,
     [OP_CAST] = do_OP_CAST,
     [OP_PRINT] = do_OP_PRINT,
+    [OP_PRINTS] = do_OP_PRINTS,
 };
 #define NUM_OPCODES (sizeof(opcode_table) / sizeof(do_opcode_func))
 

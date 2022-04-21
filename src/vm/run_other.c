@@ -26,10 +26,18 @@ int do_OP_EXIT()
     return 1;   // that's all!
 }
 
+int do_OP_PRINTS()
+{
+    printf("\n");
+    printVar(convertValToVar(peekStk()));
+    printf("\n");
+    return 0;
+}
+
 int do_OP_PRINT()
 {
     printf("\n");
-    printVar(convertValToVar(peekVal()));
+    printVar(getVar(read16()));
     printf("\n");
     return 0;
 }
