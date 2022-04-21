@@ -55,8 +55,7 @@ StkVal convertVarToVal(Variable* var)
             val.data.addr = var->data.addr;
             break;
         default:
-            fprintf(stderr, "Fatal Error: cannot convert variable type 0x%02X\n", var->type);
-            exit(1);
+            fatalError("cannot convert variable type 0x%02X\n", var->type);
     }
     val.type = var->type;
 
@@ -89,9 +88,7 @@ void assignValToVar(Variable* var, StkVal val)
             var->data.addr = val.data.addr;
             break;
         default:
-            fprintf(stderr, "Fatal Error: cannot convert value type 0x%02X\n", val.type);
-            exit(1);
-
+            fatalError("cannot convert value type 0x%02X\n", val.type);
     }
 }
 

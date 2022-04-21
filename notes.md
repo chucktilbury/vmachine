@@ -2,9 +2,9 @@
 
 # Current
 
-* Clean up comp_expr.c error messages.
+* implement some kind of trace functionality that is settable at runtime.
 
-* Use the linker to link the correct error function in common code.
+* print immediate values in exec trace and elsewhere.
 
 # Random
 
@@ -14,12 +14,6 @@ automatically select abs or rel jmp.
 * mechanism for comparing objects. (implement strings)
 
 * figure out a way to store symbol tables in the ASM file for debugging.
-
-* implement some kind of trace functionality that is settable at runtime.
-
-* print immediate values in exec trace and elsewhere.
-
-* make exec trace switchable on the command line
 
 * Bitwise operations?
 
@@ -59,4 +53,8 @@ files on the file stack in the reverse order from the command line.
 * Move the disassembler into the assembler and create a listing according to the command line parameters.
 
 * Integrate labels into the listing in the assembler.
+
+* Clean up comp_expr.c error messages.
+
+* Use the linker to link the correct error function in common code.
 

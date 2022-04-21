@@ -216,11 +216,13 @@ const char* memstrdup(const char* str)
     if(str != NULL) {
         size_t len = strlen(str) + 1;
         char* s = malloc(len);
+        assert(s != NULL);
         memcpy(s, str, len);
         return s;
     }
     else {
         char* s = malloc(1);
+        assert(s != NULL);
         s[0] = '\0';
         return s;
     }

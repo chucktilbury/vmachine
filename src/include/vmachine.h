@@ -4,7 +4,7 @@
 #include "memory.h"
 #include "instr.h"
 //#include "strings.h"
-#include "error.h"
+#include "logging.h"
 #include "opcodes.h"
 #include "file_io.h"
 #include "cmd_line.h"

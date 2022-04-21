@@ -14,6 +14,7 @@ SLST	=	run_arith.c \
 			run_other.c \
 			run_push.c \
 			runner.c \
+			error.c \
 			arith_expr.c \
 			comp_expr.c \
 			vm.c

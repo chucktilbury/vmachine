@@ -1,7 +1,7 @@
 #ifndef _ARITH_EXPR_H_
 #define _ARITH_EXPR_H_
 
-//#include "value.h"
+#include "asm.h"
 #include "var_store.h"
 
 void addVals(Variable* dest, Variable* left, Variable* right);

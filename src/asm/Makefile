@@ -12,6 +12,7 @@ SLST	=	parser.c \
 			emit.c \
 			symbols.c \
 			listing.c \
+			error.c \
 			asm.c
 
 all: $(TARGET)

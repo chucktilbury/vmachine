@@ -161,7 +161,7 @@ void assignVal(int index, StkVal val)
                 case VAL_FNUM:
                 case VAL_BOOL:
                 case VAL_ADDRESS:
-                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
                 default:
                     fatalError("cannot assign unknown value type: %u\n", stack.list[index].type);
@@ -177,7 +177,7 @@ void assignVal(int index, StkVal val)
                 case VAL_ERROR:
                 case VAL_OBJ:
                 case VAL_NOTHING:
-                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
                 case VAL_UNUM:
                     stack.list[index].data.unum = val.data.unum;
@@ -204,7 +204,7 @@ void assignVal(int index, StkVal val)
                 case VAL_ERROR:
                 case VAL_OBJ:
                 case VAL_NOTHING:
-                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
                 case VAL_UNUM:
                     stack.list[index].data.inum = (int32_t)val.data.unum;
@@ -232,7 +232,7 @@ void assignVal(int index, StkVal val)
                 case VAL_OBJ:
                 case VAL_NOTHING:
                 case VAL_ADDRESS:
-                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
                 case VAL_UNUM:
                     stack.list[index].data.fnum = (float)((int32_t)val.data.unum);
@@ -283,7 +283,7 @@ void assignVal(int index, StkVal val)
                 case VAL_NOTHING:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                    fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
                 case VAL_UNUM:
                     stack.list[index].data.addr = val.data.unum;

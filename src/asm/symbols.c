@@ -1,8 +1,7 @@
 
 
 #include "common.h"
-#include "scanner.h"
-#include "symbols.h"
+#include "asm.h"
 
 // defined in asm.c
 extern Symbol* sym_table;

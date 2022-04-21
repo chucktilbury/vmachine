@@ -1,14 +1,12 @@
 
-#include "common.h"
 #include <stdarg.h>
-#include "vmachine.h"
-#include "scanner.h"
-#include "parser.h"
-#include "symbols.h"
 
+#include "common.h"
+#include "vmachine.h"
+#include "parser.h"
 #include "asm.h"
 
-int error_count = 0;
+extern int error_count;
 Symbol* sym_table = NULL;
 
 #include <stdio.h>
@@ -27,8 +25,9 @@ static void verifySym(Symbol* sym)
 
     Variable* var = getVar(sym->idx);
     if(!var->isAssigned) {
-        fprintf(stderr, "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n", sym->filename, sym->line,
-                sym->col);
+        fprintf(stderr,
+                "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n",
+                sym->filename, sym->line, sym->col);
         error_count++;
     }
 }
@@ -37,18 +36,6 @@ void verifySymbolTable()
 {
     // TODO: add the "start" symbol and require it.
     verifySym(sym_table);
-}
-
-void syntaxError(const char* fmt, ...)
-{
-    fprintf(stderr, "Syntax Error: %s: line %d: at %d: ", get_file_name(), get_line_number(), get_col_number());
-    error_count++;
-
-    va_list args;
-    va_start(args, fmt);
-    vfprintf(stderr, fmt, args);
-    va_end(args);
-    fputc('\n', stderr);
 }
 
 void yyerror(const char* s)

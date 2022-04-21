@@ -15,4 +15,7 @@ void marker(const char* fmt, ...);
 #define VTRACE(n, f, ...) do {} while(0)
 #endif
 
+// defined by the app that the library links to
+void genericError(const char* fmt, ...);
+
 #endif

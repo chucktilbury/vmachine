@@ -11,7 +11,7 @@ make_dirs := $(shell mkdir -p $(OBJDIR) )
 #			strings.c \
 #			ptr_list.c \
 
-SLST	=	error.c \
+SLST	=	logging.c \
 			file_io.c \
 			memory.c \
 			instr.c \

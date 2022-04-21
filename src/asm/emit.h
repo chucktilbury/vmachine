@@ -1,5 +1,5 @@
-#ifndef _JUMPS_H_
-#define _JUMPS_H_
+#ifndef _EMIT_H_
+#define _EMIT_H_
 
 #include "var_store.h"
 

@@ -1,5 +1,6 @@
 
 #include "common.h"
+#include "asm.h"
 
 // defined in main.c
 void syntaxError(const char* fmt, ...);

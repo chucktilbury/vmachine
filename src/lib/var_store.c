@@ -60,9 +60,8 @@ Variable* getVar(int index)
         return store.list[index];
     }
     else {
-        printf("index: %d store: %lu\n", index, store.len);
-        fprintf(stderr, "what the hell stupid kind of index is that?");
-        exit(1);
+        fatalError("getVar(): index: %d store: %lu\n", index, store.len);
+        return NULL; // make the compiler happy
     }
 }
 
@@ -92,18 +91,15 @@ void assignVar(Variable* dest, Variable* src)
                 case VAL_FNUM:
                 case VAL_BOOL:
                 case VAL_ADDRESS:
-                    fprintf(stderr, "ERROR: cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
-                    exit(1);
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-                    exit(1);
+                    fatalError("cannot assign unknown value type: %u\n", dest->type);
             }
             break;
 
         case VAL_NOTHING:
-            fprintf(stderr, "ERROR: cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
-            exit(1);
+            genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
             break;
 
         case VAL_UNUM:
@@ -111,8 +107,7 @@ void assignVar(Variable* dest, Variable* src)
                 case VAL_ERROR:
                 case VAL_OBJ:
                 case VAL_NOTHING:
-                    fprintf(stderr, "ERROR: cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
-                    exit(1);
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
                 case VAL_UNUM:
                     dest->data.unum = src->data.unum;
@@ -130,8 +125,7 @@ void assignVar(Variable* dest, Variable* src)
                     dest->data.unum = src->data.addr;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-                    exit(1);
+                    fatalError("cannot assign unknown value type: %u\n", dest->type);
             }
             break;
 
@@ -140,8 +134,7 @@ void assignVar(Variable* dest, Variable* src)
                 case VAL_ERROR:
                 case VAL_OBJ:
                 case VAL_NOTHING:
-                    fprintf(stderr, "ERROR: cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
-                    exit(1);
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
                 case VAL_UNUM:
                     dest->data.inum = (int32_t)src->data.unum;
@@ -159,8 +152,7 @@ void assignVar(Variable* dest, Variable* src)
                     dest->data.inum = (int32_t)src->data.addr;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-                    exit(1);
+                    fatalError("cannot assign unknown value type: %u\n", dest->type);
             }
             break;
 
@@ -170,8 +162,7 @@ void assignVar(Variable* dest, Variable* src)
                 case VAL_OBJ:
                 case VAL_NOTHING:
                 case VAL_ADDRESS:
-                    fprintf(stderr, "ERROR: cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
-                    exit(1);
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
                 case VAL_UNUM:
                     dest->data.fnum = (float)((int32_t)src->data.unum);
@@ -186,8 +177,7 @@ void assignVar(Variable* dest, Variable* src)
                     dest->data.fnum = src->data.boolean ? 1 : 0;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-                    exit(1);
+                    fatalError("cannot assign unknown value type: %u\n", dest->type);
             }
             break;
 
@@ -213,8 +203,7 @@ void assignVar(Variable* dest, Variable* src)
                     dest->data.boolean = src->data.boolean;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-                    exit(1);
+                    fatalError("cannot assign unknown value type: %u\n", dest->type);
             }
             break;
         case VAL_ADDRESS:
@@ -224,8 +213,7 @@ void assignVar(Variable* dest, Variable* src)
                 case VAL_NOTHING:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                    fprintf(stderr, "ERROR: cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
-                    exit(1);
+                    genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
                 case VAL_UNUM:
                     dest->data.addr = src->data.unum;
@@ -237,14 +225,12 @@ void assignVar(Variable* dest, Variable* src)
                     dest->data.addr = src->data.addr;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-                    exit(1);
+                    fatalError("cannot assign unknown value type: %u\n", dest->type);
             }
             break;
 
         default:
-            fprintf(stderr, "ERROR: cannot assign unknown value type: %u\n", dest->type);
-            exit(1);
+            fatalError("cannot assign unknown value type: %u\n", dest->type);
     }
 
 }
@@ -262,16 +248,14 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_FNUM:
                 case VAL_BOOL:
                 case VAL_ADDRESS:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_ERROR:
                 case VAL_OBJ:
                     // no change required
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -288,8 +272,7 @@ void castVar(Variable* var, uint8_t type)
                     var->type = type;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -298,8 +281,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_ERROR:
                 case VAL_NOTHING:
                 case VAL_OBJ:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_UNUM:
                     // no change needed
@@ -322,8 +304,7 @@ void castVar(Variable* var, uint8_t type)
                     var->data.unum = var->data.addr;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -332,8 +313,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_ERROR:
                 case VAL_NOTHING:
                 case VAL_OBJ:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_UNUM:
                     var->type = type;
@@ -355,8 +335,7 @@ void castVar(Variable* var, uint8_t type)
                     var->data.inum = (int32_t)var->data.addr;
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -367,8 +346,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_OBJ:
                 case VAL_ADDRESS:
                 case VAL_BOOL:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_UNUM:
                     var->type = type;
@@ -382,8 +360,7 @@ void castVar(Variable* var, uint8_t type)
                     // no change
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -393,8 +370,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_NOTHING:
                 case VAL_OBJ:
                 case VAL_ADDRESS:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_UNUM:
                 case VAL_INUM:
@@ -409,8 +385,7 @@ void castVar(Variable* var, uint8_t type)
                     // no change
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -423,15 +398,13 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_FNUM:
                 case VAL_BOOL:
                 case VAL_ADDRESS:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_OBJ:
                     // no change
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
@@ -442,8 +415,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_FNUM:
                 case VAL_BOOL:
                 case VAL_OBJ:
-                    fprintf(stderr, "ERROR: cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
-                    exit(1);
+                    genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_INUM:
                     var->type = type;
@@ -454,14 +426,12 @@ void castVar(Variable* var, uint8_t type)
                     // no change
                     break;
                 default:
-                    fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", var->type);
-                    exit(1);
+                    fatalError("cannot cast unknown type: %d\n", var->type);
             }
             break;
 
         default:
-            fprintf(stderr, "ERROR: cannot cast unknown type: %d\n", type);
-            exit(1);
+            fatalError("cannot cast unknown type: %d\n", type);
     }
 }
 
