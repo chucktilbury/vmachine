@@ -89,8 +89,9 @@ StkVal peekVal(size_t index)
 {
     // note that offset could be negative...
     //size_t idx = (stack.len - 1) + offset;
-    if(index > stack.len)
+    if(index > stack.len) {
         fatalError("peek value stack under run (%lu)", index);
+    }
 
     //printf("offset: %d, stack: %d\n", offset, stack.list[offset].data.inum);
     return stack.list[index];
@@ -98,8 +99,9 @@ StkVal peekVal(size_t index)
 
 StkVal peekStk()
 {
-    if(stack.len - 1 > stack.len)
+    if(stack.len - 1 > stack.len) {
         fatalError("value stack under run");
+    }
 
     return stack.list[stack.len - 1];
 }

@@ -23,19 +23,24 @@ extern Symbol* sym_table;
 static void add(Name* label, Name* node)
 {
     if(label->index > node->index) {
-        if(label->right == NULL)
+        if(label->right == NULL) {
             label->right = node;
-        else
+        }
+        else {
             add(label->right, node);
+        }
     }
     else if(label->index < node->index) {
-        if(label->left == NULL)
+        if(label->left == NULL) {
             label->left = node;
-        else
+        }
+        else {
             add(label->left, node);
+        }
     }
-    else
+    else {
         return;
+    }
 }
 
 static void add_sym(const char* name, uint16_t idx)
@@ -46,10 +51,12 @@ static void add_sym(const char* name, uint16_t idx)
     lab->left = NULL;
     lab->right = NULL;
 
-    if(syms != NULL)
+    if(syms != NULL) {
         add(syms, lab);
-    else
+    }
+    else {
         syms = lab;
+    }
 }
 
 static void add_label(uint16_t idx, const char* name)
@@ -60,18 +67,22 @@ static void add_label(uint16_t idx, const char* name)
     lab->left = NULL;
     lab->right = NULL;
 
-    if(label != NULL)
+    if(label != NULL) {
         add(label, lab);
-    else
+    }
+    else {
         label = lab;
+    }
 }
 
 static void do_symbols(Symbol* node)
 {
-    if(node->left != NULL)
+    if(node->left != NULL) {
         do_symbols(node->left);
-    if(node->right != NULL)
+    }
+    if(node->right != NULL) {
         do_symbols(node->right);
+    }
 
     Variable* var = getVar(node->idx);
     add_sym(node->key, node->idx);
@@ -84,10 +95,12 @@ static void do_symbols(Symbol* node)
 
 static void destroy(Name* node)
 {
-    if(node->left != NULL)
+    if(node->left != NULL) {
         destroy(node->left);
-    if(node->right != NULL)
+    }
+    if(node->right != NULL) {
         destroy(node->right);
+    }
 
     _free((void*)node->name);
     _free(node);
@@ -95,19 +108,24 @@ static void destroy(Name* node)
 
 static const char* find(Name* node, int index)
 {
-    if(node->index == index)
+    if(node->index == index) {
         return node->name;
+    }
     else if(node->index > index) {
-        if(node->right != NULL)
+        if(node->right != NULL) {
             return find(node->right, index);
-        else
+        }
+        else {
             return NULL;
+        }
     }
     else {
-        if(node->left != NULL)
+        if(node->left != NULL) {
             return find(node->left, index);
-        else
+        }
+        else {
             return NULL;
+        }
     }
 }
 
@@ -130,8 +148,9 @@ void showListing()
     while(getIndex() < getLen()) {
         int idx = getIndex();
         const char* lab = find_label(idx);
-        if(lab != NULL)
+        if(lab != NULL) {
             printf("\n----: %s\n", lab);
+        }
 
         inst = read8();
         printf("%04d: %s\t", idx, opToStr(inst));
@@ -171,8 +190,9 @@ void showListing()
                         printf("%4d\t", oper);
                         printVar(getVar(oper));
                     }
-                    else
+                    else {
                         printf("%s\t", str);
+                    }
                 }
                 break;
 
@@ -184,8 +204,9 @@ void showListing()
                         printf("%4d\t", oper);
                         printVar(getVar(oper));
                     }
-                    else
+                    else {
                         printf("%s\t", str);
+                    }
                 }
                 break;
 
@@ -219,8 +240,9 @@ void showListing()
                         printf("%4d\t", oper);
                         printVar(getVar(oper));
                     }
-                    else
+                    else {
                         printf("%s\t", str);
+                    }
                 }
                 break;
 
@@ -239,7 +261,7 @@ void showListing()
             case OP_PUSH8: {
                     uint8_t type = read8();
                     uint32_t valu = read8();
-                   // printf("%s\t%4d\t", varTypeToStr(type), valu);
+                    // printf("%s\t%4d\t", varTypeToStr(type), valu);
                     printf("----\t");
                     printVal(type, &valu);
                 }
@@ -270,8 +292,9 @@ void showListing()
                         printf("%4d\t", oper);
                         printVar(getVar(oper));
                     }
-                    else
+                    else {
                         printf("%s\t", str);
+                    }
                 }
                 break;
 
@@ -300,8 +323,9 @@ void showListing()
                         printf("%d\t", oper);
                         printVar(getVar(oper));
                     }
-                    else
+                    else {
                         printf("%s\t", str);
+                    }
                 }
                 break;
 
@@ -335,8 +359,9 @@ void showListing()
                         printf("%4d\t", oper);
                         printVar(getVar(oper));
                     }
-                    else
+                    else {
                         printf("%s\t", str);
+                    }
                     printf("to %s", varTypeToStr(type));
                 }
                 break;

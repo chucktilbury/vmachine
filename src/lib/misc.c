@@ -95,10 +95,12 @@ void assignValToVar(Variable* var, StkVal val)
 const char* clipFileName(const char* fname)
 {
     char* ptr = strrchr(fname, '/');
-    if(ptr != NULL)
+    if(ptr != NULL) {
         return ptr;
-    else
+    }
+    else {
         return fname;
+    }
 }
 
 void paddedPrintAfter(int len, const char* fmt, ...)
@@ -108,13 +110,14 @@ void paddedPrintAfter(int len, const char* fmt, ...)
     va_start(args, fmt);
     int actual = vsnprintf(NULL, 0, fmt, args);
     if(actual < len) {
-        char* str = _malloc(actual+1);
+        char* str = _malloc(actual + 1);
         vsprintf(str, fmt, args);
         printf("%s%*s", str, len - actual, "");
         _free(str);
     }
-    else
+    else {
         vprintf(fmt, args);
+    }
 
     va_end(args);
 }
@@ -126,13 +129,14 @@ void paddedPrintBefore(int len, const char* fmt, ...)
     va_start(args, fmt);
     int actual = vsnprintf(NULL, 0, fmt, args);
     if(actual < len) {
-        char* str = _malloc(actual+1);
+        char* str = _malloc(actual + 1);
         vsprintf(str, fmt, args);
         printf("%*s%s", len - actual, "", str);
         _free(str);
     }
-    else
+    else {
         vprintf(fmt, args);
+    }
 
     va_end(args);
 }
