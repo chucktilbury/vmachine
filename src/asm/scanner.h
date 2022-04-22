@@ -1,5 +1,5 @@
-#ifndef _SCANNER_H_
-#define _SCANNER_H_
+#ifndef SCANNER_H
+#define SCANNER_H
 
 int open_file(const char *fname);
 char *get_file_name(void);

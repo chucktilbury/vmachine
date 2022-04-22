@@ -1,5 +1,5 @@
-#ifndef _RUN_PUSH_H_
-#define _RUN_PUSH_H_
+#ifndef RUN_PUSH_H
+#define RUN_PUSH_H
 
 int do_OP_PUSH();
 int do_OP_PUSH8();

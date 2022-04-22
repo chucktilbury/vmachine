@@ -1,5 +1,5 @@
-#ifndef _EMIT_H_
-#define _EMIT_H_
+#ifndef EMIT_H
+#define EMIT_H
 
 #include "var_store.h"
 

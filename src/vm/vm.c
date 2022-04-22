@@ -29,7 +29,8 @@ int virtualMachine(const char* fname)
 int main(int argc, char** argv)
 {
     cmd_line cl = create_cmd_line("Virtual machine runner.");
-    add_num_param(cl, "tlevel", "-l", "set the trace level", 0, 0);
+    add_num_param(cl, "tlevel", "-t", "set the trace level", 0, 0);
+    add_str_param(cl, "tfile", "-f", "file name to write the trace to", "stdout", 0);
     parse_cmd_line(cl, argc, argv);
 
     setTraceLevel(get_num_param(cl, "tlevel"));

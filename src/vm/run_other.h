@@ -1,5 +1,5 @@
-#ifndef _RUN_OTHER_H_
-#define _RUN_OTHER_H_
+#ifndef RUN_OTHER_H
+#define RUN_OTHER_H
 
 int do_OP_NOOP();
 int do_OP_EXIT();

@@ -7,9 +7,10 @@
 * The assembler should always output a preamble that jumps to a location in the code and exits the program. The entry location should be given by a "standard" symbol, such as "main" or "entry". If the symbol has not been defined, then an error should be published and no code is generated.
 
 * Add a command parameter to the assembler that forces code to be output, even if there are errors.
+    * Stubbed it out.
 
 * Add command line to vm that causes the trace to be written to disk instead of stdout.
-    * Figure out how the print statements work with that.
+    * Figure out how the print statements work with that. (stubbed out)
 
 # Random
 
@@ -38,6 +39,8 @@
 * The assembler can accept a list of files. Have it maintain the parser state when switching so that all of the files are part of the same output. Push the files on the file stack in the reverse order from the command line.
 
 * Build debugger with trace, breakpoints, and watches.
+
+* Automate testing.
 
 # Completed
 

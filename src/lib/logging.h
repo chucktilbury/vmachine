@@ -1,5 +1,5 @@
-#ifndef _ERROR_H_
-#define _ERROR_H_
+#ifndef LOGGING_H
+#define LOGGING_H
 
 void setTraceLevel(int lev);
 int getTraceLevel();

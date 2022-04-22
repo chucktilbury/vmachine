@@ -1,5 +1,5 @@
-#ifndef _LISTING_H_
-#define _LISTING_H_
+#ifndef LISTING_H
+#define LISTING_H
 
 void showListing();
 

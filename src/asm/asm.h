@@ -1,5 +1,5 @@
-#ifndef _ASM_H_
-#define _ASM_H_
+#ifndef ASM_H
+#define ASM_H
 
 #include "arith_expr.h"
 #include "emit.h"

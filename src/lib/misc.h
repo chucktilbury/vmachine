@@ -1,5 +1,5 @@
-#ifndef _MISC_H_
-#define _MISC_H_
+#ifndef MISC_H
+#define MISC_H
 
 #include "var_store.h"
 #include "val_stack.h"

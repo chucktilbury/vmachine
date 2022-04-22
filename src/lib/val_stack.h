@@ -12,8 +12,8 @@
  * things like return addresses and parameter pointers to be stored
  * transparently. This is why it is a separate implementation from Values.
  */
-#ifndef _VAL_STACK_H_
-#define _VAL_STACK_H_
+#ifndef VAL_STACK_H
+#define VAL_STACK_H
 
 
 #include <stddef.h>

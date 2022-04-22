@@ -1,5 +1,5 @@
-#ifndef _COMP_EXPR_H_
-#define _COMP_EXPR_H_
+#ifndef COMP_EXPR_H
+#define COMP_EXPR_H
 
 StkVal notVal(StkVal val);
 StkVal eqVal(StkVal left, StkVal right);

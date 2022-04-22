@@ -1,5 +1,5 @@
-#ifndef _RUN_JMP_H_
-#define _RUN_JMP_H_
+#ifndef RUN_JMP_H
+#define RUN_JMP_H
 
 int do_OP_JMP();
 int do_OP_JMPIF();

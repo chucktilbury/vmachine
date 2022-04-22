@@ -1,5 +1,5 @@
-#ifndef _FILE_IO_H_
-#define _FILE_IO_H_
+#ifndef FILE_IO_H
+#define FILE_IO_H
 
 void loadVM(const char* fname);
 void saveVM(const char* fname);

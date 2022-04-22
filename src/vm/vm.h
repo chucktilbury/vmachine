@@ -1,5 +1,5 @@
-#ifndef _VM_H_
-#define _VM_H_
+#ifndef VM_H
+#define VM_H
 
 #include "arith_expr.h"
 #include "comp_expr.h"

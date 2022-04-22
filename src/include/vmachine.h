@@ -13,5 +13,6 @@
 #include "var_store.h"
 #include "var_type.h"
 #include "misc.h"
+#include "object.h"
 
 #endif

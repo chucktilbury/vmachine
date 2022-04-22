@@ -1,5 +1,5 @@
-#ifndef _VM_ERROR_H_
-#define _VM_ERROR_H_
+#ifndef VM_ERROR_H
+#define VM_ERROR_H
 
 void runtimeError(const char* fmt, ...);
 void genericError(const char* fmt, ...);

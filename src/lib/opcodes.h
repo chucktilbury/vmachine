@@ -1,5 +1,5 @@
-#ifndef _OPCODES_H_
-#define _OPCODES_H_
+#ifndef OPCODES_H
+#define OPCODES_H
 
 typedef enum {
     OP_ERROR,   // payload is a string with the error, set by the VM

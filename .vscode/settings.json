@@ -21,6 +21,7 @@
         "STRG",
         "structs",
         "sval",
+        "tfile",
         "tlevel",
         "uints",
         "upcased",

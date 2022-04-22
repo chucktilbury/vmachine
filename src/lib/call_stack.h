@@ -1,5 +1,5 @@
-#ifndef _CALL_STACK_H_
-#define _CALL_STACK_H_
+#ifndef CALL_STACK_H
+#define CALL_STACK_H
 
 #include <stddef.h>
 #include <stdint.h>

@@ -1,5 +1,5 @@
-#ifndef _RUN_COMP_H_
-#define _RUN_COMP_H_
+#ifndef RUN_COMP_H
+#define RUN_COMP_H
 
 int do_OP_NOT();
 int do_OP_EQ();

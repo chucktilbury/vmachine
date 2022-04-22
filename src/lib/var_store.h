@@ -1,5 +1,5 @@
-#ifndef _VAR_STORE_H_
-#define _VAR_STORE_H_
+#ifndef VAR_STORE_H
+#define VAR_STORE_H
 
 #include <stdint.h>
 #include <stddef.h>
