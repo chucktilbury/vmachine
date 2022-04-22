@@ -437,35 +437,35 @@ void castVar(Variable* var, uint8_t type)
 
 void printVar(Variable* var)
 {
-    printf("%-12s", varTypeToStr(var->type));
+    trace(1, "%s\t", varTypeToStr(var->type));
     switch(var->type) {
         case VAL_ERROR:
-            printf("ERROR");
+            trace(1, "ERROR\t");
             break;
         case VAL_OBJ:
-            printf("%p", var->data.obj);
+            trace(1, "%p\t", var->data.obj);
             break;
         case VAL_UNUM:
-            printf("0x%X", var->data.unum);
+            trace(1, "0x%X\t", var->data.unum);
             break;
         case VAL_ADDRESS:
-            printf("%d", var->data.addr);
+            trace(1, "%d\t", var->data.addr);
             break;
         case VAL_INUM:
-            printf("%d", var->data.inum);
+            trace(1, "%d\t", var->data.inum);
             break;
         case VAL_FNUM:
-            printf("%0.1f", var->data.fnum);
+            trace(1, "%0.1f\t", var->data.fnum);
             break;
         case VAL_BOOL:
-            printf("%s", var->data.boolean ? "TRUE" : "FALSE");
+            trace(1, "%s\t", var->data.boolean ? "TRUE" : "FALSE");
             break;
         default:
             printf("object value not found");
             break;
     }
 
-    printf("\tassigned: %-5s const: %-5s literal: %-5s ",
+    trace(1, "assigned: %-5s const: %-5s literal: %-5s ",
            var->isAssigned ? "true" : "false",
            var->isConst ? "true" : "false",
            var->isLiteral ? "true" : "false");

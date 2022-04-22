@@ -46,10 +46,6 @@ void yyerror(const char* s)
 
 int main(int argc, char** argv)
 {
-    // if(argc < 3) {
-    //     fprintf(stderr, "USE: %s infile outfile\n\n", argv[0]);
-    //     exit(1);
-    // }
     cmd_line cl = create_cmd_line("Virtual machine assembler.");
     add_str_param(cl, "outfile", "-o", "name of the output file", "out.bin", 0);
     add_none_param(cl, "listing", "-l", "create the listing", 0);
@@ -57,7 +53,6 @@ int main(int argc, char** argv)
 
     reset_cmd_excess(cl);
     open_file(iterate_cmd_excess(cl));
-    //open_file(get_str_param(cl, "infile"));
     createVMachine();
     yyparse();
     if(error_count == 0) {

@@ -28,18 +28,18 @@ int do_OP_EXIT()
 
 int do_OP_PRINTS()
 {
-    printf("\n");
-    printf("TOS: %d\t", getValStackLen());
+    trace(5, "\n");
+    trace(5, "TOS: %d\t", getValStackLen());
     printVar(convertValToVar(peekStk()));
-    printf("\n");
+    trace(1, "\n");
     return 0;
 }
 
 int do_OP_PRINT()
 {
-    printf("\n");
+    trace(5, "\n");
     printVar(getVar(read16()));
-    printf("\n");
+    trace(1, "\n");
     return 0;
 }
 

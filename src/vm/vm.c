@@ -28,12 +28,12 @@ int virtualMachine(const char* fname)
 
 int main(int argc, char** argv)
 {
-    setTraceLevel(3);
+    cmd_line cl = create_cmd_line("Virtual machine runner.");
+    add_num_param(cl, "tlevel", "-l", "set the trace level", 0, 0);
+    parse_cmd_line(cl, argc, argv);
 
-    if(argc < 2) {
-        fprintf(stderr, "use: %s filename\n", argv[0]);
-        exit(1);
-    }
+    setTraceLevel(get_num_param(cl, "tlevel"));
+    reset_cmd_excess(cl);
 
-    return virtualMachine(argv[1]);
+    return virtualMachine(iterate_cmd_excess(cl));
 }

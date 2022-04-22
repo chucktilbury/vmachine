@@ -34,7 +34,7 @@ static int get_bits(Variable* val)
             retv = 16;
         }
         else {
-            printf(">>> Count = %d\n", count);
+            //printf(">>> Count = %d\n", count);
             retv = 32;
         }
     }

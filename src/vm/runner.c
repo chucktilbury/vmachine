@@ -67,19 +67,20 @@ void runMachine()
 {
     bool finished = false;
     uint32_t opcode = 0;
+    trace(10, "there are %d opcodes\n", NUM_OPCODES);
 
     while(!finished) {
-        VTRACE(5, "%04d ", getIndex());
+        trace(5, "%04d ", getIndex());
         opcode = read8();
         if(opcode > NUM_OPCODES) {
             runtimeError("invalid opcode: 0x%02X at 0x%08X", opcode, getIndex());
             finished = true;
         }
         else {
-            VTRACE(5, "%-10s\t", opToStr(opcode));
+            trace(5, "%-10s\t", opToStr(opcode));
             finished = (*opcode_table[opcode])();
         }
-        VTRACE(5, "\n");
+        trace(5, "\n");
     }
 }
 

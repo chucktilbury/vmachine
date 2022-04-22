@@ -46,3 +46,15 @@ int getTraceLevel()
 {
     return trace_level;
 }
+
+void trace(int level, const char* fmt, ...)
+{
+    if(level <= trace_level) {
+        va_list args;
+
+        va_start(args, fmt);
+        vfprintf(stderr, fmt, args);
+        va_end(args);
+    }
+}
+

@@ -109,31 +109,31 @@ StkVal peekStk()
 //void printVal(StkVal val)
 void printVal(uint8_t type, void* val)
 {
-    printf("%-12s", varTypeToStr(type));
+    trace(1, "%s\t", varTypeToStr(type));
     switch(type) {
         case VAL_ERROR:
-            printf("ERROR");
+            trace(1, "ERROR");
             break;
         case VAL_OBJ:
-            printf("%p", val);
+            trace(1, "%p", val);
             break;
         case VAL_UNUM:
-            printf("0x%X", *((uint32_t*)val));
+            trace(1, "0x%X", *((uint32_t*)val));
             break;
         case VAL_ADDRESS:
-            printf("%u", *((uint32_t*)val));
+            trace(1, "%u", *((uint32_t*)val));
             break;
         case VAL_INUM:
-            printf("%d", *((int32_t*)val));
+            trace(1, "%d", *((int32_t*)val));
             break;
         case VAL_FNUM:
-            printf("%0.1f", *((float*)val));
+            trace(1, "%0.1f", *((float*)val));
             break;
         case VAL_BOOL:
-            printf("%s", *((bool*)val) ? "TRUE" : "FALSE");
+            trace(1, "%s", *((bool*)val) ? "TRUE" : "FALSE");
             break;
         default:
-            printf("object value not found");
+            trace(1, "object value not found");
             break;
     }
 }
