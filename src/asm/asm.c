@@ -47,8 +47,11 @@ void yyerror(const char* s)
 int main(int argc, char** argv)
 {
     cmd_line cl = create_cmd_line("Virtual machine assembler.");
-    add_str_param(cl, "outfile", "-o", "name of the output file", "out.bin", 0);
+    add_str_param(cl, "outfile", "-o", "name of the output file", "out.run", 0);
     add_none_param(cl, "listing", "-l", "create the listing", 0);
+    add_str_param(cl, "lstfile", "-n", "name of the listing file", "stdout", 0);
+    add_none_param(cl, "force", "-f", "force listing, even if there are errors", 0);
+    add_none_param(cl, "debug", "-d", "output debugging information", 0);
     parse_cmd_line(cl, argc, argv);
 
     reset_cmd_excess(cl);

@@ -17,35 +17,12 @@ typedef enum {
     OP_CALLX,   // (N.I.) call an externally defined function (constatant)
 
     OP_CALL,    // call an absolute address (constatant)
-    OP_CALL8,
-    OP_CALL16,
-    OP_CALL32,
-    OP_CALLR,    // call a signed relative address (constatant)
-    OP_CALLR8,
-    OP_CALLR16,
-    OP_CALLR32,
     OP_RETURN,  // return from a call
-
     OP_JMP,     // jump to an absolute address (constatant)
-    OP_JMP8,
-    OP_JMP16,
-    OP_JMP32,
-    OP_JMPR,     // jump to a signed relative address (constatant)
-    OP_JMPR8,
-    OP_JMPR16,
-    OP_JMPR32,
-
     OP_JMPIF,   // conditional jump to an absolute address (constatant)
-    OP_JMPIF8,
-    OP_JMPIF16,
-    OP_JMPIF32,
-    OP_JMPIFR,   // conditional jump to a signed relative address (constatant)
-    OP_JMPIFR8,
-    OP_JMPIFR16,
-    OP_JMPIFR32,
 
     OP_PUSH,    // push the value slot on the value stack (variable)
-    OP_PUSH8,
+    OP_PUSH8,   // push an immediate with type info.
     OP_PUSH16,
     OP_PUSH32,
     OP_POP,     // pop the value from the stack and throw it away

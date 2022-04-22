@@ -18,6 +18,7 @@ clean:
 	make -C src/lib clean
 	make -C src/vm clean
 	make -C src/asm clean
+	-$(RM) -r *.run bin
 
 format:
 	make -C src/lib format

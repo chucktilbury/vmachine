@@ -10,6 +10,7 @@
         "eidx",
         "eobj",
         "FNUM",
+        "fopen",
         "INUM",
         "JMPIF",
         "JMPR",

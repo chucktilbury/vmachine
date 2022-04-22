@@ -7,10 +7,8 @@ TARGET	=	$(DESTDIR)/vm
 make_dirs := $(shell mkdir -p $(OBJDIR))
 
 SLST	=	run_arith.c \
-			run_call.c \
 			run_comp.c \
 			run_jmp.c \
-			run_jmpif.c \
 			run_other.c \
 			run_push.c \
 			runner.c \

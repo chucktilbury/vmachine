@@ -42,143 +42,143 @@ static int get_bits(Variable* val)
     return retv;
 }
 
-void emitJMP(Variable* val)
-{
-    if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
-        syntaxError("jump instruction requires an address or an unsigned number");
-        return;
-    }
-
-    switch(get_bits(val)) {
-        case 8:
-            write8(OP_JMP8);
-            write8(val->data.unum);
-            break;
-        case 16:
-            write8(OP_JMP16);
-            write16(val->data.unum);
-            break;
-        case 32:
-            write8(OP_JMP32);
-            write32(val->data.unum);
-            break;
-    }
-}
-
-void emitJMPIF(Variable* val)
-{
-    if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
-        syntaxError("jump instruction requires an address or an unsigned number");
-        return;
-    }
-
-    switch(get_bits(val)) {
-        case 8:
-            write8(OP_JMPIF8);
-            write8(val->data.unum);
-            break;
-        case 16:
-            write8(OP_JMPIF16);
-            write16(val->data.unum);
-            break;
-        case 32:
-            write8(OP_JMPIF32);
-            write32(val->data.unum);
-            break;
-    }
-}
-
-void emitCALL(Variable* val)
-{
-    if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
-        syntaxError("call instruction requires an address or an unsigned number");
-        return;
-    }
-
-    switch(get_bits(val)) {
-        case 8:
-            write8(OP_CALL8);
-            write8(val->data.unum);
-            break;
-        case 16:
-            write8(OP_CALL16);
-            write16(val->data.unum);
-            break;
-        case 32:
-            write8(OP_CALL32);
-            write32(val->data.unum);
-            break;
-    }
-}
-
-void emitJMPR(Variable* val)
-{
-    if(val->type != VAL_INUM) {
-        syntaxError("jump relative instruction requires a signed number");
-        return;
-    }
-
-    switch(get_bits(val)) {
-        case 8:
-            write8(OP_JMPR8);
-            write8(val->data.inum);
-            break;
-        case 16:
-            write8(OP_JMPR16);
-            write16(val->data.inum);
-            break;
-        case 32:
-            write8(OP_JMPR32);
-            write32(val->data.inum);
-            break;
-    }
-}
-
-void emitJMPIFR(Variable* val)
-{
-    if(val->type != VAL_INUM) {
-        syntaxError("jmpif relative instruction requires a signed number");
-        return;
-    }
-
-    switch(get_bits(val)) {
-        case 8:
-            write8(OP_JMPIFR8);
-            write8(val->data.inum);
-            break;
-        case 16:
-            write8(OP_JMPIFR16);
-            write16(val->data.inum);
-            break;
-        case 32:
-            write8(OP_JMPIFR32);
-            write32(val->data.inum);
-            break;
-    }
-}
-
-void emitCALLR(Variable* val)
-{
-    if(val->type != VAL_INUM) {
-        syntaxError("call relative instruction requires a signed number");
-        return;
-    }
-
-    switch(get_bits(val)) {
-        case 8:
-            write8(OP_CALLR8);
-            write8(val->data.inum);
-            break;
-        case 16:
-            write8(OP_CALLR16);
-            write16(val->data.inum);
-            break;
-        case 32:
-            write8(OP_CALLR32);
-            write32(val->data.inum);
-            break;
-    }
-}
+// void emitJMP(Variable* val)
+// {
+//     if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
+//         syntaxError("jump instruction requires an address or an unsigned number");
+//         return;
+//     }
+//
+//     switch(get_bits(val)) {
+//         case 8:
+//             write8(OP_JMP8);
+//             write8(val->data.unum);
+//             break;
+//         case 16:
+//             write8(OP_JMP16);
+//             write16(val->data.unum);
+//             break;
+//         case 32:
+//             write8(OP_JMP32);
+//             write32(val->data.unum);
+//             break;
+//     }
+// }
+//
+// void emitJMPIF(Variable* val)
+// {
+//     if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
+//         syntaxError("jump instruction requires an address or an unsigned number");
+//         return;
+//     }
+//
+//     switch(get_bits(val)) {
+//         case 8:
+//             write8(OP_JMPIF8);
+//             write8(val->data.unum);
+//             break;
+//         case 16:
+//             write8(OP_JMPIF16);
+//             write16(val->data.unum);
+//             break;
+//         case 32:
+//             write8(OP_JMPIF32);
+//             write32(val->data.unum);
+//             break;
+//     }
+// }
+//
+// void emitCALL(Variable* val)
+// {
+//     if(val->type != VAL_ADDRESS && val->type != VAL_UNUM) {
+//         syntaxError("call instruction requires an address or an unsigned number");
+//         return;
+//     }
+//
+//     switch(get_bits(val)) {
+//         case 8:
+//             write8(OP_CALL8);
+//             write8(val->data.unum);
+//             break;
+//         case 16:
+//             write8(OP_CALL16);
+//             write16(val->data.unum);
+//             break;
+//         case 32:
+//             write8(OP_CALL32);
+//             write32(val->data.unum);
+//             break;
+//     }
+// }
+//
+// void emitJMPR(Variable* val)
+// {
+//     if(val->type != VAL_INUM) {
+//         syntaxError("jump relative instruction requires a signed number");
+//         return;
+//     }
+//
+//     switch(get_bits(val)) {
+//         case 8:
+//             write8(OP_JMPR8);
+//             write8(val->data.inum);
+//             break;
+//         case 16:
+//             write8(OP_JMPR16);
+//             write16(val->data.inum);
+//             break;
+//         case 32:
+//             write8(OP_JMPR32);
+//             write32(val->data.inum);
+//             break;
+//     }
+// }
+//
+// void emitJMPIFR(Variable* val)
+// {
+//     if(val->type != VAL_INUM) {
+//         syntaxError("jmpif relative instruction requires a signed number");
+//         return;
+//     }
+//
+//     switch(get_bits(val)) {
+//         case 8:
+//             write8(OP_JMPIFR8);
+//             write8(val->data.inum);
+//             break;
+//         case 16:
+//             write8(OP_JMPIFR16);
+//             write16(val->data.inum);
+//             break;
+//         case 32:
+//             write8(OP_JMPIFR32);
+//             write32(val->data.inum);
+//             break;
+//     }
+// }
+//
+// void emitCALLR(Variable* val)
+// {
+//     if(val->type != VAL_INUM) {
+//         syntaxError("call relative instruction requires a signed number");
+//         return;
+//     }
+//
+//     switch(get_bits(val)) {
+//         case 8:
+//             write8(OP_CALLR8);
+//             write8(val->data.inum);
+//             break;
+//         case 16:
+//             write8(OP_CALLR16);
+//             write16(val->data.inum);
+//             break;
+//         case 32:
+//             write8(OP_CALLR32);
+//             write32(val->data.inum);
+//             break;
+//     }
+// }
 
 void emitPUSH(Variable* val)
 {

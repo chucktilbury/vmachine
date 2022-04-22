@@ -210,26 +210,26 @@ void showListing()
                 }
                 break;
 
-            case OP_CALL8: {
-                    uint8_t type = read8();
-                    uint8_t valu = read8();
-                    printf("%s\t%4d\t", varTypeToStr(type), valu);
-                }
-                break;
-
-            case OP_CALL16: {
-                    uint8_t type = read8();
-                    uint16_t valu = read16();
-                    printf("%s\t%4d\t", varTypeToStr(type), valu);
-                }
-                break;
-
-            case OP_CALL32: {
-                    uint8_t type = read8();
-                    uint32_t valu = read32();
-                    printf("%s\t%4d\t", varTypeToStr(type), valu);
-                }
-                break;
+//             case OP_CALL8: {
+//                     uint8_t type = read8();
+//                     uint8_t valu = read8();
+//                     printf("%s\t%4d\t", varTypeToStr(type), valu);
+//                 }
+//                 break;
+//
+//             case OP_CALL16: {
+//                     uint8_t type = read8();
+//                     uint16_t valu = read16();
+//                     printf("%s\t%4d\t", varTypeToStr(type), valu);
+//                 }
+//                 break;
+//
+//             case OP_CALL32: {
+//                     uint8_t type = read8();
+//                     uint32_t valu = read32();
+//                     printf("%s\t%4d\t", varTypeToStr(type), valu);
+//                 }
+//                 break;
 
             case OP_CALLX:
             case OP_SAVE:
@@ -298,23 +298,23 @@ void showListing()
                 }
                 break;
 
-            case OP_JMP8: {
-                    uint8_t valu = read8();
-                    printf("%4d\t", valu);
-                }
-                break;
-
-            case OP_JMP16: {
-                    uint16_t valu = read16();
-                    printf("%4d\t", valu);
-                }
-                break;
-
-            case OP_JMP32: {
-                    uint32_t valu = read32();
-                    printf("%4d\t", valu);
-                }
-                break;
+//             case OP_JMP8: {
+//                     uint8_t valu = read8();
+//                     printf("%4d\t", valu);
+//                 }
+//                 break;
+//
+//             case OP_JMP16: {
+//                     uint16_t valu = read16();
+//                     printf("%4d\t", valu);
+//                 }
+//                 break;
+//
+//             case OP_JMP32: {
+//                     uint32_t valu = read32();
+//                     printf("%4d\t", valu);
+//                 }
+//                 break;
 
             case OP_JMPIF: {
                     int oper = (int)read16();
@@ -329,23 +329,23 @@ void showListing()
                 }
                 break;
 
-            case OP_JMPIF8: {
-                    uint8_t valu = read8();
-                    printf("%4d\t", valu);
-                }
-                break;
-
-            case OP_JMPIF16: {
-                    uint16_t valu = read16();
-                    printf("%4d\t", valu);
-                }
-                break;
-
-            case OP_JMPIF32: {
-                    uint32_t valu = read32();
-                    printf("%4d\t", valu);
-                }
-                break;
+//             case OP_JMPIF8: {
+//                     uint8_t valu = read8();
+//                     printf("%4d\t", valu);
+//                 }
+//                 break;
+//
+//             case OP_JMPIF16: {
+//                     uint16_t valu = read16();
+//                     printf("%4d\t", valu);
+//                 }
+//                 break;
+//
+//             case OP_JMPIF32: {
+//                     uint32_t valu = read32();
+//                     printf("%4d\t", valu);
+//                 }
+//                 break;
 
             case OP_EXCEPT:
                 printf("0x%08X", read16());

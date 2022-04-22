@@ -3,14 +3,6 @@
 #include "common.h"
 #include "vm.h"
 
-#define ABINARY(name) do { \
-        StkVal left, right; \
-        StkVal result; \
-        left = popVal(); \
-        right = popVal(); \
-        name(result, right, left); \
-        pushVal(result); } while(0)
-
 int do_OP_ADD()
 {
     pushVal(addVals(popVal(), popVal()));

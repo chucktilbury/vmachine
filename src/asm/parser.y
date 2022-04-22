@@ -223,10 +223,7 @@ class1_instruction
     /* instructions that have an immediate operand. the operand is a
         constant value */
 class2_instruction
-    : TOK_CALL expression {
-        emitCALL($2);
-    }
-    | TOK_CALL TOK_SYMBOL {
+    : TOK_CALL TOK_SYMBOL {
         int slot = findSymbol($2);
         if(slot == 0) {
             Variable* val = createVar(VAL_ADDRESS);
@@ -235,9 +232,6 @@ class2_instruction
         }
         write8(OP_CALL);
         write16(slot);
-    }
-    | TOK_JMP expression {
-        emitJMP($2);
     }
     | TOK_JMP TOK_SYMBOL {
         int slot = findSymbol($2);
@@ -248,9 +242,6 @@ class2_instruction
         }
         write8(OP_JMP);
         write16(slot);
-    }
-    | TOK_JMPIF expression {
-        emitJMPIF($2);
     }
     | TOK_JMPIF TOK_SYMBOL {
         int slot = findSymbol($2);
