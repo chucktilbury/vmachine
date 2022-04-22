@@ -18,7 +18,7 @@ int do_OP_JMPIF()
     Variable* var = getVar(idx);
 
     // get the arithmetic result
-    StkVal result = popVal();
+    StkVal result = peekStk();
 
     if(isFalse(result)) {
         switch(var->type) {

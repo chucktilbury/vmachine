@@ -27,13 +27,14 @@ static int get_bits(Variable* val)
             }
         }
 
-        if(count >= 0 && count < 7) {
+        if(count >= 0 && count < 8) {
             retv = 8;
         }
-        else if(count >= 8 && count < 15) {
+        else if(count >= 8 && count < 16) {
             retv = 16;
         }
         else {
+            printf(">>> Count = %d\n", count);
             retv = 32;
         }
     }
