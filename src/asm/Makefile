@@ -21,7 +21,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(COPTS) -o $(TARGET) $(OBJS) $(LIBS)
 
 parser.c parser.h: parser.y
-	bison --report=lookahead -tvdo parser.c parser.y
+	bison --report=all -tvdo parser.c parser.y
 
 scanner.c: scanner.l
 	flex -io scanner.c scanner.l
