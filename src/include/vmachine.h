@@ -3,7 +3,6 @@
 
 #include "memory.h"
 #include "instr.h"
-//#include "strings.h"
 #include "logging.h"
 #include "opcodes.h"
 #include "file_io.h"
@@ -14,5 +13,6 @@
 #include "var_type.h"
 #include "misc.h"
 #include "object.h"
+#include "strings.h"
 
 #endif

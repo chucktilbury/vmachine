@@ -4,6 +4,12 @@
 #include "memory.h"
 //#include "var_store.h"
 
+typedef struct _val_stack_ {
+    StkVal* list;
+    size_t cap;
+    size_t len;
+} ValStack;
+
 static ValStack stack;
 
 void createValStack()

@@ -31,12 +31,6 @@ typedef struct _value_ {
     } data;
 } __attribute__((__packed__)) StkVal;
 
-typedef struct _val_stack_ {
-    StkVal* list;
-    size_t cap;
-    size_t len;
-} ValStack;
-
 void createValStack();
 void destroyValStack();
 int getValStackLen();

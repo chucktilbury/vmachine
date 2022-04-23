@@ -3,6 +3,12 @@
 #include "var_store.h"
 #include "scanner.h"
 
+typedef struct {
+    Variable** list;
+    size_t cap;
+    size_t len;
+} VarStore;
+
 static VarStore store;
 
 void createVarStore()

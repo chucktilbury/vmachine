@@ -27,12 +27,6 @@ typedef struct {
 #endif
 } __attribute__((__packed__)) Variable;
 
-typedef struct {
-    Variable** list;
-    size_t cap;
-    size_t len;
-} VarStore;
-
 void createVarStore();
 void destroyVarStore();
 
