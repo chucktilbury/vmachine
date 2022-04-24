@@ -1,4 +1,7 @@
 
+# STUCK
+I am trying to figure out how to use objects in the VM. Things like strings are objects with methods and data like any other object. Objects are created at runtime, so the VM needs a way to transition from a static class to an object. It seems like the easiest thing would be to make **everything** in the VM, all of the data objects, behave like an object. For example, when two numbers are added, object methods are called to produce the resulting object that has the sum of the numbers. However, this represents a basic change in the way that the VM operates. It would be nice to reuse the code that I already have, but the result might not look much like it. So this project is on hold until I can figure out what to do. I will be looking at other VMs and their code. (hello Lua, are those Ruby slippers you have on?) I will update my notes as I work through it. Nothing is off the table. Maybe I can use the Ruby VM instead of writing my own.
+
 
 # Current
 
