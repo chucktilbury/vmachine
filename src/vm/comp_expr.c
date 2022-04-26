@@ -32,10 +32,8 @@ StkVal notVal(StkVal val)
         case VAL_BOOL:
             dest.data.boolean = (val.data.boolean == false)? true: false;
             break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
-            break;
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ERROR:
         case VAL_ADDRESS:
             dest.data.boolean = true;
@@ -66,10 +64,8 @@ StkVal eqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = ((left.data.unum == 0) == right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
                     // type comparison
@@ -93,10 +89,8 @@ StkVal eqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = ((left.data.inum == 0) == right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
                     // type comparison
@@ -120,10 +114,8 @@ StkVal eqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = ((left.data.fnum == 0.0) == right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
                     // type comparison
@@ -147,10 +139,8 @@ StkVal eqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = (left.data.boolean == right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
                     // type comparison
@@ -160,9 +150,10 @@ StkVal eqVal(StkVal left, StkVal right)
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
             }
             break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
+        case VAL_STRING:
+        case VAL_STRUCT:
+        // TODO: add right clauses
+            dest.data.boolean = false;
             break;
         case VAL_ADDRESS:
             switch(right.type) {
@@ -170,7 +161,8 @@ StkVal eqVal(StkVal left, StkVal right)
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                     dest.data.boolean = false;
                     break;
@@ -188,7 +180,8 @@ StkVal eqVal(StkVal left, StkVal right)
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ADDRESS:
                     dest.data.boolean = false;
                     break;
@@ -226,14 +219,11 @@ StkVal neqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = ((left.data.unum == 0) != right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
-                    // type comparison
-                    dest.data.boolean = false;
+                    dest.data.boolean = true;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
@@ -253,14 +243,11 @@ StkVal neqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = ((left.data.inum == 0) != right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
-                    // type comparison
-                    dest.data.boolean = false;
+                    dest.data.boolean = true;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
@@ -280,14 +267,11 @@ StkVal neqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = ((left.data.fnum == 0.0) != right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
-                    // type comparison
-                    dest.data.boolean = false;
+                    dest.data.boolean = true;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
@@ -307,22 +291,20 @@ StkVal neqVal(StkVal left, StkVal right)
                 case VAL_BOOL:
                     dest.data.boolean = (left.data.boolean != right.data.boolean);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_ADDRESS:
-                    // type comparison
-                    dest.data.boolean = false;
+                    dest.data.boolean = true;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
             }
             break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
+        case VAL_STRING:
+        case VAL_STRUCT:
+            // TODO: Implement right clauses
+            dest.data.boolean = false;
             break;
         case VAL_ADDRESS:
             switch(right.type) {
@@ -330,13 +312,11 @@ StkVal neqVal(StkVal left, StkVal right)
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
-                    dest.data.boolean = true;
-                    break;
                 case VAL_ADDRESS:
-                    // type comparison
-                    dest.data.boolean = false;
+                    dest.data.boolean = true;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
@@ -348,13 +328,11 @@ StkVal neqVal(StkVal left, StkVal right)
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
+                case VAL_ERROR:
                 case VAL_ADDRESS:
                     dest.data.boolean = true;
-                    break;
-                case VAL_ERROR:
-                    // type comparison
-                    dest.data.boolean = false;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
@@ -384,18 +362,13 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)((int32_t)left.data.unum) <= right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
@@ -412,18 +385,13 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)left.data.inum <= right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
@@ -440,67 +408,34 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = (left.data.fnum <= right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
             }
             break;
         case VAL_BOOL:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
-            }
-            break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
-            break;
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
-            }
-            break;
         case VAL_ERROR:
             switch(right.type) {
                 case VAL_UNUM:
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ADDRESS:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
+                case VAL_ADDRESS:
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
@@ -529,18 +464,13 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)((int32_t)left.data.unum) >= right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
@@ -557,18 +487,13 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)left.data.inum >= right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
@@ -585,70 +510,37 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = (left.data.fnum >= right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
             }
             break;
         case VAL_BOOL:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
-            }
-            break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
-            break;
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
-            }
-            break;
         case VAL_ERROR:
             switch(right.type) {
                 case VAL_UNUM:
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ADDRESS:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
+                case VAL_ADDRESS:
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
-                    runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
+                    runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
             }
             break;
         default:
@@ -674,18 +566,13 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)((int32_t)left.data.unum) < right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<' comparison", right.type);
@@ -702,18 +589,13 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)left.data.inum < right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<' comparison", right.type);
@@ -730,70 +612,37 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = (left.data.fnum < right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<' comparison", right.type);
             }
             break;
         case VAL_BOOL:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '<' comparison", right.type);
-            }
-            break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
-            break;
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '<' comparison", right.type);
-            }
-            break;
         case VAL_ERROR:
             switch(right.type) {
                 case VAL_UNUM:
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ADDRESS:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
+                case VAL_ADDRESS:
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
-                    runtimeError("unknown right value type (%d) in '<' comparison", right.type);
+                    runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
             }
             break;
         default:
@@ -819,18 +668,13 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)((int32_t)left.data.unum) > right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>' comparison", right.type);
@@ -847,18 +691,13 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = ((float)left.data.inum > right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>' comparison", right.type);
@@ -875,70 +714,37 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_FNUM:
                     dest.data.boolean = (left.data.fnum > right.data.fnum);
                     break;
-                case VAL_OBJ:
-                    // TODO: Implement objects and comparison protocol
-                    dest.data.boolean = true;
-                    break;
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_BOOL:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
-                    break;
                 case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>' comparison", right.type);
             }
             break;
         case VAL_BOOL:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_OBJ:
-                case VAL_BOOL:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on boolean is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '>' comparison", right.type);
-            }
-            break;
-        case VAL_OBJ:
-            // TODO: Implement objects and comparison protocol
-            dest.data.boolean = true;
-            break;
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
-            switch(right.type) {
-                case VAL_UNUM:
-                case VAL_INUM:
-                case VAL_FNUM:
-                case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ERROR:
-                case VAL_ADDRESS:
-                    runtimeError("magnitude comparison on address is meaningless");
-                    break;
-                default:
-                    runtimeError("unknown right value type (%d) in '>' comparison", right.type);
-            }
-            break;
         case VAL_ERROR:
             switch(right.type) {
                 case VAL_UNUM:
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
-                case VAL_ADDRESS:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
-                    runtimeError("magnitude comparison on error is meaningless");
+                case VAL_ADDRESS:
+                    runtimeError("magnitude comparison between %s and %s address is meaningless",
+                                    varTypeToStr(left.type), varTypeToStr(right.type));
                     break;
                 default:
-                    runtimeError("unknown right value type (%d) in '>' comparison", right.type);
+                    runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
             }
             break;
         default:

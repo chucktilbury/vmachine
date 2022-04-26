@@ -27,7 +27,7 @@ typedef struct _value_ {
         int32_t inum;
         float fnum;
         uint8_t boolean;
-        void* obj;
+        size_t store_idx;
     } data;
 } __attribute__((__packed__)) StkVal;
 

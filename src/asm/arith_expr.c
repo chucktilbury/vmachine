@@ -36,53 +36,52 @@ void castToType(Variable* val, uint16_t type)
 {
     switch(type) {
         case VAL_UNUM: {
-                uint32_t v;
                 switch(val->type) {
                     case VAL_UNUM:
                         break;
                     case VAL_INUM:
-                        v = (uint32_t)val->data.inum;
+                        val->data.unum = (uint32_t)val->data.inum;
+                        val->type = VAL_UNUM;
                         break;
                     case VAL_FNUM:
-                        v = (uint32_t)((int32_t)val->data.fnum);
+                        val->data.unum = (uint32_t)((int32_t)val->data.fnum);
+                        val->type = VAL_UNUM;
                         break;
                     default:
                         syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
                         break;
                 }
-                val->type = VAL_UNUM;
-                val->data.unum = v;
             }
             break;
 
         case VAL_INUM: {
-                int32_t v;
                 switch(val->type) {
                     case VAL_UNUM:
-                        v = (int32_t)val->data.unum;
+                        val->data.inum = (int32_t)val->data.unum;
+                        val->type = VAL_INUM;
                         break;
                     case VAL_INUM:
                         break;
                     case VAL_FNUM:
-                        v = (int32_t)val->data.fnum;
+                        val->data.inum = (int32_t)val->data.fnum;
+                        val->type = VAL_INUM;
                         break;
                     default:
                         syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
                         break;
                 }
-                val->type = VAL_INUM;
-                val->data.inum = v;
             }
             break;
 
         case VAL_FNUM: {
-                double v;
                 switch(val->type) {
                     case VAL_UNUM:
-                        v = (double)((int32_t)val->data.unum);
+                        val->data.fnum = (double)((int32_t)val->data.unum);
+                        val->type = VAL_FNUM;
                         break;
                     case VAL_INUM:
-                        v = (double)val->data.fnum;
+                        val->data.fnum = (double)val->data.fnum;
+                        val->type = VAL_FNUM;
                         break;
                     case VAL_FNUM:
                         break;
@@ -90,8 +89,6 @@ void castToType(Variable* val, uint16_t type)
                         syntaxError("cannot cast a %s to a %s", varTypeToStr(val->type), varTypeToStr(type));
                         break;
                 }
-                val->type = VAL_FNUM;
-                val->data.fnum = v;
             }
             break;
 

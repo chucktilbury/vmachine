@@ -92,7 +92,7 @@ static void update_loc(void){
 [ \t\r]         {}
 
     /* keywords */
-"string"        { yylval.type = VAL_OBJ; return TOK_STR_TYPE; }
+"string"        { yylval.type = VAL_STRING; return TOK_STR_TYPE; }
 "float"         { yylval.type = VAL_FNUM; return TOK_FNUM_TYPE; }
 "int"           { yylval.type = VAL_INUM; return TOK_INUM_TYPE; }
 "uint"          { yylval.type = VAL_UNUM; return TOK_UNUM_TYPE; }

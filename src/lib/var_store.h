@@ -18,7 +18,7 @@ typedef struct {
         int32_t inum;
         float fnum;
         bool boolean;
-        void* obj;
+        uint32_t store_idx; // strings and structs
     } data;
 #ifdef DEBUG_INFO
     const char file[64];
@@ -35,12 +35,13 @@ int addVar(Variable* var);
 Variable* getVar(int index);
 Variable* copyVar(Variable* var);
 void printVar(Variable* var);
-const char* varTypeToStr(int type);
+//const char* varTypeToStr(int type);
 void assignVar(Variable* dest, Variable* src);
 void castVar(Variable* var, uint8_t type);
 
 void loadVarStore(FILE* fp);
 void saveVarStore(FILE* fp);
 
+void dumpVarStore();
 
 #endif

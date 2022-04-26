@@ -8,8 +8,11 @@ typedef enum {
     VAL_INUM,
     VAL_FNUM,
     VAL_BOOL,
-    VAL_OBJ,
+    VAL_STRING,
+    VAL_STRUCT,
     VAL_ADDRESS,
 } ValType;
+
+const char* varTypeToStr(ValType type);
 
 #endif

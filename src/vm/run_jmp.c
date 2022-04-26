@@ -40,7 +40,8 @@ int do_OP_JMPIF()
             case VAL_FNUM:
             case VAL_ERROR:
             case VAL_BOOL:
-            case VAL_OBJ:
+            case VAL_STRING:
+            case VAL_STRUCT:
             default:
                 runtimeError("type %s cannot hold an address", varTypeToStr(var->type));
                 return 1;

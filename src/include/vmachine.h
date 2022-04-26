@@ -10,9 +10,9 @@
 #include "call_stack.h"
 #include "val_stack.h"
 #include "var_store.h"
+#include "str_store.h"
 #include "var_type.h"
 #include "misc.h"
-#include "object.h"
 #include "strings.h"
 
 #endif

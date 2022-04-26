@@ -211,7 +211,8 @@ void emitPeek(Variable* val)
         case VAL_UNUM:
         case VAL_FNUM:
         case VAL_BOOL:
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
             syntaxError("peek instruction expects a INUM, not a %s", varTypeToStr(val->type));
             return;
@@ -234,7 +235,8 @@ void emitLocal(Variable* val)
         case VAL_UNUM:
         case VAL_FNUM:
         case VAL_BOOL:
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
             syntaxError("local instruction expects a INUM, not a %s", varTypeToStr(val->type));
             return;

@@ -187,12 +187,10 @@ data_definition
         if(findSymbol($2))
             syntaxError("symbol \"%s\" has already been defined", $2);
         else {
-            Variable* val = createVar(VAL_OBJ);
-            //uint16_t idx = addStr(vm->str_store, $4);
-            //initVal(&val, $1);
-            // TODO: FIX ME.
+            Variable* val = createVar(VAL_STRING);
             val->isAssigned = true;
-            val->data.obj = 0; //idx;
+            val->data.store_idx = addStr($4);
+            //printf("store index = %d\n", val->data.store_idx);
             addSymbol($2, addVar(val));
         }
     }

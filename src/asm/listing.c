@@ -378,4 +378,6 @@ void showListing()
     destroy(syms);
 
     dumpSymbols();
+    dumpVarStore();
+    dumpStrStore();
 }

@@ -117,6 +117,7 @@ static void dump(Symbol* sym)
     }
 
     printf("   key: %-15s index: %-4u ", sym->key, sym->idx);
+    fflush(stdout); // not printing in the specified order
     printVar(getVar(sym->idx));
     printf("\n");
 }
@@ -127,76 +128,4 @@ void dumpSymbols()
     dump(sym_table);
 }
 
-
-/* // simple binary tree
-typedef struct _sym_tab_ {
-    const char* name;
-    int slot;
-    struct _sym_tab_* left;
-    struct _sym_tab_* right;
-} SymbolTable;
-
-SymbolTable* symtab = NULL;
-
-void add_symbol(SymbolTable* root, SymbolTable* sym)
-{
-    int val = strcmp(root->name, sym->name);
-    if(val < 0) {
-        if(root->left == NULL)
-            root->left = sym;
-        else
-            add_symbol(root->left, sym);
-    }
-    else if(val > 0) {
-        if(root->right == NULL)
-            root->right = sym;
-        else
-            add_symbol(root->right, sym);
-    }
-    else
-        syntaxError("symbol \"%s\" already exists.", sym->name);
-}
-
-void addSymbol(const char* name, int slot)
-{
-    SymbolTable* symbol = malloc(sizeof(SymbolTable));
-    assert(symbol != NULL);
-
-    symbol->name = name;
-    symbol->slot = slot;
-    symbol->left = NULL;
-    symbol->right = NULL;
-    if(symtab != NULL)
-        add_symbol(symtab, symbol);
-    else
-        symtab = symbol;
-}
-
-int find_symbol(SymbolTable* node, const char* name)
-{
-    int val = strcmp(node->name, name);
-    if(val < 0) {
-        if(node->left != NULL)
-            return find_symbol(node->left, name);
-        else {
-            syntaxError("symbol \"%s\" is undefined.", name);
-            return -1;
-        }
-    }
-    else if(val > 0) {
-        if(node->right != NULL)
-            return find_symbol(node->right, name);
-        else {
-            syntaxError("symbol \"%s\" is undefined.", name);
-            return -1;
-        }
-    }
-    else
-        return node->slot;
-}
-
-int findSymbol(const char* name)
-{
-    return find_symbol(symtab, name);
-} */
 

@@ -33,6 +33,8 @@
 
 * Look at implementing the notion of a function using structs. Instead of a raw label for a call instruction, it will be a named struct that has the function parameters and return value built into it, as well as the code that implements the function.
 
+* need to add name spaces to support structs.
+
 # Future
 
 * Reduce the library code to a few headers if possible.

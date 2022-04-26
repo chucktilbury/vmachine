@@ -14,10 +14,10 @@ SLST	=	logging.c \
 			opcodes.c \
 			cmd_line.c \
 			call_stack.c \
+			var_type.c \
 			var_store.c \
+			str_store.c \
 			val_stack.c \
-			object.c \
-			strings.c \
 			misc.c
 
 all: $(TARGET)

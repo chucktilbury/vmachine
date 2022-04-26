@@ -35,53 +35,52 @@ StkVal castToType(StkVal val, ValType type)
 {
     switch(type) {
         case VAL_UNUM: {
-                uint32_t v;
                 switch(val.type) {
                     case VAL_UNUM:
                         break;
                     case VAL_INUM:
-                        v = (uint32_t)val.data.inum;
+                        val.data.unum = (uint32_t)val.data.inum;
+                        val.type = VAL_UNUM;
                         break;
                     case VAL_FNUM:
-                        v = (uint32_t)((int32_t)val.data.fnum);
+                        val.data.unum = (uint32_t)((int32_t)val.data.fnum);
+                        val.type = VAL_UNUM;
                         break;
                     default:
                         runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
                         break;
                 }
-                val.type = VAL_UNUM;
-                val.data.unum = v;
             }
             break;
 
         case VAL_INUM: {
-                int32_t v;
                 switch(val.type) {
                     case VAL_UNUM:
-                        v = (int32_t)val.data.unum;
+                        val.data.inum = (int32_t)val.data.unum;
+                        val.type = VAL_INUM;
                         break;
                     case VAL_INUM:
                         break;
                     case VAL_FNUM:
-                        v = (int32_t)val.data.fnum;
+                        val.data.inum = (int32_t)val.data.fnum;
+                        val.type = VAL_INUM;
                         break;
                     default:
                         runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
                         break;
                 }
-                val.type = VAL_INUM;
-                val.data.inum = v;
             }
             break;
 
         case VAL_FNUM: {
-                double v;
                 switch(val.type) {
                     case VAL_UNUM:
-                        v = (double)((int32_t)val.data.unum);
+                        val.data.fnum = (double)((int32_t)val.data.unum);
+                        val.type = VAL_FNUM;
                         break;
                     case VAL_INUM:
-                        v = (double)val.data.fnum;
+                        val.data.fnum = (double)val.data.fnum;
+                        val.type = VAL_FNUM;
                         break;
                     case VAL_FNUM:
                         break;
@@ -89,8 +88,6 @@ StkVal castToType(StkVal val, ValType type)
                         runtimeError("cannot cast a %s to a %s", varTypeToStr(val.type), varTypeToStr(type));
                         break;
                 }
-                val.type = VAL_FNUM;
-                val.data.fnum = v;
             }
             break;
 
@@ -122,6 +119,8 @@ StkVal addVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -141,6 +140,8 @@ StkVal addVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -160,11 +161,15 @@ StkVal addVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
         default:
             runtimeError("only numbers allowed in expressions");
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
             break;
     }
     //dest.hash = hashValue(dest);
@@ -191,6 +196,8 @@ StkVal subVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -210,6 +217,8 @@ StkVal subVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -229,11 +238,15 @@ StkVal subVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
         default:
             runtimeError("only numbers allowed in expressions");
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
             break;
     }
     //dest.hash = hashValue(dest);
@@ -260,6 +273,8 @@ StkVal mulVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -279,6 +294,8 @@ StkVal mulVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -298,11 +315,15 @@ StkVal mulVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
         default:
             runtimeError("only numbers allowed in expressions");
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
             break;
     }
     //dest.hash = hashValue(dest);
@@ -353,6 +374,8 @@ StkVal divVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -372,6 +395,8 @@ StkVal divVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -391,11 +416,15 @@ StkVal divVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions: %s", varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
         default:
             runtimeError("only numbers allowed in expressions: %s", varTypeToStr(left.type));
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
             break;
     }
     //dest.hash = hashValue(dest);
@@ -446,6 +475,8 @@ StkVal modVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -465,6 +496,8 @@ StkVal modVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
@@ -484,11 +517,15 @@ StkVal modVals(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("only numbers allowed in expressions");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
             }
             break;
         default:
             runtimeError("only numbers allowed in expressions");
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
             break;
     }
     //dest.hash = hashValue(dest);
@@ -521,7 +558,8 @@ bool isFalse(StkVal val)
 {
     switch(val.type) {
         case VAL_ERROR:
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ADDRESS:
             return false;    // these are always true for this (so return false)
         case VAL_UNUM:

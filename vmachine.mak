@@ -1,5 +1,5 @@
 
-CC	=	gcc
+CC	=	clang
 
 OBJDIR	=	obj
 BINDIR	=	bin

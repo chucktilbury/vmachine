@@ -8,6 +8,7 @@ void loadVM(const char* fname)
 
     loadInstStore(infile_pointer);
     loadVarStore(infile_pointer);
+    loadStrStore(infile_pointer);
     createValStack();
     createCallStack();
 
@@ -21,6 +22,7 @@ void saveVM(const char* fname)
 
     saveInstStore(outfile_pointer);
     saveVarStore(outfile_pointer);
+    saveStrStore(outfile_pointer);
 
     fclose(outfile_pointer);
 }

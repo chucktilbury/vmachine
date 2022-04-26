@@ -36,12 +36,13 @@ StkVal initVal(uint16_t type, void* val)
     StkVal value;
 
     switch(type) {
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ERROR:
-            value.data.obj = val;
+            value.data.store_idx = *(size_t*)val;
             break;
         case VAL_NOTHING:
-            value.data.obj = NULL;
+            value.data.store_idx = 0;
             break;
         case VAL_UNUM:
             value.data.unum = *(uint32_t*)val;
@@ -120,8 +121,9 @@ void printVal(uint8_t type, void* val)
         case VAL_ERROR:
             trace(1, "ERROR");
             break;
-        case VAL_OBJ:
-            trace(1, "%p", val);
+        case VAL_STRING:
+        case VAL_STRUCT:
+            trace(1, "%ul", *(size_t*)val);
             break;
         case VAL_UNUM:
             trace(1, "0x%X", *((uint32_t*)val));
@@ -156,12 +158,14 @@ void assignVal(int index, StkVal val)
 {
     //printf("INDEX: %d\n", index);
     switch(stack.list[index].type) {
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ERROR:
             switch(val.type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
-                    stack.list[index].data.obj = val.data.obj;
+                case VAL_STRING:
+                case VAL_STRUCT:
+                    stack.list[index].data.store_idx = val.data.store_idx;
                     break;
                 case VAL_NOTHING:
                 case VAL_UNUM:
@@ -177,13 +181,14 @@ void assignVal(int index, StkVal val)
             break;
 
         case VAL_NOTHING:
-            fatalError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
+            genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
             break;
 
         case VAL_UNUM:
             switch(val.type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_NOTHING:
                     genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
@@ -210,7 +215,8 @@ void assignVal(int index, StkVal val)
         case VAL_INUM:
             switch(val.type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_NOTHING:
                     genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
                     break;
@@ -237,7 +243,8 @@ void assignVal(int index, StkVal val)
         case VAL_FNUM:
             switch(val.type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_NOTHING:
                 case VAL_ADDRESS:
                     genericError("cannot assign a %s to a %s\n", varTypeToStr(val.type), varTypeToStr(stack.list[index].type));
@@ -261,8 +268,8 @@ void assignVal(int index, StkVal val)
 
         case VAL_BOOL:
             switch(val.type) {
-                // todo: objects have their own way to give a boolean
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_ERROR:
                 case VAL_NOTHING:
                 case VAL_ADDRESS:
@@ -287,7 +294,8 @@ void assignVal(int index, StkVal val)
         case VAL_ADDRESS:
             switch(val.type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
+                case VAL_STRUCT:
                 case VAL_NOTHING:
                 case VAL_FNUM:
                 case VAL_BOOL:

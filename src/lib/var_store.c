@@ -84,12 +84,13 @@ void assignVar(Variable* dest, Variable* src)
 {
     dest->isAssigned = true;
     switch(dest->type) {
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ERROR:
             switch(src->type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
-                    dest->data.obj = src->data.obj;
+                case VAL_STRING:
+                    dest->data.store_idx = src->data.store_idx;
                     break;
                 case VAL_NOTHING:
                 case VAL_UNUM:
@@ -111,7 +112,7 @@ void assignVar(Variable* dest, Variable* src)
         case VAL_UNUM:
             switch(src->type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_NOTHING:
                     genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
@@ -138,7 +139,7 @@ void assignVar(Variable* dest, Variable* src)
         case VAL_INUM:
             switch(src->type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_NOTHING:
                     genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
                     break;
@@ -165,7 +166,7 @@ void assignVar(Variable* dest, Variable* src)
         case VAL_FNUM:
             switch(src->type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_NOTHING:
                 case VAL_ADDRESS:
                     genericError("cannot assign a %s to a %s\n", varTypeToStr(src->type), varTypeToStr(dest->type));
@@ -190,7 +191,7 @@ void assignVar(Variable* dest, Variable* src)
         case VAL_BOOL:
             switch(src->type) {
                 // todo: objects have their own way to give a boolean
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_ERROR:
                 case VAL_NOTHING:
                 case VAL_ADDRESS:
@@ -215,7 +216,7 @@ void assignVar(Variable* dest, Variable* src)
         case VAL_ADDRESS:
             switch(src->type) {
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_NOTHING:
                 case VAL_FNUM:
                 case VAL_BOOL:
@@ -257,7 +258,7 @@ void castVar(Variable* var, uint8_t type)
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_ERROR:
-                case VAL_OBJ:
+                case VAL_STRING:
                     // no change required
                     break;
                 default:
@@ -273,7 +274,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_INUM:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_ADDRESS:
                     var->type = type;
                     break;
@@ -286,7 +287,7 @@ void castVar(Variable* var, uint8_t type)
             switch(var->type) {
                 case VAL_ERROR:
                 case VAL_NOTHING:
-                case VAL_OBJ:
+                case VAL_STRING:
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_UNUM:
@@ -318,7 +319,7 @@ void castVar(Variable* var, uint8_t type)
             switch(var->type) {
                 case VAL_ERROR:
                 case VAL_NOTHING:
-                case VAL_OBJ:
+                case VAL_STRING:
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_UNUM:
@@ -349,7 +350,7 @@ void castVar(Variable* var, uint8_t type)
             switch(var->type) {
                 case VAL_ERROR:
                 case VAL_NOTHING:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_ADDRESS:
                 case VAL_BOOL:
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
@@ -374,7 +375,7 @@ void castVar(Variable* var, uint8_t type)
             switch(var->type) {
                 case VAL_ERROR:
                 case VAL_NOTHING:
-                case VAL_OBJ:
+                case VAL_STRING:
                 case VAL_ADDRESS:
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
@@ -395,7 +396,7 @@ void castVar(Variable* var, uint8_t type)
             }
             break;
 
-        case VAL_OBJ:
+        case VAL_STRING:
             switch(var->type) {
                 case VAL_ERROR:
                 case VAL_NOTHING:
@@ -406,7 +407,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_ADDRESS:
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
-                case VAL_OBJ:
+                case VAL_STRING:
                     // no change
                     break;
                 default:
@@ -420,7 +421,7 @@ void castVar(Variable* var, uint8_t type)
                 case VAL_NOTHING:
                 case VAL_FNUM:
                 case VAL_BOOL:
-                case VAL_OBJ:
+                case VAL_STRING:
                     genericError("cannot cast a %s to a %s\n", varTypeToStr(var->type), varTypeToStr(type));
                     break;
                 case VAL_INUM:
@@ -448,8 +449,8 @@ void printVar(Variable* var)
         case VAL_ERROR:
             trace(1, "ERROR\t");
             break;
-        case VAL_OBJ:
-            trace(1, "%p\t", var->data.obj);
+        case VAL_STRING:
+            trace(1, "%lu: \"%s\"\t", var->data.store_idx, getStr(var->data.store_idx));
             break;
         case VAL_UNUM:
             trace(1, "0x%X\t", var->data.unum);
@@ -471,7 +472,7 @@ void printVar(Variable* var)
             break;
     }
 
-    trace(1, "assigned: %-5s const: %-5s literal: %-5s ",
+    trace(10, "assigned: %-5s const: %-5s literal: %-5s ",
            var->isAssigned ? "true" : "false",
            var->isConst ? "true" : "false",
            var->isLiteral ? "true" : "false");
@@ -482,21 +483,18 @@ void printVar(Variable* var)
     //printf("\n");
 }
 
-const char* varTypeToStr(int type)
+void dumpVarStore()
 {
-    return (type == VAL_ERROR) ? "ERROR" :
-           (type == VAL_NOTHING) ? "NOTHING" :
-           (type == VAL_UNUM) ? "UNUM" :
-           (type == VAL_INUM) ? "INUM" :
-           (type == VAL_FNUM) ? "FNUM" :
-           (type == VAL_BOOL) ? "BOOL" :
-           (type == VAL_OBJ) ? "OBJ" :
-           (type == VAL_ADDRESS) ? "ADDRESS" : "UNKNOWN";
+    printf("\nVariable Store:\n");
+    for(size_t i = 0; i < store.len; i++) {
+        printf("  ");
+        printVar(store.list[i]);
+        printf("\n");
+    }
 }
 
 void saveVarStore(FILE* fp)
 {
-    // TODO: does not handle objects.
     fwrite(&store.len, sizeof(size_t), 1, fp);
     for(size_t i = 0; i < store.len; i++) {
         fwrite(store.list[i], sizeof(Variable), 1, fp);
@@ -505,7 +503,6 @@ void saveVarStore(FILE* fp)
 
 void loadVarStore(FILE* fp)
 {
-    // TODO: does not handle objects
     memset(&store, 0, sizeof(VarStore));
     fread(&store.len, sizeof(size_t), 1, fp);
 

@@ -10,6 +10,7 @@ void createVMachine()
     createVarStore();
     createValStack();
     createCallStack();
+    createStrStore();
 }
 
 void destroyVMachine()
@@ -18,6 +19,7 @@ void destroyVMachine()
     destroyVarStore();
     destroyValStack();
     destroyCallStack();
+    destroyStrStore();
 }
 
 Variable* convertValToVar(StkVal val)
@@ -32,12 +34,13 @@ StkVal convertVarToVal(Variable* var)
 {
     StkVal val;
     switch(var->type) {
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ERROR:
-            val.data.obj = var->data.obj;
+            val.data.store_idx = var->data.store_idx;
             break;
         case VAL_NOTHING:
-            val.data.obj = NULL;
+            val.data.store_idx = 0;
             break;
         case VAL_UNUM:
             val.data.unum = var->data.unum;
@@ -65,12 +68,14 @@ StkVal convertVarToVal(Variable* var)
 void assignValToVar(Variable* var, StkVal val)
 {
     switch(val.type) {
-        case VAL_OBJ:
+        case VAL_STRING:
+        case VAL_STRUCT:
         case VAL_ERROR:
-            var->data.obj = val.data.obj;
+            printf("idx: %lu\n", val.data.store_idx);
+            var->data.store_idx = val.data.store_idx;
             break;
         case VAL_NOTHING:
-            var->data.obj = NULL;
+            var->data.store_idx = 0;
             break;
         case VAL_UNUM:
             var->data.unum = val.data.unum;
