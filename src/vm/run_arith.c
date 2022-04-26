@@ -5,31 +5,41 @@
 
 int do_OP_ADD()
 {
-    pushVal(addVals(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(addVals(left, right));
     return 0;
 }
 
 int do_OP_SUB()
 {
-    pushVal(subVals(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(subVals(left, right));
     return 0;
 }
 
 int do_OP_MUL()
 {
-    pushVal(mulVals(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(mulVals(left, right));
     return 0;
 }
 
 int do_OP_DIV()
 {
-    pushVal(divVals(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(divVals(left, right));
     return 0;
 }
 
 int do_OP_MOD()
 {
-    pushVal(modVals(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(modVals(left, right));
     return 0;
 }
 

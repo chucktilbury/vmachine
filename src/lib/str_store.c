@@ -283,7 +283,7 @@ void deleteStr(size_t index)
  */
 const char* getStr(size_t index)
 {
-    printf("getStr(): %lu\n", index);
+    //printf("getStr(): %lu\n", index);
     return idx_to_str(index);
 }
 
@@ -333,7 +333,19 @@ int compareStr(size_t index, const char* str)
  */
 size_t arithAddStr(size_t left, size_t right)
 {
-    fatalError("%s is not implemented", __func__);
+    const char* str1 = getStr(left);
+    size_t str1_len = strlen(str1);
+    const char* str2 = getStr(right);
+    size_t str2_len = strlen(str2);
+
+    char* outs = _malloc(str1_len + str2_len + 1);
+    memcpy(outs, str1, str1_len);
+    memcpy(&outs[str1_len], str2, str2_len);
+
+    size_t val = addStr(outs);
+    _free(outs);
+
+    return val;
 }
 
 /**

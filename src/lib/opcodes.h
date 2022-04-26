@@ -50,23 +50,3 @@ const char* opToStr(OpCodes op);
 
 #endif
 
-/*
- * function parameters and return values.
- *
- * Parameters are pushed on the stack before the call, along with the number
- * of parameters. The call pushes the return address on the stack. Before the
- * return is called, the top of the stack must be the return address. So, we
- * need a register that save the top of the stack so that we can refer to the
- * function parameters using a negative index. Local vars are discarded on
- * the stack. Return value has to be on the stack somewhere. Maybe CALL can
- * reserve a slot on the stack for it. Or there could be a register that
- * holds the return value. In any case, the stack needs to be modeled closer
- * to the real thing.
- *
- * Do I want a separate call stack? Or is the expression stack the proper way
- * to maintain calling information?
- *
- * POP instruction that pops more than one item?
- *
- * What are the differences between constants and variables?
- */

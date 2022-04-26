@@ -10,37 +10,50 @@ int do_OP_NOT()
 
 int do_OP_EQ()
 {
-    pushVal(eqVal(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(eqVal(left, right));
+
     return 0;
 }
 
 int do_OP_NEQ()
 {
-    pushVal(neqVal(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(neqVal(left, right));
     return 0;
 }
 
 int do_OP_LEQ()
 {
-    pushVal(leqVal(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(leqVal(left, right));
     return 0;
 }
 
 int do_OP_GEQ()
 {
-    pushVal(geqVal(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(geqVal(left, right));
     return 0;
 }
 
 int do_OP_LESS()
 {
-    pushVal(lessVal(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(lessVal(left, right));
     return 0;
 }
 
 int do_OP_GTR()
 {
-    pushVal(gtrVal(popVal(), popVal()));
+    StkVal right = popVal();
+    StkVal left = popVal();
+    pushVal(gtrVal(left, right));
     return 0;
 }
 

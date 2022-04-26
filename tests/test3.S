@@ -8,10 +8,10 @@ _symbol_123
     push some_name
     pUSh another_name
     add
-    print
+    prints
     push some_name
     div
-    print
+    prints
     noop
     exit
 

@@ -118,6 +118,7 @@ static void update_loc(void){
 "pop"           { yylval.opcode = OP_POP; return TOK_POP; }
 "not"           { yylval.opcode = OP_NOT; return TOK_NOT; }
 "eq"            { yylval.opcode = OP_EQ; return TOK_EQ; }
+"equ"           { yylval.opcode = OP_EQ; return TOK_EQ; }
 "neq"           { yylval.opcode = OP_NEQ; return TOK_NEQ; }
 "leq"           { yylval.opcode = OP_LEQ; return TOK_LEQ; }
 "geq"           { yylval.opcode = OP_GEQ; return TOK_GEQ; }

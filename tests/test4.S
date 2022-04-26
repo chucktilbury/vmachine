@@ -10,10 +10,10 @@ _symbol_123
     push some_name
     pUSh another_name
     add
-    print
+    prints
     push some_name
     div
-    print
+    prints
     noop
 
 uint uint_name = 22 + 3
@@ -23,10 +23,10 @@ _symbol_321
     push uint_name
     PUSH int_name
     add
-    print
+    prints
     push some_name
     div
-    print
+    prints
     NoOp
 
 const float some_int =  int_name
@@ -36,10 +36,10 @@ _symbol_
     push some_int
     pUSh float_name
     add
-    print
+    prints
     push 27.12*3
     div
-    print
+    prints
     noop
 
 _bacon
@@ -47,6 +47,6 @@ _bacon
     push float_name
     push 12.6
     add
-    print
+    prints
     exit
 

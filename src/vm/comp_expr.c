@@ -40,6 +40,8 @@ StkVal notVal(StkVal val)
             break;
         default:
             runtimeError("unknown value type (%d) in comparison", val.type);
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
     dest.type = VAL_BOOL;
@@ -49,6 +51,7 @@ StkVal notVal(StkVal val)
 StkVal eqVal(StkVal left, StkVal right)
 {
     StkVal dest;
+    dest.type = VAL_BOOL;
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {
@@ -73,6 +76,8 @@ StkVal eqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_INUM:
@@ -98,6 +103,8 @@ StkVal eqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_FNUM:
@@ -123,6 +130,8 @@ StkVal eqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_BOOL:
@@ -148,9 +157,31 @@ StkVal eqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_STRING:
+            switch(right.type) {
+                case VAL_UNUM:
+                case VAL_INUM:
+                case VAL_FNUM:
+                case VAL_BOOL:
+                case VAL_ADDRESS:
+                case VAL_STRUCT:
+                case VAL_ERROR:
+                    dest.data.boolean = false;
+                    break;
+                case VAL_STRING:
+                    // duplicate string are never stored.
+                    dest.data.boolean = left.data.store_idx == right.data.store_idx? true: false;
+                    break;
+                default:
+                    runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
+            }
+            break;
         case VAL_STRUCT:
         // TODO: add right clauses
             dest.data.boolean = false;
@@ -172,6 +203,8 @@ StkVal eqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_ERROR:
@@ -191,19 +224,23 @@ StkVal eqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '==' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         default:
             runtimeError("unknown left value type (%d) in '==' comparison", left.type);
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
-    dest.type = VAL_BOOL;
     return dest;
 }
 
 StkVal neqVal(StkVal left, StkVal right)
 {
     StkVal dest;
+    dest.type = VAL_BOOL;
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {
@@ -227,6 +264,8 @@ StkVal neqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_INUM:
@@ -251,6 +290,8 @@ StkVal neqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_FNUM:
@@ -275,6 +316,8 @@ StkVal neqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_BOOL:
@@ -299,6 +342,8 @@ StkVal neqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_STRING:
@@ -320,6 +365,8 @@ StkVal neqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_ERROR:
@@ -336,20 +383,23 @@ StkVal neqVal(StkVal left, StkVal right)
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '!=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         default:
             runtimeError("unknown left value type %s in '!=' comparison", varTypeToStr(left.type));
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
-    dest.type = VAL_BOOL;
     return dest;
 }
 
 StkVal leqVal(StkVal left, StkVal right)
 {
     StkVal dest;
-    //printf("left type = %s right type = %s\t", varTypeToStr(left.type), varTypeToStr(right.type));
+    dest.type = VAL_BOOL;
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {
@@ -369,9 +419,13 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_INUM:
@@ -392,9 +446,13 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_FNUM:
@@ -415,9 +473,13 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_BOOL:
@@ -436,22 +498,28 @@ StkVal leqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         default:
             runtimeError("unknown left value type (%d) in '<=' comparison", left.type);
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
-    dest.type = VAL_BOOL;
     return dest;
 }
 
 StkVal geqVal(StkVal left, StkVal right)
 {
     StkVal dest;
+    dest.type = VAL_BOOL;
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {
@@ -471,9 +539,13 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_INUM:
@@ -494,9 +566,13 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_FNUM:
@@ -517,9 +593,13 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_BOOL:
@@ -538,22 +618,28 @@ StkVal geqVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         default:
             runtimeError("unknown left value type (%d) in '>=' comparison", left.type);
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
-    dest.type = VAL_BOOL;
     return dest;
 }
 
 StkVal lessVal(StkVal left, StkVal right)
 {
     StkVal dest;
+    dest.type = VAL_BOOL;
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {
@@ -573,9 +659,13 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_INUM:
@@ -596,9 +686,13 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_FNUM:
@@ -619,9 +713,13 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_BOOL:
@@ -640,22 +738,28 @@ StkVal lessVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         default:
             runtimeError("unknown left value type (%d) in '<' comparison", left.type);
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
-    dest.type = VAL_BOOL;
     return dest;
 }
 
 StkVal gtrVal(StkVal left, StkVal right)
 {
     StkVal dest;
+    dest.type = VAL_BOOL;
     switch(left.type) {
         case VAL_UNUM:
             switch(right.type) {
@@ -675,9 +779,13 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_INUM:
@@ -698,9 +806,13 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_FNUM:
@@ -721,9 +833,13 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '>' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         case VAL_BOOL:
@@ -742,16 +858,21 @@ StkVal gtrVal(StkVal left, StkVal right)
                 case VAL_ADDRESS:
                     runtimeError("magnitude comparison between %s and %s address is meaningless",
                                     varTypeToStr(left.type), varTypeToStr(right.type));
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
                     break;
                 default:
                     runtimeError("unknown right value type (%d) in '<=' comparison", right.type);
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
             }
             break;
         default:
             runtimeError("unknown left value type (%d) in '>' comparison", left.type);
+            dest.type = VAL_ERROR;
+            dest.data.unum = 0;
     }
 
-    dest.type = VAL_BOOL;
     return dest;
 }
 

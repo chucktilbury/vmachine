@@ -166,8 +166,21 @@ StkVal addVals(StkVal left, StkVal right)
                     break;
             }
             break;
+        case VAL_STRING:
+            switch(right.type) {
+                case VAL_STRING:
+                    dest.type = VAL_STRING;
+                    dest.data.store_idx = arithAddStr(left.data.store_idx, right.data.store_idx);
+                    break;
+                default:
+                    runtimeError("can only add a STRING to another STRING");
+                    dest.type = VAL_ERROR;
+                    dest.data.unum = 0;
+                    break;
+            }
+            break;
         default:
-            runtimeError("only numbers allowed in expressions");
+            runtimeError("can only add numbers or strings");
             dest.type = VAL_ERROR;
             dest.data.unum = 0;
             break;
