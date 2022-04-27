@@ -28,18 +28,18 @@ int do_OP_EXIT()
 
 int do_OP_PRINTS()
 {
-    trace(5, "\n");
-    trace(5, "TOS: %d\t", getValStackLen());
-    printVar(convertValToVar(peekStk()));
-    trace(1, "\n");
+    //trace(5, "\n");
+    //trace(5, "TOS: %d\t", getValStackLen());
+    printVar(5, convertValToVar(peekStk()));
+    //trace(1, "\n");
     return 0;
 }
 
 int do_OP_PRINT()
 {
-    trace(5, "\n");
-    printVar(getVar(read16()));
-    trace(1, "\n");
+    //trace(5, "\n");
+    printVar(5, getVar(read16()));
+    //trace(1, "\n");
     return 0;
 }
 
@@ -88,7 +88,7 @@ int do_OP_LOCAL()
     short ofst = (short)read16();
     int base = peekCallBase();
     StkVal val = peekStk();
-    printVal(val.type, &val.data.inum); fputc('\n', stdout);
+    printVal(5, val.type, &val.data.inum); fputc('\n', stdout);
     assignVal(ofst+base, val);
     return 0;
 }

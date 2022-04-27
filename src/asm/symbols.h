@@ -21,6 +21,6 @@ void destroySymbols();
 void addSymbol(const char* key, uint16_t idx);
 uint16_t findSymbol(const char* key);
 
-void dumpSymbols();
+void dumpSymbols(int level);
 
 #endif

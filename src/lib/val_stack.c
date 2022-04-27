@@ -114,34 +114,34 @@ StkVal peekStk()
 }
 
 //void printVal(StkVal val)
-void printVal(uint8_t type, void* val)
+void printVal(int level, uint8_t type, void* val)
 {
-    trace(1, "%s\t", varTypeToStr(type));
+    trace(level, "%s\t", varTypeToStr(type));
     switch(type) {
         case VAL_ERROR:
-            trace(1, "ERROR");
+            trace(level, "ERROR");
             break;
         case VAL_STRING:
         case VAL_STRUCT:
-            trace(1, "%ul", *(size_t*)val);
+            trace(level, "%ul", *(size_t*)val);
             break;
         case VAL_UNUM:
-            trace(1, "0x%X", *((uint32_t*)val));
+            trace(level, "0x%X", *((uint32_t*)val));
             break;
         case VAL_ADDRESS:
-            trace(1, "%u", *((uint32_t*)val));
+            trace(level, "%u", *((uint32_t*)val));
             break;
         case VAL_INUM:
-            trace(1, "%d", *((int32_t*)val));
+            trace(level, "%d", *((int32_t*)val));
             break;
         case VAL_FNUM:
-            trace(1, "%0.1f", *((float*)val));
+            trace(level, "%0.1f", *((float*)val));
             break;
         case VAL_BOOL:
-            trace(1, "%s", *((bool*)val) ? "TRUE" : "FALSE");
+            trace(level, "%s", *((bool*)val) ? "TRUE" : "FALSE");
             break;
         default:
-            trace(1, "object value not found");
+            trace(level, "object value not found");
             break;
     }
 }

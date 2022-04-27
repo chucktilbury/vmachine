@@ -1,11 +1,11 @@
 
 # Current
 
-* Print immediate values in exec trace and elsewhere. Controlled by a verbosity command line parameter.
-
 * Implement structs as a native type.
 
 # Completed
+
+* Print immediate values in exec trace and elsewhere. Controlled by a verbosity command line parameter.
 
 * Equality compare for strings.
 

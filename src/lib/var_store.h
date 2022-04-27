@@ -34,7 +34,7 @@ Variable* createVar(uint16_t type);
 int addVar(Variable* var);
 Variable* getVar(int index);
 Variable* copyVar(Variable* var);
-void printVar(Variable* var);
+void printVar(int level, Variable* var);
 //const char* varTypeToStr(int type);
 void assignVar(Variable* dest, Variable* src);
 void castVar(Variable* var, uint8_t type);
@@ -42,6 +42,6 @@ void castVar(Variable* var, uint8_t type);
 void loadVarStore(FILE* fp);
 void saveVarStore(FILE* fp);
 
-void dumpVarStore();
+void dumpVarStore(int level);
 
 #endif

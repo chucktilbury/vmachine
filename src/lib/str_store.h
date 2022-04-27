@@ -17,6 +17,6 @@ size_t arithAddStr(size_t left, size_t right);
 void saveStrStore(FILE* fp);
 void loadStrStore(FILE* fp);
 
-void dumpStrStore();
+void dumpStrStore(int level);
 
 #endif

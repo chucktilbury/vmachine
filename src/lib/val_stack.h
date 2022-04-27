@@ -39,7 +39,7 @@ void pushVal(StkVal val);
 StkVal popVal();
 StkVal peekVal(size_t offset);
 StkVal peekStk();
-void printVal(uint8_t type, void* val);
+void printVal(int level, uint8_t type, void* val);
 void assignVal(int index, StkVal val);
 
 #endif

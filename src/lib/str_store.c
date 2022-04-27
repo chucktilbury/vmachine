@@ -448,8 +448,10 @@ static void dump(String* node)
 /**
  * @brief Dump the string nodes to stdout for debugging.
  */
-void dumpStrStore()
+void dumpStrStore(int level)
 {
-    printf("\nString Store:\n");
-    dump(strs.strs);
+    if(level <= getTraceLevel()) {
+        printf("\nString Store:\n");
+        dump(strs.strs);
+    }
 }

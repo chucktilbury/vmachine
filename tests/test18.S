@@ -8,7 +8,7 @@ string str2 = 'this is a string'
 entry
     call test1
     call test2
-    ret
+    exit
 
 test2
     push str1

@@ -442,37 +442,37 @@ void castVar(Variable* var, uint8_t type)
     }
 }
 
-void printVar(Variable* var)
+void printVar(int level, Variable* var)
 {
-    trace(1, "%s\t", varTypeToStr(var->type));
+    trace(level, "%s\t", varTypeToStr(var->type));
     switch(var->type) {
         case VAL_ERROR:
-            trace(1, "ERROR\t");
+            trace(level, "ERROR\t");
             break;
         case VAL_STRING:
-            trace(1, "%lu: \"%s\"\t", var->data.store_idx, getStr(var->data.store_idx));
+            trace(level, "%lu: \"%s\"\t", var->data.store_idx, getStr(var->data.store_idx));
             break;
         case VAL_UNUM:
-            trace(1, "0x%X\t", var->data.unum);
+            trace(level, "0x%X\t", var->data.unum);
             break;
         case VAL_ADDRESS:
-            trace(1, "%d\t", var->data.addr);
+            trace(level, "%d\t", var->data.addr);
             break;
         case VAL_INUM:
-            trace(1, "%d\t", var->data.inum);
+            trace(level, "%d\t", var->data.inum);
             break;
         case VAL_FNUM:
-            trace(1, "%0.1f\t", var->data.fnum);
+            trace(level, "%0.1f\t", var->data.fnum);
             break;
         case VAL_BOOL:
-            trace(1, "%s\t", var->data.boolean ? "TRUE" : "FALSE");
+            trace(level, "%s\t", var->data.boolean ? "TRUE" : "FALSE");
             break;
         default:
             printf("object value not found");
             break;
     }
 
-    trace(10, "assigned: %-5s const: %-5s literal: %-5s ",
+    trace(level+2, "assigned: %-5s const: %-5s literal: %-5s ",
            var->isAssigned ? "true" : "false",
            var->isConst ? "true" : "false",
            var->isLiteral ? "true" : "false");
@@ -483,13 +483,13 @@ void printVar(Variable* var)
     //printf("\n");
 }
 
-void dumpVarStore()
+void dumpVarStore(int level)
 {
-    printf("\nVariable Store:\n");
+    trace(level, "\nVariable Store:\n");
     for(size_t i = 0; i < store.len; i++) {
-        printf("  ");
-        printVar(store.list[i]);
-        printf("\n");
+        trace(level, "  ");
+        printVar(level, store.list[i]);
+        trace(level, "\n");
     }
 }
 

@@ -7,6 +7,8 @@ int do_OP_PUSH()
     uint16_t idx = read16();
     Variable* var = getVar(idx);
     //printf("var type: %s\t", varTypeToStr(var->type));
+    trace(5, "%d\t", idx);
+    printVar(6, var);
     pushVal(convertVarToVal(var));
     return 0;
 }

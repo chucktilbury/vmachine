@@ -118,14 +118,16 @@ static void dump(Symbol* sym)
 
     printf("   key: %-15s index: %-4u ", sym->key, sym->idx);
     fflush(stdout); // not printing in the specified order
-    printVar(getVar(sym->idx));
+    printVar(0, getVar(sym->idx));
     printf("\n");
 }
 
-void dumpSymbols()
+void dumpSymbols(int level)
 {
-    printf("\nSymbol Table:\n");
-    dump(sym_table);
+    if(level <= getTraceLevel()) {
+        printf("\nSymbol Table:\n");
+        dump(sym_table);
+    }
 }
 
 

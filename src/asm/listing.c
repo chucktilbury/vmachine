@@ -149,11 +149,11 @@ void showListing()
         int idx = getIndex();
         const char* lab = find_label(idx);
         if(lab != NULL) {
-            printf("\n----: %s\n", lab);
+            trace(3, "\n----: %s\n", lab);
         }
 
         inst = read8();
-        printf("%04d: %s\t", idx, opToStr(inst));
+        trace(3, "%04d: %s\t", idx, opToStr(inst));
 
         switch(inst) {
             case OP_EXIT:
@@ -180,18 +180,18 @@ void showListing()
                 break;
 
             case OP_PRINTS:
-                printf("----\t");
+                trace(5, "----\t");
                 break;
 
             case OP_PRINT: {
                     uint16_t oper = read16();
                     const char* str = find_sym(oper);
                     if(str == NULL) {
-                        printf("%4d\t", oper);
-                        printVar(getVar(oper));
+                        trace(5, "%4d\t", oper);
+                        printVar(5, getVar(oper));
                     }
                     else {
-                        printf("%s\t", str);
+                        trace(5, "%s\t", str);
                     }
                 }
                 break;
@@ -201,35 +201,14 @@ void showListing()
                     uint16_t oper = read16();
                     const char* str = find_sym(oper);
                     if(str == NULL) {
-                        printf("%4d\t", oper);
-                        printVar(getVar(oper));
+                        trace(5, "%4d\t", oper);
+                        printVar(5, getVar(oper));
                     }
                     else {
-                        printf("%s\t", str);
+                        trace(5, "%s\t", str);
                     }
                 }
                 break;
-
-//             case OP_CALL8: {
-//                     uint8_t type = read8();
-//                     uint8_t valu = read8();
-//                     printf("%s\t%4d\t", varTypeToStr(type), valu);
-//                 }
-//                 break;
-//
-//             case OP_CALL16: {
-//                     uint8_t type = read8();
-//                     uint16_t valu = read16();
-//                     printf("%s\t%4d\t", varTypeToStr(type), valu);
-//                 }
-//                 break;
-//
-//             case OP_CALL32: {
-//                     uint8_t type = read8();
-//                     uint32_t valu = read32();
-//                     printf("%s\t%4d\t", varTypeToStr(type), valu);
-//                 }
-//                 break;
 
             case OP_CALLX:
             case OP_SAVE:
@@ -237,24 +216,24 @@ void showListing()
                     uint16_t oper = read16();
                     const char* str = find_sym(oper);
                     if(str == NULL) {
-                        printf("%4d\t", oper);
-                        printVar(getVar(oper));
+                        trace(5, "%4d\t", oper);
+                        printVar(5, getVar(oper));
                     }
                     else {
-                        printf("%s\t", str);
+                        trace(5, "%s\t", str);
                     }
                 }
                 break;
 
             case OP_PEEK: {
                     short ofst = (short)read16();
-                    printf("%d\t", ofst);
+                    trace(5, "%d\t", ofst);
                 }
                 break;
 
             case OP_LOCAL: {
                     short ofst = (short)read16();
-                    printf("%d\t", ofst);
+                    trace(5, "%d\t", ofst);
                 }
                 break;
 
@@ -262,8 +241,8 @@ void showListing()
                     uint8_t type = read8();
                     uint32_t valu = read8();
                     // printf("%s\t%4d\t", varTypeToStr(type), valu);
-                    printf("----\t");
-                    printVal(type, &valu);
+                    trace(5, "----\t");
+                    printVal(5, type, &valu);
                 }
                 break;
 
@@ -271,16 +250,16 @@ void showListing()
                     uint8_t type = read8();
                     uint32_t valu = read16();
                     //printf("%s\t%4d\t", varTypeToStr(type), valu);
-                    printf("----\t");
-                    printVal(type, &valu);
+                    trace(5, "----\t");
+                    printVal(5, type, &valu);
                 }
                 break;
 
             case OP_PUSH32: {
                     uint8_t type = read8();
                     uint32_t valu = read32();
-                    printf("----\t"); //%s\t%4d\t", varTypeToStr(type), valu);
-                    printVal(type, &valu);
+                    trace(5, "----\t"); //%s\t%4d\t", varTypeToStr(type), valu);
+                    printVal(5, type, &valu);
                 }
                 break;
 
@@ -289,63 +268,27 @@ void showListing()
                     uint16_t oper = read16();
                     const char* str = find_sym(oper);
                     if(str == NULL) {
-                        printf("%4d\t", oper);
-                        printVar(getVar(oper));
+                        trace(5, "%4d\t", oper);
+                        printVar(5, getVar(oper));
                     }
                     else {
-                        printf("%s\t", str);
+                        trace(5, "%s\t", str);
                     }
                 }
                 break;
-
-//             case OP_JMP8: {
-//                     uint8_t valu = read8();
-//                     printf("%4d\t", valu);
-//                 }
-//                 break;
-//
-//             case OP_JMP16: {
-//                     uint16_t valu = read16();
-//                     printf("%4d\t", valu);
-//                 }
-//                 break;
-//
-//             case OP_JMP32: {
-//                     uint32_t valu = read32();
-//                     printf("%4d\t", valu);
-//                 }
-//                 break;
 
             case OP_JMPIF: {
                     int oper = (int)read16();
                     const char* str = find_sym(oper);
                     if(str == NULL) {
-                        printf("%d\t", oper);
-                        printVar(getVar(oper));
+                        trace(5, "%d\t", oper);
+                        printVar(5, getVar(oper));
                     }
                     else {
-                        printf("%s\t", str);
+                        trace(5, "%s\t", str);
                     }
                 }
                 break;
-
-//             case OP_JMPIF8: {
-//                     uint8_t valu = read8();
-//                     printf("%4d\t", valu);
-//                 }
-//                 break;
-//
-//             case OP_JMPIF16: {
-//                     uint16_t valu = read16();
-//                     printf("%4d\t", valu);
-//                 }
-//                 break;
-//
-//             case OP_JMPIF32: {
-//                     uint32_t valu = read32();
-//                     printf("%4d\t", valu);
-//                 }
-//                 break;
 
             case OP_EXCEPT:
                 printf("0x%08X", read16());
@@ -356,28 +299,27 @@ void showListing()
                     int oper = (int)read16();
                     const char* str = find_sym(oper);
                     if(str == NULL) {
-                        printf("%4d\t", oper);
-                        printVar(getVar(oper));
+                        trace(5, "%4d\t", oper);
+                        printVar(5, getVar(oper));
                     }
                     else {
-                        printf("%s\t", str);
+                        trace(5, "%s\t", str);
                     }
-                    printf("to %s", varTypeToStr(type));
+                    trace(5, "to %s", varTypeToStr(type));
                 }
                 break;
 
             default:
-                printf("invalid instruction: 0x%02X at 0x%0d\n", inst, getIndex());
-                exit(1);
+                fatalError("invalid instruction: 0x%02X at 0x%0d\n", inst, getIndex());
 
         }
-        printf("\n");
+        trace(3, "\n");
     }
 
     destroy(label);
     destroy(syms);
 
-    dumpSymbols();
-    dumpVarStore();
-    dumpStrStore();
+    dumpSymbols(5);
+    dumpVarStore(5);
+    dumpStrStore(5);
 }
