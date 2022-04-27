@@ -1,6 +1,10 @@
 /*
     Multi line comment
  */
+startup
+    call entry
+    exit
+
 int some_name = 22 + 3
 int another_name = -123
 
@@ -8,10 +12,13 @@ _symbol_123
     push some_name
     pUSh another_name
     add
-    print
+    prints
     push some_name
     div
-    print
+    prints
     noop
-    exit
+    ret
 
+entry
+    call _symbol_123
+    ret

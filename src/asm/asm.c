@@ -25,9 +25,14 @@ static void verifySym(Symbol* sym)
 
     Variable* var = getVar(sym->idx);
     if(!var->isAssigned) {
-        fprintf(stderr,
-                "Syntax Error: %s: line %d: at %d: is defined but never assigned a value\n",
-                sym->filename, sym->line, sym->col);
+        if(!strcmp(sym->key, "entry")) {
+            fprintf(stderr, "Syntax Error: program \"entry\" point is not defined\n");
+        }
+        else {
+            fprintf(stderr,
+                "Syntax Error: %s: line %d: at %d: symbol \"%s\" is defined but never assigned a value\n",
+                sym->filename, sym->line, sym->col, sym->key);
+        }
         error_count++;
     }
 }

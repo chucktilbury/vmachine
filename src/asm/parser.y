@@ -71,6 +71,17 @@ void verifySymbolTable();
 
 %%
 program
+    :  {
+        // Variable* var = createVar(VAL_ADDRESS);
+        // size_t idx = addVar(var);
+        // addSymbol("entry", idx);
+        // write8(OP_CALL);
+        // write16(idx);
+        // write8(OP_EXIT);
+    } module
+    ;
+
+module
     : module_item_list {
         verifySymbolTable();
     }

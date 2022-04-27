@@ -1,17 +1,7 @@
 
 # Current
 
-* Casting numbers to strings and strings to numbers.
-
 * Print immediate values in exec trace and elsewhere. Controlled by a verbosity command line parameter.
-
-* The assembler should always output a preamble that jumps to a location in the code and exits the program. The entry location should be given by a "standard" symbol, such as "main" or "entry". If the symbol has not been defined, then an error should be published and no code is generated.
-
-* Add a command parameter to the assembler that forces code to be output, even if there are errors.
-    * Stubbed it out.
-
-* Add command line to vm that causes the trace to be written to disk instead of stdout.
-    * Figure out how the print statements work with that. (stubbed out)
 
 * Implement structs as a native type.
 
@@ -45,6 +35,9 @@
     * Update: Is this needed? Or is it acceptable to always have a label (in the symbol table) for a jump or call destination?
     * Deleted relative and immediate jumps.
 
+* The assembler should always output a preamble that jumps to a location in the code and exits the program. The entry location should be given by a "standard" symbol, such as "main" or "entry". If the symbol has not been defined, then an error should be published and no code is generated.
+    * I added this, but I took it out because it seems like needless complexity. I will revisit the idea when I have an actual runtime library which will need to be initialized.
+
 # Random
 
 * Runtime library that includes things like fopen() and friends.
@@ -65,7 +58,18 @@
 
 * need to add name spaces to support structs.
 
+* Look at running the code through a pre-processor before assembly. This will be very useful as the project gets more complex. See this: https://github.com/bagder/fcpp
+
 # Future
+
+* Add a command parameter to the assembler that forces code to be output, even if there are errors.
+    * Stubbed it out and deferred. I really want to work on core functionality.
+
+* Add command line to vm that causes the trace to be written to disk instead of stdout.
+    * Figure out how the print statements work with that. (stubbed out and deferred)
+
+* Casting numbers to strings and strings to numbers.
+    * This is a "must-do", but I have deferred it because it's not a core functionality and I really want to get to the place where I can do real programming with the assembler.
 
 * Reduce the library code to a few headers if possible.
 
@@ -77,7 +81,7 @@
 
 * Build debugger with trace, breakpoints, and watches.
 
-* Automate testing.
+* **Automate testing**.
 
 # Other Junk
 ### STUCK
